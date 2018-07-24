@@ -1,0 +1,27 @@
+version: '3'
+services:
+  setup:
+    build: .
+    depends_on:
+      - mysql
+    command: "python manage.py migrate"
+  mysql:
+    image: mysql:5.6
+    container_name: kraven_db
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=homestead
+      - MYSQL_USER=homestead
+      - MYSQL_PASSWORD=secret
+      - MYSQL_ALLOW_EMPTY_PASSWORD=yes
+  web:
+    build: .
+    command: "python manage.py runserver 0.0.0.0:8000"
+    container_name: kraven_web
+    depends_on:
+      - mysql
+      - setup
+    volumes:
+      - .:/kraven
+    ports:
+      - "8000:8000"

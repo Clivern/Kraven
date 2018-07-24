@@ -1,5 +1,5 @@
 <p align="center">
-  <img height="150" src="https://raw.githubusercontent.com/Clivern/Kraven/master/static/assets/images/logo.svg">
+  <img height="150" src="https://raw.githubusercontent.com/Clivern/Kraven/master/static/assets/images/logo.png">
 </p>
 
 # Kraven

@@ -22,7 +22,7 @@ from app.controllers.web.admin.profile import Profile as Profile_View
 
 from app.controllers.web.admin.settings import Settings as Settings_View
 
-from app.controllers.web.admin.manage import Manage as Manage_View
+from app.controllers.web.admin.hosts import Hosts as Hosts_View
 
 from app.controllers.api.private.v1.install import Install as Install_V1_Endpoint_Private
 from app.controllers.api.private.v1.login import Login as Login_V1_Endpoint_Private
@@ -51,7 +51,7 @@ urlpatterns = [
         path('dashboard', Dashboard_View.as_view(), name='app.web.admin.dashboard'),
         path('profile', Profile_View.as_view(), name='app.web.admin.profile'),
 
-        path('manage', Manage_View.as_view(), name='app.web.admin.manage'),
+        path('hosts', Hosts_View.as_view(), name='app.web.admin.hosts'),
 
         path('settings', Settings_View.as_view(), name='app.web.admin.settings'),
 

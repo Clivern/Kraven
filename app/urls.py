@@ -22,6 +22,8 @@ from app.controllers.web.admin.profile import Profile as Profile_View
 
 from app.controllers.web.admin.settings import Settings as Settings_View
 
+from app.controllers.web.admin.manage import Manage as Manage_View
+
 from app.controllers.api.private.v1.install import Install as Install_V1_Endpoint_Private
 from app.controllers.api.private.v1.login import Login as Login_V1_Endpoint_Private
 from app.controllers.api.private.v1.register import Register as Register_V1_Endpoint_Private
@@ -29,6 +31,8 @@ from app.controllers.api.private.v1.forgot_password import Forgot_Password as Fo
 from app.controllers.api.private.v1.reset_password import Reset_Password as Reset_Password_V1_Endpoint_Private
 from app.controllers.api.private.v1.admin.settings import Settings as Settings_Admin_V1_Endpoint_Private
 from app.controllers.api.private.v1.admin.profile import Profile as Profile_Admin_V1_Endpoint_Private
+
+
 
 
 urlpatterns = [
@@ -46,6 +50,8 @@ urlpatterns = [
         path('logout', Logout_View.as_view(), name='app.web.admin.logout'),
         path('dashboard', Dashboard_View.as_view(), name='app.web.admin.dashboard'),
         path('profile', Profile_View.as_view(), name='app.web.admin.profile'),
+
+        path('manage', Manage_View.as_view(), name='app.web.admin.manage'),
 
         path('settings', Settings_View.as_view(), name='app.web.admin.settings'),
 

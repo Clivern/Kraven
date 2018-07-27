@@ -32,6 +32,8 @@ from app.controllers.api.private.v1.reset_password import Reset_Password as Rese
 from app.controllers.api.private.v1.admin.settings import Settings as Settings_Admin_V1_Endpoint_Private
 from app.controllers.api.private.v1.admin.profile import Profile as Profile_Admin_V1_Endpoint_Private
 
+from app.controllers.api.private.v1.admin.hosts import hosts as Hosts_Admin_V1_Endpoint_Private
+from app.controllers.api.private.v1.admin.hosts import host as Host_Admin_V1_Endpoint_Private
 
 
 
@@ -69,6 +71,10 @@ urlpatterns = [
         path('admin/', include([
             path('settings', Settings_Admin_V1_Endpoint_Private.as_view(), name='app.api.private.v1.admin.settings.endpoint'),
             path('profile', Profile_Admin_V1_Endpoint_Private.as_view(), name='app.api.private.v1.admin.profile.endpoint'),
+
+            path('host', Hosts_Admin_V1_Endpoint_Private.as_view(), name='app.api.private.v1.admin.hosts.endpoint'),
+            path('host/<int:host_id>', Host_Admin_V1_Endpoint_Private.as_view(), name='app.api.private.v1.admin.host.endpoint'),
+
         ]))
 
     ])),

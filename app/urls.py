@@ -22,7 +22,12 @@ from app.controllers.web.admin.profile import Profile as Profile_View
 
 from app.controllers.web.admin.settings import Settings as Settings_View
 
-from app.controllers.web.admin.hosts import Hosts as Hosts_View
+
+from app.controllers.web.admin.hosts import Hosts_List as Hosts_List_Web
+from app.controllers.web.admin.hosts import Host_Create as Host_Create_Web
+from app.controllers.web.admin.hosts import Host_Edit as Host_Edit_Web
+from app.controllers.web.admin.hosts import Host_View as Host_View_Web
+
 
 from app.controllers.api.private.v1.install import Install as Install_V1_Endpoint_Private
 from app.controllers.api.private.v1.login import Login as Login_V1_Endpoint_Private
@@ -32,8 +37,8 @@ from app.controllers.api.private.v1.reset_password import Reset_Password as Rese
 from app.controllers.api.private.v1.admin.settings import Settings as Settings_Admin_V1_Endpoint_Private
 from app.controllers.api.private.v1.admin.profile import Profile as Profile_Admin_V1_Endpoint_Private
 
-from app.controllers.api.private.v1.admin.hosts import hosts as Hosts_Admin_V1_Endpoint_Private
-from app.controllers.api.private.v1.admin.hosts import host as Host_Admin_V1_Endpoint_Private
+from app.controllers.api.private.v1.admin.hosts import Hosts as Hosts_Admin_V1_Endpoint_Private
+from app.controllers.api.private.v1.admin.hosts import Host as Host_Admin_V1_Endpoint_Private
 
 
 
@@ -53,7 +58,13 @@ urlpatterns = [
         path('dashboard', Dashboard_View.as_view(), name='app.web.admin.dashboard'),
         path('profile', Profile_View.as_view(), name='app.web.admin.profile'),
 
-        path('hosts', Hosts_View.as_view(), name='app.web.admin.hosts'),
+
+        path('hosts', Hosts_List_Web.as_view(), name='app.web.admin.hosts.list'),
+        path('hosts/create', Host_Create_Web.as_view(), name='app.web.admin.hosts.create'),
+        path('hosts/edit/<slug:host_slug>', Host_Edit_Web.as_view(), name='app.web.admin.hosts.edit'),
+        path('hosts/view/<slug:host_slug>', Host_View_Web.as_view(), name='app.web.admin.hosts.view'),
+
+
 
         path('settings', Settings_View.as_view(), name='app.web.admin.settings'),
 

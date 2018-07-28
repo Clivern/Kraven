@@ -11,7 +11,7 @@ class Host():
 
     __helpers = Helpers()
     __logger = None
-    __host_entity = Namespace_Entity()
+    __host_entity = Host_Entity()
 
 
     def __init__(self):
@@ -30,8 +30,16 @@ class Host():
         return (self.__host_entity.get_one_by_slug_user_id(slug, user_id) != False)
 
 
+    def get_one_by_slug_user_id(self, slug, user_id):
+        return self.__host_entity.get_one_by_slug_user_id(slug, user_id);
+
+
     def insert_one(self, host):
         return self.__host_entity.insert_one(host)
+
+
+    def get_many_by_user(self, user_id, order_by, asc):
+        return self.__host_entity.get_many_by_user(user_id, order_by, asc)
 
 
     def update_one_by_id(self, host_id, new_data):

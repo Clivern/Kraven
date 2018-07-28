@@ -78,7 +78,7 @@ class Hosts(View):
                         'error': _('Error! Host server is not valid.')
                     },
                     'length_between':{
-                        'param': [3, 21],
+                        'param': [3, 60],
                         'error': _('Error! Host server length must be from 4 to 20 characters.')
                     }
                 }
@@ -209,7 +209,7 @@ class Host(View):
                         'error': _('Error! Host server is not valid.')
                     },
                     'length_between':{
-                        'param': [3, 21],
+                        'param': [3, 60],
                         'error': _('Error! Host server length must be from 4 to 20 characters.')
                     }
                 }

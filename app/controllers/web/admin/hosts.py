@@ -18,6 +18,8 @@ from app.modules.core.context import Context
 from app.modules.core.host import Host as Host_Module
 
 
+from app.modules.docker.info import Info
+
 class Hosts_List(View):
 
     template_name = 'templates/admin/hosts/list.html'
@@ -34,7 +36,7 @@ class Hosts_List(View):
         })
 
         self.__context.push({
-            "hosts": self.__host_module.get_many_by_user(request.user.id, "created_at", True)
+            "hosts": self.__host_module.get_many_by_user(request.user.id, "created_at", False)
         })
 
         return render(request, self.template_name, self.__context.get())
@@ -106,5 +108,11 @@ class Host_View(View):
             "page_title": _("%s Host · %s") % (host.name, self.__context.get("app_name", os.getenv("APP_NAME", "Kraven"))),
             "host": host
         })
+
+        try:
+            print(Info(host.server).get_version())
+        except Exception as e:
+            print("HOST DOWN")
+
 
         return render(request, self.template_name, self.__context.get())

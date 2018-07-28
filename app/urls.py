@@ -58,13 +58,10 @@ urlpatterns = [
         path('dashboard', Dashboard_View.as_view(), name='app.web.admin.dashboard'),
         path('profile', Profile_View.as_view(), name='app.web.admin.profile'),
 
-
         path('hosts', Hosts_List_Web.as_view(), name='app.web.admin.hosts.list'),
         path('hosts/create', Host_Create_Web.as_view(), name='app.web.admin.hosts.create'),
         path('hosts/edit/<slug:host_slug>', Host_Edit_Web.as_view(), name='app.web.admin.hosts.edit'),
         path('hosts/view/<slug:host_slug>', Host_View_Web.as_view(), name='app.web.admin.hosts.view'),
-
-
 
         path('settings', Settings_View.as_view(), name='app.web.admin.settings'),
 

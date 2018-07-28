@@ -22,7 +22,7 @@ from app.modules.docker.info import Info
 
 class Hosts_List(View):
 
-    template_name = 'templates/admin/hosts/list.html'
+    template_name = 'templates/admin/hosts/docker/list.html'
     __context = Context()
     __host_module = Host_Module()
 
@@ -44,7 +44,7 @@ class Hosts_List(View):
 
 class Host_Create(View):
 
-    template_name = 'templates/admin/hosts/create.html'
+    template_name = 'templates/admin/hosts/docker/create.html'
     __context = Context()
     __host_module = Host_Module()
 
@@ -62,7 +62,7 @@ class Host_Create(View):
 
 class Host_Edit(View):
 
-    template_name = 'templates/admin/hosts/edit.html'
+    template_name = 'templates/admin/hosts/docker/edit.html'
     __context = Context()
     __host_module = Host_Module()
     __helpers = Helpers()
@@ -87,10 +87,9 @@ class Host_Edit(View):
         return render(request, self.template_name, self.__context.get())
 
 
-
 class Host_View(View):
 
-    template_name = 'templates/admin/hosts/view.html'
+    template_name = 'templates/admin/hosts/docker/view.html'
     __context = Context()
     __host_module = Host_Module()
 
@@ -106,13 +105,159 @@ class Host_View(View):
         self.__context.autoload_user(request.user.id if request.user.is_authenticated else None)
         self.__context.push({
             "page_title": _("%s Host · %s") % (host.name, self.__context.get("app_name", os.getenv("APP_NAME", "Kraven"))),
-            "host": host
+            "host": host,
+            "screen": "main"
         })
 
-        try:
-            print(Info(host.server).get_version())
-        except Exception as e:
-            print("HOST DOWN")
+        return render(request, self.template_name, self.__context.get())
 
+
+class Host_Containers_View(View):
+
+    template_name = 'templates/admin/hosts/docker/view.html'
+    __context = Context()
+    __host_module = Host_Module()
+
+
+    def get(self, request, host_slug):
+
+        host = self.__host_module.get_one_by_slug_user_id(host_slug, request.user.id)
+
+        if host == False or request.user.id != host.user.id:
+            raise Http404("Host not found.")
+
+        self.__context.autoload_options()
+        self.__context.autoload_user(request.user.id if request.user.is_authenticated else None)
+        self.__context.push({
+            "page_title": _("%s Host · %s") % (host.name, self.__context.get("app_name", os.getenv("APP_NAME", "Kraven"))),
+            "host": host,
+            "screen": "containers"
+        })
+
+        return render(request, self.template_name, self.__context.get())
+
+
+class Host_Images_View(View):
+
+    template_name = 'templates/admin/hosts/docker/view.html'
+    __context = Context()
+    __host_module = Host_Module()
+
+
+    def get(self, request, host_slug):
+
+        host = self.__host_module.get_one_by_slug_user_id(host_slug, request.user.id)
+
+        if host == False or request.user.id != host.user.id:
+            raise Http404("Host not found.")
+
+        self.__context.autoload_options()
+        self.__context.autoload_user(request.user.id if request.user.is_authenticated else None)
+        self.__context.push({
+            "page_title": _("%s Host · %s") % (host.name, self.__context.get("app_name", os.getenv("APP_NAME", "Kraven"))),
+            "host": host,
+            "screen": "images"
+        })
+
+        return render(request, self.template_name, self.__context.get())
+
+
+class Host_Networks_View(View):
+
+    template_name = 'templates/admin/hosts/docker/view.html'
+    __context = Context()
+    __host_module = Host_Module()
+
+
+    def get(self, request, host_slug):
+
+        host = self.__host_module.get_one_by_slug_user_id(host_slug, request.user.id)
+
+        if host == False or request.user.id != host.user.id:
+            raise Http404("Host not found.")
+
+        self.__context.autoload_options()
+        self.__context.autoload_user(request.user.id if request.user.is_authenticated else None)
+        self.__context.push({
+            "page_title": _("%s Host · %s") % (host.name, self.__context.get("app_name", os.getenv("APP_NAME", "Kraven"))),
+            "host": host,
+            "screen": "networks"
+        })
+
+        return render(request, self.template_name, self.__context.get())
+
+
+class Host_Services_View(View):
+
+    template_name = 'templates/admin/hosts/docker/view.html'
+    __context = Context()
+    __host_module = Host_Module()
+
+
+    def get(self, request, host_slug):
+
+        host = self.__host_module.get_one_by_slug_user_id(host_slug, request.user.id)
+
+        if host == False or request.user.id != host.user.id:
+            raise Http404("Host not found.")
+
+        self.__context.autoload_options()
+        self.__context.autoload_user(request.user.id if request.user.is_authenticated else None)
+        self.__context.push({
+            "page_title": _("%s Host · %s") % (host.name, self.__context.get("app_name", os.getenv("APP_NAME", "Kraven"))),
+            "host": host,
+            "screen": "services"
+        })
+
+        return render(request, self.template_name, self.__context.get())
+
+
+
+class Host_Volumes_View(View):
+
+    template_name = 'templates/admin/hosts/docker/view.html'
+    __context = Context()
+    __host_module = Host_Module()
+
+
+    def get(self, request, host_slug):
+
+        host = self.__host_module.get_one_by_slug_user_id(host_slug, request.user.id)
+
+        if host == False or request.user.id != host.user.id:
+            raise Http404("Host not found.")
+
+        self.__context.autoload_options()
+        self.__context.autoload_user(request.user.id if request.user.is_authenticated else None)
+        self.__context.push({
+            "page_title": _("%s Host · %s") % (host.name, self.__context.get("app_name", os.getenv("APP_NAME", "Kraven"))),
+            "host": host,
+            "screen": "volumes"
+        })
+
+        return render(request, self.template_name, self.__context.get())
+
+
+class Host_Activity_View(View):
+
+    template_name = 'templates/admin/hosts/docker/view.html'
+    __context = Context()
+    __host_module = Host_Module()
+
+
+    def get(self, request, host_slug):
+
+        host = self.__host_module.get_one_by_slug_user_id(host_slug, request.user.id)
+
+        if host == False or request.user.id != host.user.id:
+            raise Http404("Host not found.")
+
+        self.__context.autoload_options()
+        self.__context.autoload_user(request.user.id if request.user.is_authenticated else None)
+        self.__context.push({
+            "page_title": _("%s Host · %s") % (host.name, self.__context.get("app_name", os.getenv("APP_NAME", "Kraven"))),
+            "host": host,
+            "screen": "activity"
+        })
 
         return render(request, self.template_name, self.__context.get())

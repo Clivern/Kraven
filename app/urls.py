@@ -27,6 +27,12 @@ from app.controllers.web.admin.hosts import Hosts_List as Hosts_List_Web
 from app.controllers.web.admin.hosts import Host_Create as Host_Create_Web
 from app.controllers.web.admin.hosts import Host_Edit as Host_Edit_Web
 from app.controllers.web.admin.hosts import Host_View as Host_View_Web
+from app.controllers.web.admin.hosts import Host_Containers_View as Host_Containers_View_Web
+from app.controllers.web.admin.hosts import Host_Images_View as Host_Images_View_Web
+from app.controllers.web.admin.hosts import Host_Networks_View as Host_Networks_View_Web
+from app.controllers.web.admin.hosts import Host_Services_View as Host_Services_View_Web
+from app.controllers.web.admin.hosts import Host_Volumes_View as Host_Volumes_View_Web
+from app.controllers.web.admin.hosts import Host_Activity_View as Host_Activity_View_Web
 
 
 from app.controllers.api.private.v1.install import Install as Install_V1_Endpoint_Private
@@ -62,6 +68,13 @@ urlpatterns = [
         path('hosts/create', Host_Create_Web.as_view(), name='app.web.admin.hosts.create'),
         path('hosts/edit/<slug:host_slug>', Host_Edit_Web.as_view(), name='app.web.admin.hosts.edit'),
         path('hosts/view/<slug:host_slug>', Host_View_Web.as_view(), name='app.web.admin.hosts.view'),
+
+        path('hosts/view/<slug:host_slug>/containers', Host_Containers_View_Web.as_view(), name='app.web.admin.hosts.view.containers'),
+        path('hosts/view/<slug:host_slug>/images', Host_Images_View_Web.as_view(), name='app.web.admin.hosts.view.images'),
+        path('hosts/view/<slug:host_slug>/networks', Host_Networks_View_Web.as_view(), name='app.web.admin.hosts.view.networks'),
+        path('hosts/view/<slug:host_slug>/services', Host_Services_View_Web.as_view(), name='app.web.admin.hosts.view.services'),
+        path('hosts/view/<slug:host_slug>/volumes', Host_Volumes_View_Web.as_view(), name='app.web.admin.hosts.view.volumes'),
+        path('hosts/view/<slug:host_slug>/activity', Host_Activity_View_Web.as_view(), name='app.web.admin.hosts.view.activity'),
 
         path('settings', Settings_View.as_view(), name='app.web.admin.settings'),
 

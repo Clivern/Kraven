@@ -3,7 +3,7 @@
 </p>
 
 # Kraven
-Docker Management Dashboard
+A SaaS Docker Management Dashboard.
 
 [![Build Status](https://travis-ci.org/Clivern/Kraven.svg?branch=master)](https://travis-ci.org/Clivern/Kraven)
 

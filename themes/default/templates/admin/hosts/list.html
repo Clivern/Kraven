@@ -51,7 +51,7 @@
                                                                 <a href="{% url 'app.web.admin.hosts.edit' host.slug %}" class="dropdown-item">
                                                                     <i class="dropdown-icon fe fe-edit"></i> {% trans "Edit" %}
                                                                 </a>
-                                                                <a href="javascript:void(0)" data-url="{% url 'app.api.private.v1.admin.host.endpoint' host.id %}" class="dropdown-item delete_namespace">
+                                                                <a href="javascript:void(0)" data-url="{% url 'app.api.private.v1.admin.host.endpoint' host.id %}" class="dropdown-item delete_host">
                                                                     <i class="dropdown-icon fe fe-trash"></i> {% trans "Delete" %}
                                                                 </a>
                                                             </div>

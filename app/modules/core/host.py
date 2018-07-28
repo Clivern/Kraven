@@ -30,6 +30,11 @@ class Host():
         return (self.__host_entity.get_one_by_slug_user_id(slug, user_id) != False)
 
 
+    def slug_used_elsewhere(self, host_id, slug, user_id):
+        host = self.__host_entity.get_one_by_slug_user_id(slug, user_id)
+        return False if host == False or host.id == host_id else True
+
+
     def get_one_by_slug_user_id(self, slug, user_id):
         return self.__host_entity.get_one_by_slug_user_id(slug, user_id);
 

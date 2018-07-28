@@ -34,7 +34,109 @@ class Hosts(View):
 
 
     def post(self, request):
-        pass
+
+        self.__user_id = request.user.id
+
+        self.__request.set_request(request)
+        request_data = self.__request.get_request_data("post", {
+            "name" : "",
+            "slug" : "",
+            "server": "",
+            "type": "",
+            "auth_type": ""
+        })
+
+        self.__form.add_inputs({
+            'name': {
+                'value': request_data["name"],
+                'validate': {
+                    'host_name': {
+                        'error': _("Error! Host Name is invalid.")
+                    },
+                    'length_between':{
+                        'param': [3, 41],
+                        'error': _("Error! Host slug length must be from 4 to 40 characters.")
+                    }
+                }
+            },
+            'slug': {
+                'value': request_data["slug"],
+                'validate': {
+                    'host_slug': {
+                        'error': _('Error! Host slug is not valid.')
+                    },
+                    'length_between':{
+                        'param': [3, 21],
+                        'error': _('Error! Host slug length must be from 4 to 20 characters.')
+                    }
+                }
+            },
+            'server': {
+                'value': request_data["server"],
+                'validate': {
+                    'host_server': {
+                        'error': _('Error! Host server is not valid.')
+                    },
+                    'length_between':{
+                        'param': [3, 21],
+                        'error': _('Error! Host server length must be from 4 to 20 characters.')
+                    }
+                }
+            },
+            'type': {
+                'value': request_data["type"],
+                'validate': {
+                    'any_of':{
+                        'param': [["docker"]],
+                        'error': _('Error! Host type is invalid.')
+                    }
+                }
+            },
+            'auth_type': {
+                'value': request_data["auth_type"],
+                'validate': {
+                    'any_of':{
+                        'param': [["no"]],
+                        'error': _('Error! Auth type is invalid.')
+                    }
+                }
+            }
+        })
+
+        self.__form.process()
+
+        if not self.__form.is_passed():
+            return JsonResponse(self.__response.send_private_failure(self.__form.get_errors(with_type=True)))
+
+        if self.__host_module.slug_used(self.__form.get_input_value("slug"), self.__user_id):
+            return JsonResponse(self.__response.send_private_failure([{
+                "type": "error",
+                "message": _("Error! Host slug is already used.")
+            }]))
+
+
+        result = self.__host_module.insert_one({
+            "name": self.__form.get_input_value("name"),
+            "slug": self.__form.get_input_value("slug"),
+            "server": self.__form.get_input_value("server"),
+            "type": self.__form.get_input_value("type"),
+            "auth_data": self.__helpers.json_dumps({
+                "auth_type": self.__form.get_input_value("auth_type")
+            }),
+            "user_id": self.__user_id
+        })
+
+        if result:
+            return JsonResponse(self.__response.send_private_success([{
+                "type": "success",
+                "message": _("Host created successfully.")
+            }]))
+
+        else:
+            return JsonResponse(self.__response.send_private_failure([{
+                "type": "error",
+                "message": _("Error! Something goes wrong while creating host.")
+            }]))
 
 
 
@@ -55,7 +157,116 @@ class Host(View):
 
 
     def post(self, request, host_id):
-       pass
+
+
+        self.__user_id = request.user.id
+        self.__host_id = host_id
+
+        if not self.__host_module.user_owns(self.__host_id, self.__user_id):
+            return JsonResponse(self.__response.send_private_failure([{
+                "type": "error",
+                "message": _("Error! Invalid Request.")
+            }]))
+
+        self.__request.set_request(request)
+        request_data = self.__request.get_request_data("post", {
+            "name" : "",
+            "slug" : "",
+            "server": "",
+            "type": "",
+            "auth_type": ""
+        })
+
+        self.__form.add_inputs({
+            'name': {
+                'value': request_data["name"],
+                'validate': {
+                    'host_name': {
+                        'error': _("Error! Host Name is invalid.")
+                    },
+                    'length_between':{
+                        'param': [3, 41],
+                        'error': _("Error! Host slug length must be from 4 to 40 characters.")
+                    }
+                }
+            },
+            'slug': {
+                'value': request_data["slug"],
+                'validate': {
+                    'host_slug': {
+                        'error': _('Error! Host slug is not valid.')
+                    },
+                    'length_between':{
+                        'param': [3, 21],
+                        'error': _('Error! Host slug length must be from 4 to 20 characters.')
+                    }
+                }
+            },
+            'server': {
+                'value': request_data["server"],
+                'validate': {
+                    'host_server': {
+                        'error': _('Error! Host server is not valid.')
+                    },
+                    'length_between':{
+                        'param': [3, 21],
+                        'error': _('Error! Host server length must be from 4 to 20 characters.')
+                    }
+                }
+            },
+            'type': {
+                'value': request_data["type"],
+                'validate': {
+                    'any_of':{
+                        'param': [["docker"]],
+                        'error': _('Error! Host type is invalid.')
+                    }
+                }
+            },
+            'auth_type': {
+                'value': request_data["auth_type"],
+                'validate': {
+                    'any_of':{
+                        'param': [["no"]],
+                        'error': _('Error! Auth type is invalid.')
+                    }
+                }
+            }
+        })
+
+        self.__form.process()
+
+        if not self.__form.is_passed():
+            return JsonResponse(self.__response.send_private_failure(self.__form.get_errors(with_type=True)))
+
+        if self.__host_module.slug_used_elsewhere(self.__host_id, self.__form.get_input_value("slug"), self.__user_id):
+            return JsonResponse(self.__response.send_private_failure([{
+                "type": "error",
+                "message": _("Error! Host slug is already used.")
+            }]))
+
+        result = self.__host_module.update_one_by_id(self.__host_id, {
+            "name": self.__form.get_input_value("name"),
+            "slug": self.__form.get_input_value("slug"),
+            "server": self.__form.get_input_value("server"),
+            "type": self.__form.get_input_value("type"),
+            "auth_data": self.__helpers.json_dumps({
+                "auth_type": self.__form.get_input_value("auth_type")
+            }),
+            "user_id": self.__user_id
+        })
+
+        if result:
+            return JsonResponse(self.__response.send_private_success([{
+                "type": "success",
+                "message": _("Host updated successfully.")
+            }]))
+
+        else:
+            return JsonResponse(self.__response.send_private_failure([{
+                "type": "error",
+                "message": _("Error! Something goes wrong while creating host.")
+            }]))
 
 
     def delete(self, request, host_id):

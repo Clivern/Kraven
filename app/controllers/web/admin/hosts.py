@@ -13,6 +13,7 @@ from django.utils.translation import gettext as _
 from django.http import Http404
 
 # local Django
+from app.modules.util.helpers import Helpers
 from app.modules.core.context import Context
 from app.modules.core.host import Host as Host_Module
 
@@ -62,6 +63,7 @@ class Host_Edit(View):
     template_name = 'templates/admin/hosts/edit.html'
     __context = Context()
     __host_module = Host_Module()
+    __helpers = Helpers()
 
 
     def get(self, request, host_slug):
@@ -70,6 +72,8 @@ class Host_Edit(View):
 
         if host == False or request.user.id != host.user.id:
             raise Http404("Host not found.")
+
+        host.auth_data = self.__helpers.json_loads(host.auth_data);
 
         self.__context.autoload_options()
         self.__context.autoload_user(request.user.id if request.user.is_authenticated else None)

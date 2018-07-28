@@ -84,6 +84,9 @@ class Host_Entity():
             if "type" in new_data:
                 host.type = new_data["type"]
 
+            if "status" in new_data:
+                host.status = new_data["status"]
+
             if "server" in new_data:
                 host.server = new_data["server"]
 
@@ -92,6 +95,9 @@ class Host_Entity():
 
             if "user_id" in new_data:
                 host.user = User.objects.get(pk=new_data["user_id"])
+
+            if "last_status_check" in new_data:
+                host.last_status_check = new_data["last_status_check"]
 
             host.save()
             return True

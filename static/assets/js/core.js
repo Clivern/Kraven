@@ -248,6 +248,96 @@ kraven_app.profile = (function (window, document, $) {
 })(window, document, jQuery);
 
 
+
+/**
+ * Host Endpoints
+ */
+kraven_app.host = (function (window, document, $) {
+
+    'use strict';
+
+    var base = {
+
+        el: {
+            hostName : $('form#host_create input[name="name"]'),
+            hostSlug : $('form#host_create input[name="slug"]'),
+            hostDelete: $('a.delete_host')
+        },
+        init: function(){
+            if( base.el.hostName.length ){
+                base.el.hostName.on("change", base.hostNameChange);
+            }
+            if( base.el.hostDelete.length ){
+                base.el.hostDelete.on("click", base.deleteHost);
+            }
+        },
+
+        deleteHost: function(event) {
+            event.preventDefault();
+
+            if( !confirm(_i18n.confirm_msg) ){
+                return false;
+            }
+
+            var _self = $(this);
+            _self.attr('disabled', 'disabled');
+            require(['pace', 'jscookie'], function(Pace, Cookies) {
+                Pace.track(function(){
+                    $.ajax({
+                      method: "DELETE",
+                      url: _self.attr('data-url') + "?csrfmiddlewaretoken=" + Cookies.get('csrftoken'),
+                      data: { "csrfmiddlewaretoken": Cookies.get('csrftoken') }
+                    }).done(function( response ) {
+                        if( response.status == "success" ){
+                            base.success(response.messages);
+                            _self.closest("tr").remove();
+                        }else{
+                            base.error(response.messages);
+                        }
+                    });
+                });
+            });
+        },
+
+        hostNameChange: function(event) {
+            event.preventDefault();
+            base.el.hostSlug.val(base.slugify(base.el.hostName.val()))
+        },
+        slugify: function(text) {
+          return text.toString().toLowerCase()
+            .replace(/\s+/g, '-')           // Replace spaces with -
+            .replace(/[^\w\-]+/g, '')       // Remove all non-word chars
+            .replace(/\-\-+/g, '-')         // Replace multiple - with single -
+            .replace(/^-+/, '')             // Trim - from start of text
+            .replace(/-+$/, '');            // Trim - from end of text
+        },
+        success : function(messages){
+            for(var messageObj of messages) {
+                require(['toastr'], function(toastr) {
+                    toastr.clear();
+                    toastr.success(messageObj.message);
+                });
+                break;
+            }
+        },
+        error : function(messages){
+            for(var messageObj of messages) {
+                require(['toastr'], function(toastr) {
+                    toastr.clear();
+                    toastr.error(messageObj.message);
+                });
+                break;
+            }
+        }
+    };
+
+   return {
+        init: base.init
+    };
+
+})(window, document, jQuery);
+
+
 /**
  *
  */
@@ -277,6 +367,7 @@ $(document).ready(function() {
 
     kraven_app.endpoint_connect.init();
     kraven_app.profile.init();
+    kraven_app.host.init();
 
     require(['jscookie'], function(Cookies) {
         $.ajaxSetup({

@@ -47,6 +47,10 @@ class Helpers():
         return json.dumps(data)
 
 
+    def json_loads(self, data):
+        return json.loads(data)
+
+
     def dump_var(self, var):
         pprint(var)
 

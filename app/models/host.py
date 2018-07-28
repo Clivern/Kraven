@@ -21,6 +21,7 @@ class Host(models.Model):
     )
 
     STATUS_CHOICES = (
+        ('pending', 'PENDING'),
         ('running', 'RUNNING'),
         ('down', 'DOWN'),
     )
@@ -28,7 +29,7 @@ class Host(models.Model):
     name = models.CharField(max_length=50, verbose_name="Name")
     slug = models.SlugField(max_length=60, db_index=True, verbose_name="Slug")
     type = models.CharField(max_length=20, choices=TYPE_CHOICES, default="docker", verbose_name="Type")
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default="running", verbose_name="Status")
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default="pending", verbose_name="Status")
     server = models.CharField(max_length=200, verbose_name="Connection")
     auth_data = models.TextField(verbose_name="Auth Data")
     last_status_check = models.DateTimeField(auto_now_add=True, verbose_name="Last Status Check")

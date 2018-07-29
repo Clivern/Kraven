@@ -65,6 +65,7 @@ class Install():
         self.__acl.add_role_to_user("super_admin", user_id)
         return True
 
+
     def install(self):
         try:
             execute_from_command_line(["manage.py", "migrate"])

@@ -6,6 +6,7 @@ Register Module
 from app.modules.util.helpers import Helpers
 from app.modules.entity.option_entity import Option_Entity
 from app.modules.entity.user_entity import User_Entity
+from app.modules.core.acl import ACL
 
 
 class Register():
@@ -14,6 +15,7 @@ class Register():
     __user_entity = None
     __helpers = None
     __logger = None
+    __acl = ACL()
 
 
     def __init__(self):
@@ -33,7 +35,8 @@ class Register():
 
     def create_user(self, user_data):
         status = True
-        status &= (self.__user_entity.insert_one({
+
+        user = self.__user_entity.insert_one({
             "username" : user_data["username"],
             "email" : user_data["email"],
             "password" : user_data["password"],
@@ -42,6 +45,11 @@ class Register():
             "is_superuser": False,
             "is_active": True,
             "is_staff": False
-        }) != False)
+        })
+
+        if user != False:
+            self.__acl.add_role_to_user("normal_user", user.id)
+
+        status &= ( user != False)
 
         return status

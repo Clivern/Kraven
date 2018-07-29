@@ -60,6 +60,7 @@ class Install():
     def init_base_acl(self, user_id):
         self.__acl.truncate_default_permissions();
         self.__acl.new_role("super_admin")
+        self.__acl.new_role("normal_user")
         self.__acl.new_permission("Manage Settings", self.__acl.get_content_type_id("auth", "user") , "manage_settings")
         self.__acl.add_permission_to_role("super_admin", "manage_settings")
         self.__acl.add_role_to_user("super_admin", user_id)

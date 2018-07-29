@@ -16,6 +16,7 @@ from app.modules.util.helpers import Helpers
 from app.modules.core.request import Request
 from app.modules.core.response import Response
 from app.modules.core.settings import Settings as Settings_Module
+from app.modules.core.acl import ACL
 
 
 class Settings(View):
@@ -26,6 +27,7 @@ class Settings(View):
     __form = Form()
     __settings_module = Settings_Module()
     __logger = None
+    __acl = ACL()
 
 
     def __init__(self):
@@ -33,6 +35,12 @@ class Settings(View):
 
 
     def post(self, request):
+
+        if not self.__acl.user_has_permission(request.user.id, "manage_settings"):
+            return JsonResponse(self.__response.send_private_failure([{
+                "type": "error",
+                "message": _("Error! Invalid Request.")
+            }]))
 
         self.__request.set_request(request)
         request_data = self.__request.get_request_data("post", {

@@ -338,6 +338,84 @@ kraven_app.host = (function (window, document, $) {
 })(window, document, jQuery);
 
 
+
+kraven_app.host_health_check_action =  (function (window, document, $) {
+
+    'use strict';
+
+    var base = {
+
+        el: {
+            healthIndicator : $('[data-action="host_health_check"]')
+        },
+        init: function(){
+            if( base.el.healthIndicator.length ){
+                base.healthCheck();
+            }
+        },
+        healthCheck: function() {
+            base.el.healthIndicator.each(function( index ) {
+                var _self = $(this);
+                setTimeout(function(){
+                    require(['pace', 'jscookie'], function(Pace, Cookies) {
+                        Pace.track(function(){
+                            $.ajax({
+                              method: "GET",
+                              url: _self.attr('data-action-url') + "?csrfmiddlewaretoken=" + Cookies.get('csrftoken'),
+                              data: {}
+                            }).done(function( response ) {
+                                if( response.status == "success" ){
+                                    if( response.payload.status == "up" ){
+                                        _self.removeClass("btn-loading");
+                                        _self.removeClass("avatar-yellow");
+                                        _self.addClass("avatar-green");
+                                        _self.find("i").removeClass("fe-refresh-ccw").addClass("fe-check");
+                                    }else{
+                                        _self.removeClass("btn-loading");
+                                        _self.removeClass("avatar-yellow");
+                                        _self.addClass("avatar-red");
+                                        _self.find("i").removeClass("fe-refresh-ccw").addClass("fe-x");
+                                    }
+                                }else{
+                                    _self.removeClass("btn-loading");
+                                    _self.find("i").removeClass("fe-refresh-ccw").addClass("fe fe-alert-circle");
+                                    base.error(response.messages);
+                                }
+                            });
+                        });
+                    });
+
+                 }, (index + 1) * 1500, _self);
+            });
+        },
+        success : function(messages){
+            for(var messageObj of messages) {
+                require(['toastr'], function(toastr) {
+                    toastr.clear();
+                    toastr.success(messageObj.message);
+                });
+                break;
+            }
+        },
+        error : function(messages){
+            for(var messageObj of messages) {
+                require(['toastr'], function(toastr) {
+                    toastr.clear();
+                    toastr.error(messageObj.message);
+                });
+                break;
+            }
+        }
+    };
+
+   return {
+        init: base.init
+    };
+
+})(window, document, jQuery);
+
+
+
 /**
  *
  */
@@ -368,6 +446,7 @@ $(document).ready(function() {
     kraven_app.endpoint_connect.init();
     kraven_app.profile.init();
     kraven_app.host.init();
+    kraven_app.host_health_check_action.init();
 
     require(['jscookie'], function(Cookies) {
         $.ajaxSetup({

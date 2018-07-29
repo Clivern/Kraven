@@ -39,6 +39,10 @@ class Host():
         return self.__host_entity.get_one_by_slug_user_id(slug, user_id);
 
 
+    def get_one_by_id(self, host_id):
+        return self.__host_entity.get_one_by_id(host_id);
+
+
     def insert_one(self, host):
         return self.__host_entity.insert_one(host)
 

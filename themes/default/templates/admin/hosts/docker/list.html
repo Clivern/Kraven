@@ -41,9 +41,7 @@
                                                         {{ host.created_at }}
                                                     </td>
                                                     <td class="text-center">
-                                                        <span class="avatar avatar-yellow btn-loading"><i class="fe fe-refresh-ccw"></i></span>
-                                                        <span class="avatar avatar-red"><i class="fe fe-x"></i></span>
-                                                        <span class="avatar avatar-green"><i class="fe fe-check"></i></span>
+                                                        <span data-action="host_health_check" data-action-url="{% url 'app.api.private.v1.admin.action.host.health_check.endpoint' host.id %}" class="avatar avatar-yellow btn-loading"><i class="fe fe-refresh-ccw"></i></span>
                                                     </td>
                                                     <td colspan="2" class="text-right">
                                                         <a href="{% url 'app.web.admin.hosts.view' host.slug %}" class="btn btn-secondary btn-sm">{% trans "Manage" %}</a>

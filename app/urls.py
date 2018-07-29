@@ -49,6 +49,13 @@ from app.controllers.api.private.v1.admin.hosts import Hosts as Hosts_Admin_V1_E
 from app.controllers.api.private.v1.admin.hosts import Host as Host_Admin_V1_Endpoint_Private
 
 
+from app.controllers.api.private.v1.admin.actions.hosts import Health_Check as Health_Check_Action_Admin_V1_Endpoint_Private
+
+
+
+
+
+
 
 urlpatterns = [
     # Public Views
@@ -98,6 +105,8 @@ urlpatterns = [
 
             path('host', Hosts_Admin_V1_Endpoint_Private.as_view(), name='app.api.private.v1.admin.hosts.endpoint'),
             path('host/<int:host_id>', Host_Admin_V1_Endpoint_Private.as_view(), name='app.api.private.v1.admin.host.endpoint'),
+
+            path('action/host/health_check/<int:host_id>', Health_Check_Action_Admin_V1_Endpoint_Private.as_view(), name='app.api.private.v1.admin.action.host.health_check.endpoint'),
 
         ]))
 

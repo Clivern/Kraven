@@ -22,6 +22,8 @@ from app.controllers.web.admin.profile import Profile as Profile_View
 
 from app.controllers.web.admin.settings import Settings as Settings_View
 
+from app.controllers.web.metric import Metric as Metric_View
+
 
 from app.controllers.web.admin.hosts import Hosts_List as Hosts_List_Web
 from app.controllers.web.admin.hosts import Host_Create as Host_Create_Web
@@ -56,6 +58,7 @@ urlpatterns = [
     path('register', Register_View.as_view(), name='app.web.register'),
     path('forgot-password', Forgot_Password_View.as_view(), name='app.web.forgot_password'),
     path('reset-password/<token>', Reset_Password_View.as_view(), name='app.web.reset_password'),
+    path('metric/<type>', Metric_View.as_view(), name='app.web.metric'),
 
     # Authenticated Users Views
     path('admin/', include([

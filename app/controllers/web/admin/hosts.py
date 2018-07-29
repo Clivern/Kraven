@@ -16,9 +16,8 @@ from django.http import Http404
 from app.modules.util.helpers import Helpers
 from app.modules.core.context import Context
 from app.modules.core.host import Host as Host_Module
+from app.modules.service.docker.info import Info
 
-
-from app.modules.docker.info import Info
 
 class Hosts_List(View):
 

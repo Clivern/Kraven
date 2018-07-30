@@ -10,18 +10,19 @@ from app.modules.service.docker.auth import Auth
 class Status():
 
     __client = None
-
-    def connect(self, server, auth_data={}):
-        try:
-            self.__client = docker.DockerClient(base_url=server)
-            self.__client.ping()
-        except Exception as e:
-            self.__client = False
+    __retry = 3
 
     def check_health(self, server, auth_data={}):
-        self.connect(server, auth_data)
+        for x in range(0, self.__retry):
+            if self.__ping(server, auth_data):
+                return True
 
-        if self.__client == False:
+        return False
+
+
+    def __ping(self, server, auth_data={}):
+        try:
+            self.__client = docker.DockerClient(base_url=server)
+            return self.__client.ping()
+        except Exception as e:
             return False
-
-        return True

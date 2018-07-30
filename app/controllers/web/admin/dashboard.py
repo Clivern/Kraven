@@ -14,6 +14,7 @@ from django.utils.translation import gettext as _
 
 # local Django
 from app.modules.core.context import Context
+from app.modules.core.decorators import login_if_not_authenticated
 
 
 class Dashboard(View):
@@ -22,6 +23,7 @@ class Dashboard(View):
     __context = Context()
 
 
+    @login_if_not_authenticated
     def get(self, request):
 
         self.__context.autoload_options()

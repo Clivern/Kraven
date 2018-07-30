@@ -17,6 +17,7 @@ from app.modules.util.helpers import Helpers
 from app.modules.core.context import Context
 from app.modules.core.host import Host as Host_Module
 from app.modules.service.docker.info import Info
+from app.modules.core.decorators import login_if_not_authenticated
 
 
 class Hosts_List(View):
@@ -26,6 +27,7 @@ class Hosts_List(View):
     __host_module = Host_Module()
 
 
+    @login_if_not_authenticated
     def get(self, request):
 
         self.__context.autoload_options()
@@ -48,6 +50,7 @@ class Host_Create(View):
     __host_module = Host_Module()
 
 
+    @login_if_not_authenticated
     def get(self, request):
 
         self.__context.autoload_options()
@@ -67,6 +70,7 @@ class Host_Edit(View):
     __helpers = Helpers()
 
 
+    @login_if_not_authenticated
     def get(self, request, host_slug):
 
         host = self.__host_module.get_one_by_slug_user_id(host_slug, request.user.id)
@@ -93,6 +97,7 @@ class Host_View(View):
     __host_module = Host_Module()
 
 
+    @login_if_not_authenticated
     def get(self, request, host_slug):
 
         host = self.__host_module.get_one_by_slug_user_id(host_slug, request.user.id)
@@ -118,6 +123,7 @@ class Host_Containers_View(View):
     __host_module = Host_Module()
 
 
+    @login_if_not_authenticated
     def get(self, request, host_slug):
 
         host = self.__host_module.get_one_by_slug_user_id(host_slug, request.user.id)
@@ -143,6 +149,7 @@ class Host_Images_View(View):
     __host_module = Host_Module()
 
 
+    @login_if_not_authenticated
     def get(self, request, host_slug):
 
         host = self.__host_module.get_one_by_slug_user_id(host_slug, request.user.id)
@@ -168,6 +175,7 @@ class Host_Networks_View(View):
     __host_module = Host_Module()
 
 
+    @login_if_not_authenticated
     def get(self, request, host_slug):
 
         host = self.__host_module.get_one_by_slug_user_id(host_slug, request.user.id)
@@ -193,6 +201,7 @@ class Host_Services_View(View):
     __host_module = Host_Module()
 
 
+    @login_if_not_authenticated
     def get(self, request, host_slug):
 
         host = self.__host_module.get_one_by_slug_user_id(host_slug, request.user.id)
@@ -219,6 +228,7 @@ class Host_Volumes_View(View):
     __host_module = Host_Module()
 
 
+    @login_if_not_authenticated
     def get(self, request, host_slug):
 
         host = self.__host_module.get_one_by_slug_user_id(host_slug, request.user.id)
@@ -244,6 +254,7 @@ class Host_Activity_View(View):
     __host_module = Host_Module()
 
 
+    @login_if_not_authenticated
     def get(self, request, host_slug):
 
         host = self.__host_module.get_one_by_slug_user_id(host_slug, request.user.id)

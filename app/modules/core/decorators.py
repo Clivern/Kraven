@@ -3,7 +3,7 @@ Custom Decorators
 """
 
 # Django
-from django.shortcuts import redirect
+from django.shortcuts import redirect, reverse
 from django.http import JsonResponse
 from django.utils.translation import gettext as _
 
@@ -16,7 +16,17 @@ from app.modules.entity.option_entity import Option_Entity
 def redirect_if_authenticated(function):
     def wrap(controller, request, *args, **kwargs):
         if request.user and request.user.is_authenticated:
+            if "redirect" in request.GET:
+                return redirect(request.GET["redirect"])
             return redirect("app.web.admin.dashboard")
+        return function(controller, request, *args, **kwargs)
+    return wrap
+
+
+def login_if_not_authenticated(function):
+    def wrap(controller, request, *args, **kwargs):
+        if not request.user or not request.user.is_authenticated:
+            return redirect(reverse("app.web.login") + "?redirect=" + request.get_full_path())
         return function(controller, request, *args, **kwargs)
     return wrap
 

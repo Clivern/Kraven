@@ -17,6 +17,7 @@ from django.http import Http404
 from app.modules.core.upgrade import Upgrade
 from app.modules.core.context import Context
 from app.modules.core.acl import ACL
+from app.modules.core.decorators import login_if_not_authenticated
 
 
 class Settings(View):
@@ -27,6 +28,7 @@ class Settings(View):
     __acl = ACL()
 
 
+    @login_if_not_authenticated
     def get(self, request):
 
         if not self.__acl.user_has_permission(request.user.id, "manage_settings"):

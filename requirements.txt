@@ -6,3 +6,5 @@ requests==2.18.4
 psycopg2==2.7.4
 jsonschema==2.6.0
 docker==3.4.1
+celery==4.2.1
+redis==2.10.6

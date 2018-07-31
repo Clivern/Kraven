@@ -55,7 +55,6 @@ class Health_Check(View):
                 "message": _("Error! Invalid Request.")
             }]))
 
-
         health = self.__status.check_health(host.server)
 
         if health:

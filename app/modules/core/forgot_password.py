@@ -4,16 +4,19 @@ Forgot Password Module
 
 # standard library
 from datetime import timedelta
+import json
 
 # Django
 from django.utils import timezone
+from django.utils.translation import gettext as _
 
 # local Django
 from app.modules.util.helpers import Helpers
 from app.modules.entity.user_entity import User_Entity
 from app.modules.entity.option_entity import Option_Entity
-from app.modules.entity.job_entity import Job_Entity
 from app.modules.entity.reset_request_entity import Reset_Request_Entity
+from app.tasks import forgot_password_email
+from app.modules.core.task import Task as Task_Core
 
 
 class Forgot_Password():
@@ -21,7 +24,7 @@ class Forgot_Password():
     __reset_request_entity = None
     __option_entity = None
     __user_entity = None
-    __job_entity = None
+    __task_core = None
     __helpers = None
 
     __reset_expire_option = 24
@@ -33,7 +36,7 @@ class Forgot_Password():
         self.__option_entity = Option_Entity()
         self.__helpers = Helpers()
         self.__user_entity = User_Entity()
-        self.__job_entity = Job_Entity()
+        self.__task_core = Task_Core()
 
         messages_count_option = self.__option_entity.get_one_by_key("reset_mails_messages_count")
         reset_expire_option = self.__option_entity.get_one_by_key("reset_mails_expire_after")
@@ -89,9 +92,35 @@ class Forgot_Password():
 
 
     def send_message(self, email, token):
-        return self.__job_entity.insert_one({
-            "name": "reset_password_msg_for_%s" % (email),
-            "executor": "forgot_password_email.Forgot_Password_Email",
-            "parameters": {"recipient_list": [email], "token": token},
-            "interval": {"type": Job_Entity.ONCE}
-        })
+
+        app_name = self.__option_entity.get_value_by_key("app_name")
+        app_email = self.__option_entity.get_value_by_key("app_email")
+        app_url = self.__option_entity.get_value_by_key("app_url")
+        user = self.__user_entity.get_one_by_email(email);
+
+        parameters = {
+            "app_name": app_name,
+            "app_email": app_email,
+            "app_url": app_url,
+            "recipient_list": [email],
+            "token": token,
+            "subject": _("%s Password Reset") % (app_name),
+            "template": "mails/reset_password.html",
+            "fail_silently": False
+        }
+
+        task_result = forgot_password_email.delay(**parameters)
+
+        if task_result.task_id != "":
+
+            return self.__task_core.create_task({
+                "name": "Password Reset",
+                "uuid": task_result.task_id,
+                "status": "pending",
+                "executor": "app.tasks.forgot_password_email",
+                "parameters": json.dumps(parameters),
+                "result": '{}',
+                "user_id": user.id
+            }) != False
+
+        return False

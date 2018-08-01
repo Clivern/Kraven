@@ -65,14 +65,6 @@ python manage.py migrate
 python manage.py runserver
 ```
 
-6. Run the Jobs Schedule.
-
-```bash
-python manage.py schedule run < /dev/null
-# Or as a process
-python manage.py schedule run </dev/null &
-```
-
 7. Go to `http://127.0.0.1:8000/install` to install the application.
 
 

@@ -84,7 +84,6 @@ class Forgot_Password(View):
                 "message": _("Error! Something goes wrong while creating reset request.")
             }]))
 
-
         message = self.__forgot_password.send_message(self.__form.get_input_value("email"), token)
 
         if message == False:

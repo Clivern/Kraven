@@ -137,3 +137,7 @@ class Task_Entity():
             count, deleted = task.delete()
             return True if count > 0 else False
         return False
+
+
+    def count_all_tasks(self):
+        return Task.objects.count()

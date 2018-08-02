@@ -111,3 +111,7 @@ class Host_Entity():
             count, deleted = host.delete()
             return True if count > 0 else False
         return False
+
+
+    def count_all_hosts(self):
+        return Host.objects.count()

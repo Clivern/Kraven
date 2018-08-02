@@ -20,7 +20,8 @@ class Install():
         {"key": "google_analytics_account", "value": "", "autoload": True},
         {"key": "reset_mails_messages_count", "value": "5", "autoload": False},
         {"key": "reset_mails_expire_after", "value": "24", "autoload": False},
-        {"key": "access_tokens_expire_after", "value": "48", "autoload": False}
+        {"key": "access_tokens_expire_after", "value": "48", "autoload": False},
+        {"key": "prometheus_token", "value": "123", "autoload": False}
     ]
     __admin = {
         "username" : "",

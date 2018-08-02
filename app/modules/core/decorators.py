@@ -6,11 +6,13 @@ Custom Decorators
 from django.shortcuts import redirect, reverse
 from django.http import JsonResponse
 from django.utils.translation import gettext as _
+from django.http import Http404
 
 # local Django
 from app.modules.util.helpers import Helpers
 from app.modules.core.response import Response
 from app.modules.entity.option_entity import Option_Entity
+
 
 
 def redirect_if_authenticated(function):
@@ -48,6 +50,16 @@ def redirect_if_not_installed(function):
         installed = False if Option_Entity().get_one_by_key("app_installed") == False else True
         if not installed:
             return redirect("app.web.install")
+        return function(controller, request, *args, **kwargs)
+    return wrap
+
+
+def protect_metric_with_auth_key(function):
+    def wrap(controller, request, *args, **kwargs):
+        if kwargs["type"] == "prometheus":
+            prometheus_token = Option_Entity().get_one_by_key("prometheus_token")
+            if prometheus_token.value != "" and (not "HTTP_AUTHORIZATION" in request.META or prometheus_token.value != request.META["HTTP_AUTHORIZATION"]):
+                raise Http404("Host not found.")
         return function(controller, request, *args, **kwargs)
     return wrap
 

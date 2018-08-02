@@ -157,3 +157,7 @@ class Profile_Entity():
         })
 
         return result
+
+
+    def count_all_profiles(self):
+        return Profile.objects.count()

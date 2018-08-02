@@ -41,8 +41,24 @@
                                             <label class="form-label">{% trans "Auth Type" %}</label>
                                             <select class="form-control custom-select" name="auth_type" required>
                                                 <option value="">{% trans "Please Select Auth Type" %}</option>
-                                                <option value="no">{% trans "No Auth" %}</option>
+                                                <option value="no_auth">{% trans "No Auth" %}</option>
+                                                <option value="tls_server_client">{% trans "TLS with Server and Client Verification" %}</option>
+                                                <option value="tls_client_only">{% trans "TLS with Client Verification Only" %}</option>
+                                                <option value="tls_server_only">{% trans "TLS with Server Verification Only" %}</option>
+                                                <option value="tls_only">{% trans "TLS Only" %}</option>
                                             </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">{% trans "TLS CA Certificate" %}</label>
+                                            <textarea name="tls_ca_certificate" class="form-control"></textarea>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">{% trans "TLS Certificate" %}</label>
+                                            <textarea name="tls_certificate" class="form-control"></textarea>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">{% trans "TLS Key" %}</label>
+                                            <textarea name="tls_key" class="form-control"></textarea>
                                         </div>
                                     </div>
                                 </div>

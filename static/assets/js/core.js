@@ -261,7 +261,8 @@ kraven_app.host = (function (window, document, $) {
         el: {
             hostName : $('form#host_create input[name="name"]'),
             hostSlug : $('form#host_create input[name="slug"]'),
-            hostDelete: $('a.delete_host')
+            hostDelete: $('a.delete_host'),
+            authSwitcher: $('form#host_create select[name="auth_type"]')
         },
         init: function(){
             if( base.el.hostName.length ){
@@ -270,8 +271,47 @@ kraven_app.host = (function (window, document, $) {
             if( base.el.hostDelete.length ){
                 base.el.hostDelete.on("click", base.deleteHost);
             }
+            if( base.el.authSwitcher.length ){
+                base.authSwitcherActionInitial();
+                base.el.authSwitcher.on("change", base.authSwitcherAction);
+            }
         },
+        authSwitcherActionInitial: function(){
+            var _self = base.el.authSwitcher;
 
+            $('[name="tls_ca_certificate"]').closest('div.form-group').hide();
+            $('[name="tls_certificate"]').closest('div.form-group').hide();
+            $('[name="tls_key"]').closest('div.form-group').hide();
+
+            if( _self.val() == "tls_server_client"){
+                $('[name="tls_ca_certificate"]').closest('div.form-group').show();
+                $('[name="tls_certificate"]').closest('div.form-group').show();
+                $('[name="tls_key"]').closest('div.form-group').show();
+            }else if( _self.val() == "tls_client_only"){
+                $('[name="tls_certificate"]').closest('div.form-group').show();
+                $('[name="tls_key"]').closest('div.form-group').show();
+            }else if( _self.val() == "tls_server_only"){
+                $('[name="tls_ca_certificate"]').closest('div.form-group').show();
+            }
+        },
+        authSwitcherAction: function(event) {
+            var _self = $(this);
+
+            $('[name="tls_ca_certificate"]').closest('div.form-group').hide();
+            $('[name="tls_certificate"]').closest('div.form-group').hide();
+            $('[name="tls_key"]').closest('div.form-group').hide();
+
+            if( _self.val() == "tls_server_client"){
+                $('[name="tls_ca_certificate"]').closest('div.form-group').show();
+                $('[name="tls_certificate"]').closest('div.form-group').show();
+                $('[name="tls_key"]').closest('div.form-group').show();
+            }else if( _self.val() == "tls_client_only"){
+                $('[name="tls_certificate"]').closest('div.form-group').show();
+                $('[name="tls_key"]').closest('div.form-group').show();
+            }else if( _self.val() == "tls_server_only"){
+                $('[name="tls_ca_certificate"]').closest('div.form-group').show();
+            }
+        },
         deleteHost: function(event) {
             event.preventDefault();
 

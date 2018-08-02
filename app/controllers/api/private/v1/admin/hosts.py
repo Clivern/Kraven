@@ -43,7 +43,10 @@ class Hosts(View):
             "slug" : "",
             "server": "",
             "type": "",
-            "auth_type": ""
+            "auth_type": "",
+            "tls_ca_certificate": "",
+            "tls_certificate": "",
+            "tls_key": ""
         })
 
         self.__form.add_inputs({
@@ -96,8 +99,35 @@ class Hosts(View):
                 'value': request_data["auth_type"],
                 'validate': {
                     'any_of':{
-                        'param': [["no"]],
+                        'param': [["no_auth", "tls_server_client", "tls_client_only", "tls_server_only", "tls_only"]],
                         'error': _('Error! Auth type is invalid.')
+                    }
+                }
+            },
+            'tls_ca_certificate': {
+                'value': request_data["tls_ca_certificate"],
+                'validate': {
+                    'optional': {},
+                    'tls_certificate': {
+                        'error': _('Error! TLS CA Certificate is invalid.')
+                    }
+                }
+            },
+            'tls_certificate': {
+                'value': request_data["tls_certificate"],
+                'validate': {
+                    'optional': {},
+                    'tls_certificate': {
+                        'error': _('Error! TLS Certificate is invalid.')
+                    }
+                }
+            },
+            'tls_key': {
+                'value': request_data["tls_key"],
+                'validate': {
+                    'optional': {},
+                    'tls_certificate': {
+                        'error': _('Error! TLS Key is invalid.')
                     }
                 }
             }
@@ -121,7 +151,10 @@ class Hosts(View):
             "server": self.__form.get_input_value("server"),
             "type": self.__form.get_input_value("type"),
             "auth_data": self.__helpers.json_dumps({
-                "auth_type": self.__form.get_input_value("auth_type")
+                "auth_type": self.__form.get_input_value("auth_type"),
+                "tls_ca_certificate": self.__form.get_input_value("tls_ca_certificate"),
+                "tls_certificate": self.__form.get_input_value("tls_certificate"),
+                "tls_key": self.__form.get_input_value("tls_key")
             }),
             "user_id": self.__user_id
         })
@@ -174,7 +207,10 @@ class Host(View):
             "slug" : "",
             "server": "",
             "type": "",
-            "auth_type": ""
+            "auth_type": "",
+            "tls_ca_certificate": "",
+            "tls_certificate": "",
+            "tls_key": ""
         })
 
         self.__form.add_inputs({
@@ -227,8 +263,35 @@ class Host(View):
                 'value': request_data["auth_type"],
                 'validate': {
                     'any_of':{
-                        'param': [["no"]],
+                        'param': [["no_auth", "tls_server_client", "tls_client_only", "tls_server_only", "tls_only"]],
                         'error': _('Error! Auth type is invalid.')
+                    }
+                }
+            },
+            'tls_ca_certificate': {
+                'value': request_data["tls_ca_certificate"],
+                'validate': {
+                    'optional': {},
+                    'tls_certificate': {
+                        'error': _('Error! TLS CA Certificate is invalid.')
+                    }
+                }
+            },
+            'tls_certificate': {
+                'value': request_data["tls_certificate"],
+                'validate': {
+                    'optional': {},
+                    'tls_certificate': {
+                        'error': _('Error! TLS Certificate is invalid.')
+                    }
+                }
+            },
+            'tls_key': {
+                'value': request_data["tls_key"],
+                'validate': {
+                    'optional': {},
+                    'tls_certificate': {
+                        'error': _('Error! TLS Key is invalid.')
                     }
                 }
             }
@@ -251,7 +314,10 @@ class Host(View):
             "server": self.__form.get_input_value("server"),
             "type": self.__form.get_input_value("type"),
             "auth_data": self.__helpers.json_dumps({
-                "auth_type": self.__form.get_input_value("auth_type")
+                "auth_type": self.__form.get_input_value("auth_type"),
+                "tls_ca_certificate": self.__form.get_input_value("tls_ca_certificate"),
+                "tls_certificate": self.__form.get_input_value("tls_certificate"),
+                "tls_key": self.__form.get_input_value("tls_key")
             }),
             "user_id": self.__user_id
         })

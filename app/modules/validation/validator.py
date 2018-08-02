@@ -262,3 +262,7 @@ class Validator():
 
     def host_server(self):
         return True
+
+
+    def tls_certificate(self):
+        return True

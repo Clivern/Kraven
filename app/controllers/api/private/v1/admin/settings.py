@@ -51,7 +51,8 @@ class Settings(View):
             "google_analytics_account": "",
             "reset_mails_messages_count": "",
             "reset_mails_expire_after": "",
-            "access_tokens_expire_after": ""
+            "access_tokens_expire_after": "",
+            "prometheus_token": ""
         })
 
         self.__form.add_inputs({
@@ -104,6 +105,19 @@ class Settings(View):
                     'length_between':{
                         'param': [0, 300],
                         'error': _('Error! App description is very long.')
+                    },
+                    'optional': {}
+                }
+            },
+            "prometheus_token": {
+                'value': request_data["prometheus_token"],
+                'sanitize': {
+                    'strip': {}
+                },
+                'validate': {
+                    'length_between':{
+                        'param': [0, 100],
+                        'error': _('Error! Prometheus token is invalid.')
                     },
                     'optional': {}
                 }
@@ -181,7 +195,8 @@ class Settings(View):
             "google_analytics_account": self.__form.get_input_value("google_analytics_account"),
             "reset_mails_messages_count": self.__form.get_input_value("reset_mails_messages_count"),
             "reset_mails_expire_after": self.__form.get_input_value("reset_mails_expire_after"),
-            "access_tokens_expire_after": self.__form.get_input_value("access_tokens_expire_after")
+            "access_tokens_expire_after": self.__form.get_input_value("access_tokens_expire_after"),
+            "prometheus_token": self.__form.get_input_value("prometheus_token")
         })
 
         if result:

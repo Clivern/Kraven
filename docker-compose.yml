@@ -70,6 +70,7 @@ services:
     image: redis:3.2-alpine
     volumes:
       - redis_data:/data
+    restart: always
 
   rabbitmq:
     image: "rabbitmq:3-management"
@@ -80,6 +81,7 @@ services:
       NAME: "rabbitmq"
     volumes:
       - ./docker/rabbitmq/rabbitmq-isolated.conf:/etc/rabbitmq/rabbitmq.config
+    restart: always
 
 volumes:
   redis_data:

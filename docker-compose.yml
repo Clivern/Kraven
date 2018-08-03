@@ -1,10 +1,23 @@
 version: '3'
 
 services:
+  nginx:
+    image: nginx:1.15
+    ports:
+      - "80:80"
+    volumes:
+      - .:/code
+      - ./docker/nginx:/etc/nginx/conf.d
+    depends_on:
+      - web
+    restart: always
+    healthcheck:
+      test: "/bin/bash service nginx status || exit 1"
+      interval: 3s
+      timeout: 1s
+      retries: 5
   db:
     image: mysql:5.6
-    ports:
-      - "32000:3306"
     environment:
       - MYSQL_ROOT_PASSWORD=root
       - MYSQL_DATABASE=homestead
@@ -12,13 +25,21 @@ services:
       - MYSQL_PASSWORD=secret
       - MYSQL_ALLOW_EMPTY_PASSWORD=yes
     restart: always
+    healthcheck:
+      test: "/usr/bin/mysql --user=homestead --password=secret --execute \"SHOW DATABASES;\""
+      interval: 3s
+      timeout: 1s
+      retries: 5
   web:
     build: .
-    command: python3 manage.py runserver 0.0.0.0:8000
+    command: "gunicorn --bind 0.0.0.0:8000 app.wsgi"
     volumes:
       - .:/code
-    ports:
-      - "8000:8000"
     depends_on:
       - db
     restart: always
+    healthcheck:
+      test: "python3 manage.py health check"
+      interval: 3s
+      timeout: 1s
+      retries: 5

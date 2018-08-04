@@ -38,4 +38,3 @@ class Command(BaseCommand):
 
         if options['command'][0] == "check":
             print("Hello")
-            sys.exit(1)

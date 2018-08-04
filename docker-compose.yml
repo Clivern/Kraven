@@ -81,5 +81,24 @@ services:
       - ./docker/rabbitmq/rabbitmq-isolated.conf:/etc/rabbitmq/rabbitmq.config
     restart: always
 
+  prometheus:
+    image: prom/prometheus:v2.3.2
+    volumes:
+      - ./docker/prometheus:/etc/prometheus
+    command: "--config.file=/etc/prometheus/prometheus.yml"
+    ports:
+      - 9090:9090
+    depends_on:
+      - nginx
+    restart: always
+
+  grafana:
+    image: grafana/grafana
+    ports:
+      - "3000:3000"
+    depends_on:
+      - prometheus
+    restart: always
+
 volumes:
   redis_data:

@@ -65,7 +65,7 @@ urlpatterns = [
     path('register', Register_View.as_view(), name='app.web.register'),
     path('forgot-password', Forgot_Password_View.as_view(), name='app.web.forgot_password'),
     path('reset-password/<token>', Reset_Password_View.as_view(), name='app.web.reset_password'),
-    path('metric/<type>', Metric_View.as_view(), name='app.web.metric'),
+    path('metrics/<type>', Metric_View.as_view(), name='app.web.metrics'),
 
     # Authenticated Users Views
     path('admin/', include([

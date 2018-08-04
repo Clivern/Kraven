@@ -36,5 +36,5 @@ class Prometheus():
         data = ""
         if "comment" in item:
             data += "# %s\n" % item["comment"]
-        data += "%s %d %d\n" % (item["record"], item["count"], item["timestamp"])
+        data += "%s %d\n" % (item["record"], item["count"])
         return data

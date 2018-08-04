@@ -36,7 +36,6 @@ class Metric():
             "type": "count",
             "record": "%s_all_users" % self.__app_name,
             "count": self.__user_entity.count_all_users(),
-            "timestamp": time.time(),
             "comment": "Current All Users on System"
         }
 
@@ -46,7 +45,6 @@ class Metric():
             "type": "count",
             "record": "%s_all_profiles" % self.__app_name,
             "count": self.__profile_entity.count_all_profiles(),
-            "timestamp": time.time(),
             "comment": "Current All Profiles on System"
         }
 
@@ -56,7 +54,6 @@ class Metric():
             "type": "count",
             "record": "%s_all_tasks" % self.__app_name,
             "count": self.__task_entity.count_all_tasks(),
-            "timestamp": time.time(),
             "comment": "Current All Tasks on System"
         }
 
@@ -66,6 +63,5 @@ class Metric():
             "type": "count",
             "record": "%s_all_hosts" % self.__app_name,
             "count": self.__host_entity.count_all_hosts(),
-            "timestamp": time.time(),
             "comment": "Current All Hosts on System"
         }

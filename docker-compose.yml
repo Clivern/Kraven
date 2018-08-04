@@ -93,7 +93,7 @@ services:
     restart: always
 
   grafana:
-    image: grafana/grafana
+    image: grafana/grafana:5.2.2
     ports:
       - "3000:3000"
     depends_on:

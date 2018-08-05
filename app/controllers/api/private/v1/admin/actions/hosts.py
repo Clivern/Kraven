@@ -47,15 +47,7 @@ class Health_Check(View):
                 "message": _("Error! Invalid Request.")
             }]))
 
-        host = self.__host_module.get_one_by_id(self.__host_id)
-
-        if host == False:
-            return JsonResponse(self.__response.send_private_failure([{
-                "type": "error",
-                "message": _("Error! Invalid Request.")
-            }]))
-
-        health = self.__status.check_health(host.server)
+        health = self.__status.set_host(self.__host_id).ping()
 
         if health:
             return JsonResponse(self.__response.send_private_success([], {"status": "up"}))

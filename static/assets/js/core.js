@@ -1,4 +1,4 @@
-require(['jscookie', 'toastr', 'pace']);
+require(['jscookie', 'toastr', 'pace', 'vue', 'axios']);
 
 var kraven_app = kraven_app || {};
 
@@ -479,6 +479,32 @@ $(document).ready(function() {
             Pace.restart();
         });
     });
+
+
+    require(['vue', 'axios'], function(Vue, axios) {
+        vueApp = new Vue({
+            delimiters: ['${', '}'],
+            el: '#app',
+            data () {
+                return {
+                    info: null,
+                    items: [
+                        { no: '12', subject: "Carl" },
+                        { no: '13', subject: "Duck" }
+                    ]
+                }
+            },
+            mounted () {
+                axios
+                    .get('https://api.coindesk.com/v1/bpi/currentprice.json')
+                    .then(response => (this.info = response))
+            }
+        })
+        setInterval(function(){
+            vueApp._data.items.push({ no: '12', subject: "Carl" });
+        }, 1000);
+    });
+
 
     /** Constant div card */
     const DIV_CARD = 'div.card';

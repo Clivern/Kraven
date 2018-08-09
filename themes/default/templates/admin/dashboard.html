@@ -3,7 +3,7 @@
 {% load i18n %}
 
 {% block content %}
-    <div class="page-main">
+    <div class="page-main" id="app">
         {% include 'partials/top-menu.html' %}
         <div class="my-3 my-md-5">
             <div class="container">
@@ -11,6 +11,33 @@
                     <h1 class="page-title">
                         {% trans "Dashboard" %}
                     </h1>
+                </div>
+
+                <div class="row row-cards row-deck">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">Invoices</h3>
+                            </div>
+                            <div class="table-responsive">
+                                <table class="table card-table table-vcenter text-nowrap">
+                                    <thead>
+                                        <tr>
+                                            <th class="w-1">No.</th>
+                                            <th>Invoice Subject</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr v-for="item in items">
+                                            <td><span class="text-muted">${item.no}</span></td>
+                                            <td>${item.subject}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </div>

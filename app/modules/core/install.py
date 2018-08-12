@@ -9,19 +9,19 @@ from django.core.management import execute_from_command_line
 from app.modules.util.helpers import Helpers
 from app.modules.entity.option_entity import Option_Entity
 from app.modules.entity.user_entity import User_Entity
+from app.modules.core.acl import ACL
 
 
 class Install():
 
-    __option_entity = None
-    __user_entity = None
     __options = [
         {"key": "app_installed", "value": "true", "autoload": True},
         {"key": "app_description", "value": "", "autoload": False},
         {"key": "google_analytics_account", "value": "", "autoload": True},
         {"key": "reset_mails_messages_count", "value": "5", "autoload": False},
         {"key": "reset_mails_expire_after", "value": "24", "autoload": False},
-        {"key": "access_tokens_expire_after", "value": "48", "autoload": False}
+        {"key": "access_tokens_expire_after", "value": "48", "autoload": False},
+        {"key": "prometheus_token", "value": "", "autoload": False}
     ]
     __admin = {
         "username" : "",
@@ -31,14 +31,14 @@ class Install():
         "is_active": True,
         "is_staff": False
     }
-    __helpers = None
+    __option_entity = Option_Entity()
+    __user_entity = User_Entity()
+    __helpers = Helpers()
     __logger = None
+    __acl = ACL()
 
 
     def __init__(self):
-        self.__option_entity = Option_Entity()
-        self.__user_entity = User_Entity()
-        self.__helpers = Helpers()
         self.__logger = self.__helpers.get_logger(__name__)
 
 
@@ -58,6 +58,16 @@ class Install():
         self.__admin["password"] = password
 
 
+    def init_base_acl(self, user_id):
+        self.__acl.truncate_default_permissions();
+        self.__acl.new_role("super_admin")
+        self.__acl.new_role("normal_user")
+        self.__acl.new_permission("Manage Settings", self.__acl.get_content_type_id("auth", "user") , "manage_settings")
+        self.__acl.add_permission_to_role("super_admin", "manage_settings")
+        self.__acl.add_role_to_user("super_admin", user_id)
+        return True
+
+
     def install(self):
         try:
             execute_from_command_line(["manage.py", "migrate"])
@@ -67,5 +77,10 @@ class Install():
 
         status = True
         status &= self.__option_entity.insert_many(self.__options)
-        status &= (self.__user_entity.insert_one(self.__admin) != False)
+        user = self.__user_entity.insert_one(self.__admin)
+        status &= (user != False)
+
+        if user != False:
+            status &= self.init_base_acl(user.id)
+
         return status

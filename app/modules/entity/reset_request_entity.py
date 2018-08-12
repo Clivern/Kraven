@@ -3,7 +3,7 @@ Reset Request Entity Module
 """
 
 # standard library
-import datetime
+from datetime import datetime
 from datetime import timedelta
 
 # Django

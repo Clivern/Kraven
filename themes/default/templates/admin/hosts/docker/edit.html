@@ -1,0 +1,79 @@
+{% extends 'layouts/base.html' %}
+{% load staticfiles %}
+{% load i18n %}
+
+{% block content %}
+    <div class="page-main">
+        {% include 'partials/top-menu.html' %}
+        <div class="my-3 my-md-5">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12">
+                        <form id="host_create" class="card _endpoint_connect" onsubmit="return false" action="{% url 'app.api.private.v1.admin.host.endpoint' host.id %}" method="post"data-succ-type="redirect" data-succ-url="{% url 'app.web.admin.hosts.list' %}" data-succ-wait="3000">
+                            {% csrf_token %}
+                            <div class="card-status bg-green"></div>
+                            <div class="card-header">
+                                <h3 class="card-title">{% trans "Host" %}</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-12 col-lg-12">
+                                        <div class="form-group">
+                                            <label class="form-label">{% trans "Name" %}</label>
+                                            <input type="text" class="form-control" name="name" value="{{ host.name }}" placeholder="My Dock" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">{% trans "Slug" %}</label>
+                                            <input type="text" class="form-control" name="slug" value="{{ host.slug }}" placeholder="my-dock" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">{% trans "Server" %}</label>
+                                            <input type="text" class="form-control" name="server" value="{{ host.server }}" placeholder="tcp://127.0.0.1:1234" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">{% trans "Type" %}</label>
+                                            <select class="form-control custom-select" name="type" required>
+                                                <option value="">{% trans "Please Select a Type" %}</option>
+                                                <option value="docker" {% if host.type == 'docker' %}selected{% endif %}>{% trans "Docker" %}</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">{% trans "Auth Type" %}</label>
+                                            <select class="form-control custom-select" name="auth_type" required>
+                                                <option value="">{% trans "Please Select Auth Type" %}</option>
+                                                <option value="no_auth" {% if host.auth_data.auth_type == 'no_auth' %}selected{% endif %}>{% trans "No Auth" %}</option>
+                                                <option value="tls_server_client" {% if host.auth_data.auth_type == 'tls_server_client' %}selected{% endif %}>{% trans "TLS with Server and Client Verification" %}</option>
+                                                <option value="tls_client_only" {% if host.auth_data.auth_type == 'tls_client_only' %}selected{% endif %}>{% trans "TLS with Client Verification Only" %}</option>
+                                                <option value="tls_server_only" {% if host.auth_data.auth_type == 'tls_server_only' %}selected{% endif %}>{% trans "TLS with Server Verification Only" %}</option>
+                                                <option value="tls_only" {% if host.auth_data.auth_type == 'tls_only' %}selected{% endif %}>{% trans "TLS Only" %}</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">{% trans "TLS CA Certificate" %}</label>
+                                            <textarea name="tls_ca_certificate" class="form-control">{{ host.auth_data.tls_ca_certificate }}</textarea>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">{% trans "TLS Certificate" %}</label>
+                                            <textarea name="tls_certificate" class="form-control">{{ host.auth_data.tls_certificate }}</textarea>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">{% trans "TLS Key" %}</label>
+                                            <textarea name="tls_key" class="form-control">{{ host.auth_data.tls_key }}</textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-footer text-right">
+                                <div class="d-flex">
+                                    <button type="submit" class="btn btn-primary ml-auto">{% trans "Save" %}</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% include 'partials/bottom-menu.html' %}
+
+{% endblock %}

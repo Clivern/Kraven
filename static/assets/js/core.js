@@ -1,4 +1,4 @@
-require(['jscookie', 'toastr', 'pace']);
+require(['jscookie', 'toastr', 'pace', 'vue', 'axios']);
 
 var kraven_app = kraven_app || {};
 
@@ -248,6 +248,214 @@ kraven_app.profile = (function (window, document, $) {
 })(window, document, jQuery);
 
 
+
+/**
+ * Host Endpoints
+ */
+kraven_app.host = (function (window, document, $) {
+
+    'use strict';
+
+    var base = {
+
+        el: {
+            hostName : $('form#host_create input[name="name"]'),
+            hostSlug : $('form#host_create input[name="slug"]'),
+            hostDelete: $('a.delete_host'),
+            authSwitcher: $('form#host_create select[name="auth_type"]')
+        },
+        init: function(){
+            if( base.el.hostName.length ){
+                base.el.hostName.on("change", base.hostNameChange);
+            }
+            if( base.el.hostDelete.length ){
+                base.el.hostDelete.on("click", base.deleteHost);
+            }
+            if( base.el.authSwitcher.length ){
+                base.authSwitcherActionInitial();
+                base.el.authSwitcher.on("change", base.authSwitcherAction);
+            }
+        },
+        authSwitcherActionInitial: function(){
+            var _self = base.el.authSwitcher;
+
+            $('[name="tls_ca_certificate"]').closest('div.form-group').hide();
+            $('[name="tls_certificate"]').closest('div.form-group').hide();
+            $('[name="tls_key"]').closest('div.form-group').hide();
+
+            if( _self.val() == "tls_server_client"){
+                $('[name="tls_ca_certificate"]').closest('div.form-group').show();
+                $('[name="tls_certificate"]').closest('div.form-group').show();
+                $('[name="tls_key"]').closest('div.form-group').show();
+            }else if( _self.val() == "tls_client_only"){
+                $('[name="tls_certificate"]').closest('div.form-group').show();
+                $('[name="tls_key"]').closest('div.form-group').show();
+            }else if( _self.val() == "tls_server_only"){
+                $('[name="tls_ca_certificate"]').closest('div.form-group').show();
+            }
+        },
+        authSwitcherAction: function(event) {
+            var _self = $(this);
+
+            $('[name="tls_ca_certificate"]').closest('div.form-group').hide();
+            $('[name="tls_certificate"]').closest('div.form-group').hide();
+            $('[name="tls_key"]').closest('div.form-group').hide();
+
+            if( _self.val() == "tls_server_client"){
+                $('[name="tls_ca_certificate"]').closest('div.form-group').show();
+                $('[name="tls_certificate"]').closest('div.form-group').show();
+                $('[name="tls_key"]').closest('div.form-group').show();
+            }else if( _self.val() == "tls_client_only"){
+                $('[name="tls_certificate"]').closest('div.form-group').show();
+                $('[name="tls_key"]').closest('div.form-group').show();
+            }else if( _self.val() == "tls_server_only"){
+                $('[name="tls_ca_certificate"]').closest('div.form-group').show();
+            }
+        },
+        deleteHost: function(event) {
+            event.preventDefault();
+
+            if( !confirm(_i18n.confirm_msg) ){
+                return false;
+            }
+
+            var _self = $(this);
+            _self.attr('disabled', 'disabled');
+            require(['pace', 'jscookie'], function(Pace, Cookies) {
+                Pace.track(function(){
+                    $.ajax({
+                      method: "DELETE",
+                      url: _self.attr('data-url') + "?csrfmiddlewaretoken=" + Cookies.get('csrftoken'),
+                      data: { "csrfmiddlewaretoken": Cookies.get('csrftoken') }
+                    }).done(function( response ) {
+                        if( response.status == "success" ){
+                            base.success(response.messages);
+                            _self.closest("tr").remove();
+                        }else{
+                            base.error(response.messages);
+                        }
+                    });
+                });
+            });
+        },
+
+        hostNameChange: function(event) {
+            event.preventDefault();
+            base.el.hostSlug.val(base.slugify(base.el.hostName.val()))
+        },
+        slugify: function(text) {
+          return text.toString().toLowerCase()
+            .replace(/\s+/g, '-')           // Replace spaces with -
+            .replace(/[^\w\-]+/g, '')       // Remove all non-word chars
+            .replace(/\-\-+/g, '-')         // Replace multiple - with single -
+            .replace(/^-+/, '')             // Trim - from start of text
+            .replace(/-+$/, '');            // Trim - from end of text
+        },
+        success : function(messages){
+            for(var messageObj of messages) {
+                require(['toastr'], function(toastr) {
+                    toastr.clear();
+                    toastr.success(messageObj.message);
+                });
+                break;
+            }
+        },
+        error : function(messages){
+            for(var messageObj of messages) {
+                require(['toastr'], function(toastr) {
+                    toastr.clear();
+                    toastr.error(messageObj.message);
+                });
+                break;
+            }
+        }
+    };
+
+   return {
+        init: base.init
+    };
+
+})(window, document, jQuery);
+
+
+
+kraven_app.host_health_check_action =  (function (window, document, $) {
+
+    'use strict';
+
+    var base = {
+
+        el: {
+            healthIndicator : $('[data-action="host_health_check"]')
+        },
+        init: function(){
+            if( base.el.healthIndicator.length ){
+                base.healthCheck();
+            }
+        },
+        healthCheck: function() {
+            base.el.healthIndicator.each(function( index ) {
+                var _self = $(this);
+                setTimeout(function(){
+                    require(['pace', 'jscookie'], function(Pace, Cookies) {
+                        Pace.track(function(){
+                            $.ajax({
+                              method: "GET",
+                              url: _self.attr('data-action-url') + "?csrfmiddlewaretoken=" + Cookies.get('csrftoken'),
+                              data: {}
+                            }).done(function( response ) {
+                                if( response.status == "success" ){
+                                    if( response.payload.status == "up" ){
+                                        _self.removeClass("btn-loading");
+                                        _self.removeClass("avatar-yellow");
+                                        _self.addClass("avatar-green");
+                                        _self.find("i").removeClass("fe-refresh-ccw").addClass("fe-check");
+                                    }else{
+                                        _self.removeClass("btn-loading");
+                                        _self.removeClass("avatar-yellow");
+                                        _self.addClass("avatar-red");
+                                        _self.find("i").removeClass("fe-refresh-ccw").addClass("fe-x");
+                                    }
+                                }else{
+                                    _self.removeClass("btn-loading");
+                                    _self.find("i").removeClass("fe-refresh-ccw").addClass("fe fe-alert-circle");
+                                    base.error(response.messages);
+                                }
+                            });
+                        });
+                    });
+
+                 }, (index + 1) * 1500, _self);
+            });
+        },
+        success : function(messages){
+            for(var messageObj of messages) {
+                require(['toastr'], function(toastr) {
+                    toastr.clear();
+                    toastr.success(messageObj.message);
+                });
+                break;
+            }
+        },
+        error : function(messages){
+            for(var messageObj of messages) {
+                require(['toastr'], function(toastr) {
+                    toastr.clear();
+                    toastr.error(messageObj.message);
+                });
+                break;
+            }
+        }
+    };
+
+   return {
+        init: base.init
+    };
+
+})(window, document, jQuery);
+
+
+
 /**
  *
  */
@@ -272,11 +480,39 @@ $(document).ready(function() {
         });
     });
 
+
+    require(['vue', 'axios'], function(Vue, axios) {
+        vueApp = new Vue({
+            delimiters: ['${', '}'],
+            el: '#app',
+            data () {
+                return {
+                    info: null,
+                    items: [
+                        { no: '12', subject: "Carl" },
+                        { no: '13', subject: "Duck" }
+                    ]
+                }
+            },
+            mounted () {
+                axios
+                    .get('https://api.coindesk.com/v1/bpi/currentprice.json')
+                    .then(response => (this.info = response))
+            }
+        })
+        setInterval(function(){
+            vueApp._data.items.push({ no: '12', subject: "Carl" });
+        }, 1000);
+    });
+
+
     /** Constant div card */
     const DIV_CARD = 'div.card';
 
     kraven_app.endpoint_connect.init();
     kraven_app.profile.init();
+    kraven_app.host.init();
+    kraven_app.host_health_check_action.init();
 
     require(['jscookie'], function(Cookies) {
         $.ajaxSetup({

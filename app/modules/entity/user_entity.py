@@ -143,3 +143,7 @@ class User_Entity():
             user.save()
             return True
         return False
+
+
+    def count_all_users(self):
+        return User.objects.count()

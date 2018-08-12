@@ -1,0 +1,82 @@
+{% extends 'layouts/base.html' %}
+{% load staticfiles %}
+{% load i18n %}
+
+
+{% block content %}
+    <div class="page-main">
+        {% include 'partials/top-menu.html' %}
+        <div class="my-3 my-md-5">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">{% trans "Hosts" %}</h3>
+                                <div class="card-options">
+                                    <a href="{% url 'app.web.admin.hosts.create' %}" class="btn btn-secondary btn-sm"><i class="fe fe-plus mr-2"></i> {% trans "New Host" %}</a>
+                                </div>
+                            </div>
+                            <div class="table-responsive">
+                                <table class="table card-table table-vcenter text-nowrap">
+                                    <thead>
+                                        <tr>
+                                            <th>{% trans "Host Name" %}</th>
+                                            <th>{% trans "Type" %}</th>
+                                            <th>{% trans "Created" %}</th>
+                                            <th class="text-center">{% trans "Status" %}</th>
+                                            <th></th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% if hosts %}
+                                            {% for host in hosts %}
+                                                <tr>
+                                                    <td><a href="{% url 'app.web.admin.hosts.view' host.slug %}" class="text-inherit">{{ host.name }}</a></td>
+                                                    <td>
+                                                        {{ host.type|title }}
+                                                    </td>
+                                                    <td>
+                                                        {{ host.created_at }}
+                                                    </td>
+                                                    <td class="text-center">
+                                                        <span data-action="host_health_check" data-action-url="{% url 'app.api.private.v1.admin.action.host.health_check.endpoint' host.id %}" class="avatar avatar-yellow btn-loading"><i class="fe fe-refresh-ccw"></i></span>
+                                                    </td>
+                                                    <td colspan="2" class="text-right">
+                                                        <a href="{% url 'app.web.admin.hosts.view' host.slug %}" class="btn btn-secondary btn-sm">{% trans "Manage" %}</a>
+                                                        <div class="dropdown">
+                                                            <button class="btn btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown">{% trans "Actions" %}</button>
+                                                            <div class="dropdown-menu dropdown-menu-right">
+                                                                <a href="{% url 'app.web.admin.hosts.edit' host.slug %}" class="dropdown-item">
+                                                                    <i class="dropdown-icon fe fe-edit"></i> {% trans "Edit" %}
+                                                                </a>
+                                                                <a href="javascript:void(0)" data-url="{% url 'app.api.private.v1.admin.host.endpoint' host.id %}" class="dropdown-item delete_host">
+                                                                    <i class="dropdown-icon fe fe-trash"></i> {% trans "Delete" %}
+                                                                </a>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            {% endfor %}
+                                        {% else %}
+                                            <tr>
+                                                <td colspan="6" class="text-center small text-muted">
+                                                    <br/>
+                                                    {% trans "You miss a lot of fun, create some hosts!" %}
+                                                </td>
+                                            </tr>
+                                        {% endif %}
+                                    </tbody>
+                                </table>
+                                <br/><br/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% include 'partials/bottom-menu.html' %}
+
+{% endblock %}

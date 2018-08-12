@@ -1,0 +1,85 @@
+{% extends 'layouts/base.html' %}
+{% load staticfiles %}
+{% load i18n %}
+
+
+{% block content %}
+    <div class="page-main">
+        {% include 'partials/top-menu.html' %}
+        <div class="my-3 my-md-5">
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-6 col-lg-3">
+                        <div class="card">
+                            <table class="table card-table">
+                                <tbody>
+                                    <tr>
+                                        <td width="1"><i class="fe fe-rss text-muted"></i></td>
+                                        <td>
+                                            <a href="{% url 'app.web.admin.hosts.view' host.slug %}">{% trans "Statistics" %}</a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><i class="fe fe-layers text-muted"></i></td>
+                                        <td>
+                                            <a href="{% url 'app.web.admin.hosts.view.containers' host.slug %}">{% trans "Containers" %}</a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><i class="fe fe-circle text-muted"></i></td>
+                                        <td>
+                                            <a href="{% url 'app.web.admin.hosts.view.images' host.slug %}">{% trans "Images" %}</a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><i class="fe fe-shield text-muted"></i></td>
+                                        <td>
+                                            <a href="{% url 'app.web.admin.hosts.view.networks' host.slug %}">{% trans "Networks" %}</a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><i class="fe fe-cpu text-muted"></i></td>
+                                        <td>
+                                            <a href="{% url 'app.web.admin.hosts.view.services' host.slug %}">{% trans "Services" %}</a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><i class="fe fe-hard-drive text-muted"></i></td>
+                                        <td>
+                                            <a href="{% url 'app.web.admin.hosts.view.volumes' host.slug %}">{% trans "Volumes" %}</a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><i class="fe fe-activity text-muted"></i></td>
+                                        <td>
+                                            <a href="{% url 'app.web.admin.hosts.view.activity' host.slug %}">{% trans "Activity" %}</a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-lg-9">
+                        {% if screen == "main" %}
+                            {% include 'templates/admin/hosts/docker/partials/main.html' %}
+                        {% elif screen == "containers" %}
+                            {% include 'templates/admin/hosts/docker/partials/containers.html' %}
+                        {% elif screen == "images" %}
+                            {% include 'templates/admin/hosts/docker/partials/images.html' %}
+                        {% elif screen == "networks" %}
+                            {% include 'templates/admin/hosts/docker/partials/networks.html' %}
+                        {% elif screen == "services" %}
+                            {% include 'templates/admin/hosts/docker/partials/services.html' %}
+                        {% elif screen == "volumes" %}
+                            {% include 'templates/admin/hosts/docker/partials/volumes.html' %}
+                        {% elif screen == "activity" %}
+                            {% include 'templates/admin/hosts/docker/partials/activity.html' %}
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% include 'partials/bottom-menu.html' %}
+
+{% endblock %}

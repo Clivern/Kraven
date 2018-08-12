@@ -1,10 +1,12 @@
-FROM python:3
+FROM python:3.6
 
-RUN mkdir /kraven
-WORKDIR /kraven
-ADD . /kraven
+ENV PYTHONUNBUFFERED 1
+RUN mkdir /code
 
-RUN pip install --upgrade pip
+WORKDIR /code
+
+ADD requirements.txt /code/
+
 RUN pip install -r requirements.txt
 
-CMD [ "python", "./manage.py runserver 0.0.0.0:8000"]
+ADD . /code/

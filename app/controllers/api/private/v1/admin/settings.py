@@ -16,6 +16,7 @@ from app.modules.util.helpers import Helpers
 from app.modules.core.request import Request
 from app.modules.core.response import Response
 from app.modules.core.settings import Settings as Settings_Module
+from app.modules.core.acl import ACL
 
 
 class Settings(View):
@@ -26,6 +27,7 @@ class Settings(View):
     __form = Form()
     __settings_module = Settings_Module()
     __logger = None
+    __acl = ACL()
 
 
     def __init__(self):
@@ -33,6 +35,12 @@ class Settings(View):
 
 
     def post(self, request):
+
+        if not self.__acl.user_has_permission(request.user.id, "manage_settings"):
+            return JsonResponse(self.__response.send_private_failure([{
+                "type": "error",
+                "message": _("Error! Invalid Request.")
+            }]))
 
         self.__request.set_request(request)
         request_data = self.__request.get_request_data("post", {
@@ -43,7 +51,8 @@ class Settings(View):
             "google_analytics_account": "",
             "reset_mails_messages_count": "",
             "reset_mails_expire_after": "",
-            "access_tokens_expire_after": ""
+            "access_tokens_expire_after": "",
+            "prometheus_token": ""
         })
 
         self.__form.add_inputs({
@@ -96,6 +105,19 @@ class Settings(View):
                     'length_between':{
                         'param': [0, 300],
                         'error': _('Error! App description is very long.')
+                    },
+                    'optional': {}
+                }
+            },
+            "prometheus_token": {
+                'value': request_data["prometheus_token"],
+                'sanitize': {
+                    'strip': {}
+                },
+                'validate': {
+                    'length_between':{
+                        'param': [0, 100],
+                        'error': _('Error! Prometheus token is invalid.')
                     },
                     'optional': {}
                 }
@@ -173,7 +195,8 @@ class Settings(View):
             "google_analytics_account": self.__form.get_input_value("google_analytics_account"),
             "reset_mails_messages_count": self.__form.get_input_value("reset_mails_messages_count"),
             "reset_mails_expire_after": self.__form.get_input_value("reset_mails_expire_after"),
-            "access_tokens_expire_after": self.__form.get_input_value("access_tokens_expire_after")
+            "access_tokens_expire_after": self.__form.get_input_value("access_tokens_expire_after"),
+            "prometheus_token": self.__form.get_input_value("prometheus_token")
         })
 
         if result:

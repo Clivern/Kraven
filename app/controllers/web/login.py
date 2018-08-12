@@ -6,6 +6,7 @@ Login Web Controller
 import os
 
 # Django
+from django.shortcuts import reverse
 from django.views import View
 from django.shortcuts import render
 from django.http import HttpResponse
@@ -33,5 +34,14 @@ class Login(View):
         self.__context.push({
             "page_title": _("Login · %s") % self.__context.get("app_name", os.getenv("APP_NAME", "Kraven"))
         })
+
+        if "redirect" in request.GET:
+            self.__context.push({
+                "redirect_url": request.GET["redirect"]
+            })
+        else:
+            self.__context.push({
+                "redirect_url": reverse("app.web.admin.dashboard")
+            })
 
         return render(request, self.template_name, self.__context.get())

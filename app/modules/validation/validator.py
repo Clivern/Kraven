@@ -248,3 +248,21 @@ class Validator():
     def numeric(self):
         regex = re.compile('^[0-9]+$')
         return bool(regex.match(self.__input))
+
+
+    def host_slug(self):
+        regex = re.compile('^[a-z0-9-_]+$')
+        return bool(regex.match(self.__input))
+
+
+    def host_name(self):
+        regex = re.compile('^[a-zA-Z0-9-_\s]+$')
+        return bool(regex.match(self.__input))
+
+
+    def host_server(self):
+        return True
+
+
+    def tls_certificate(self):
+        return True

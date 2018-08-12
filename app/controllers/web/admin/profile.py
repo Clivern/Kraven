@@ -15,6 +15,7 @@ from django.utils.translation import gettext as _
 # local Django
 from app.modules.core.context import Context
 from app.modules.core.profile import Profile
+from app.modules.core.decorators import login_if_not_authenticated
 
 
 class Profile(View):
@@ -25,6 +26,7 @@ class Profile(View):
     __user_id = None
 
 
+    @login_if_not_authenticated
     def get(self, request):
 
         self.__user_id = request.user.id

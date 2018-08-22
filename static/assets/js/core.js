@@ -456,6 +456,79 @@ kraven_app.host_health_check_action =  (function (window, document, $) {
 
 
 
+kraven_app.load_tabular_data = function(Vue, axios){
+    return new Vue({
+        delimiters: ['${', '}'],
+        el: '#app',
+        data () {
+            return {
+                info: null,
+                items: [
+                    { no: '12', subject: "Carl" },
+                    { no: '13', subject: "Duck" }
+                ],
+                isDimmerActive: true,
+                errored: false
+            }
+        },
+        mounted () {
+            axios
+                .get('https://api.coindesk.com/v1/bpi/currentprice.json')
+                .then(response => {
+                    this.info = response
+                })
+                .catch(error => {
+                    console.log(error)
+                    this.errored = true
+                })
+                .finally(() => this.isDimmerActive = false)
+        }
+    });
+}
+
+
+kraven_app.notifications = function(Vue, axios){
+    return new Vue({
+        delimiters: ['${', '}'],
+        el: '#app_notifications',
+        data () {
+            return {
+                notification_status: 'read',
+                notifications: []
+            }
+        },
+        mounted () {
+            this.fetch();
+            setInterval(function(){ this.fetch() }.bind(this), 3000)
+        },
+        methods:{
+            fetch () {
+                axios.get(app_globals.notifications_endpoint)
+                    .then(response => {
+                        this.notifications = response.data.payload.notifications;
+                        this.notification_status = response.data.payload.status;
+                    })
+                    .catch(error => {
+                        console.log(error)
+                    })
+                    .finally(() => console.log("Done!"))
+            },
+            mouseOver (id, delivered){
+                if (delivered == false){
+                    const params = new URLSearchParams();
+                    params.append('notification_id', id);
+                    axios({
+                      method: 'post',
+                      url: app_globals.notifications_endpoint,
+                      data: params
+                    });
+                }
+            }
+        }
+    });
+}
+
+
 /**
  *
  */
@@ -481,28 +554,12 @@ $(document).ready(function() {
     });
 
 
-    require(['vue', 'axios'], function(Vue, axios) {
-        vueApp = new Vue({
-            delimiters: ['${', '}'],
-            el: '#app',
-            data () {
-                return {
-                    info: null,
-                    items: [
-                        { no: '12', subject: "Carl" },
-                        { no: '13', subject: "Duck" }
-                    ]
-                }
-            },
-            mounted () {
-                axios
-                    .get('https://api.coindesk.com/v1/bpi/currentprice.json')
-                    .then(response => (this.info = response))
-            }
-        })
-        setInterval(function(){
-            vueApp._data.items.push({ no: '12', subject: "Carl" });
-        }, 1000);
+    require(['vue', 'axios', 'jscookie'], function(Vue, axios, Cookies) {
+        axios.defaults.headers.common = {
+            'X-Requested-With': 'XMLHttpRequest',
+            'X-CSRFToken' : Cookies.get('csrftoken')
+        };
+        kraven_app.notifications(Vue, axios);
     });
 
 

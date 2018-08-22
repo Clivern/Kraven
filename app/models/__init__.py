@@ -10,3 +10,4 @@ from .reset_request import Reset_Request
 from .host import Host
 from .host_meta import Host_Meta
 from .task import Task
+from .notification import Notification

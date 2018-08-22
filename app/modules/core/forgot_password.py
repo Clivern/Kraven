@@ -15,7 +15,6 @@ from app.modules.util.helpers import Helpers
 from app.modules.entity.user_entity import User_Entity
 from app.modules.entity.option_entity import Option_Entity
 from app.modules.entity.reset_request_entity import Reset_Request_Entity
-from app.tasks import forgot_password_email
 from app.modules.core.task import Task as Task_Core
 
 
@@ -98,7 +97,7 @@ class Forgot_Password():
         app_url = self.__option_entity.get_value_by_key("app_url")
         user = self.__user_entity.get_one_by_email(email);
 
-        parameters = {
+        return self.__task_core.delay("forgot_password_email", {
             "app_name": app_name,
             "app_email": app_email,
             "app_url": app_url,
@@ -107,20 +106,20 @@ class Forgot_Password():
             "subject": _("%s Password Reset") % (app_name),
             "template": "mails/reset_password.html",
             "fail_silently": False
-        }
+        }, user.id)
 
-        task_result = forgot_password_email.delay(**parameters)
 
-        if task_result.task_id != "":
 
-            return self.__task_core.create_task({
-                "name": "Password Reset",
-                "uuid": task_result.task_id,
-                "status": "pending",
-                "executor": "app.tasks.forgot_password_email",
-                "parameters": json.dumps(parameters),
-                "result": '{}',
-                "user_id": user.id
-            }) != False
 
-        return False
+
+
+
+
+
+
+
+
+
+
+
+

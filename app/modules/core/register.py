@@ -3,14 +3,18 @@ Register Module
 """
 
 # local Django
+from django.shortcuts import reverse
 from app.modules.util.helpers import Helpers
 from app.modules.entity.option_entity import Option_Entity
 from app.modules.entity.user_entity import User_Entity
+from app.modules.entity.notification_entity import Notification_Entity
 from app.modules.core.acl import ACL
+from django.utils.translation import gettext as _
 
 
 class Register():
 
+    __notification_entity = None
     __option_entity = None
     __user_entity = None
     __helpers = None
@@ -22,6 +26,7 @@ class Register():
         self.__option_entity = Option_Entity()
         self.__user_entity = User_Entity()
         self.__helpers = Helpers()
+        self.__notification_entity = Notification_Entity()
         self.__logger = self.__helpers.get_logger(__name__)
 
 
@@ -49,6 +54,16 @@ class Register():
 
         if user != False:
             self.__acl.add_role_to_user("normal_user", user.id)
+            self.__notification_entity.insert_one({
+                "highlight": "$APP_NAME",
+                "notification": _("Welcome, Hurry up and create your first host!"),
+                "url": reverse('app.web.admin.hosts.list'),
+                "type": "message",
+                "delivered": False,
+                "user_id": user.id,
+                "task_id": None,
+                "host_id": None
+            })
 
         status &= ( user != False)
 

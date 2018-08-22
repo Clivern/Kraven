@@ -2,6 +2,11 @@
 Task Module
 """
 
+# standard library
+import json
+import importlib
+from datetime import timedelta
+
 # local Django
 from app.modules.util.helpers import Helpers
 from app.modules.entity.task_entity import Task_Entity
@@ -24,3 +29,24 @@ class Task():
 
     def create_task(self, task):
         return self.__task_entity.insert_one(task)
+
+
+    def delay(self, task_name, parameters, user_id):
+
+        tasks_module = importlib.import_module("app.tasks")
+        task_object = getattr(tasks_module, task_name)
+
+        task_result = task_object.delay(**parameters)
+
+        if task_result.task_id != "":
+
+            return self.create_task({
+                "uuid": task_result.task_id,
+                "status": "pending",
+                "executor": task_object.name,
+                "parameters": json.dumps(parameters),
+                "result": '{}',
+                "user_id": user_id
+            })
+
+        return False

@@ -5,6 +5,7 @@ see https://docs.djangoproject.com/en/2.0/howto/custom-management-commands/
 """
 
 # standard library
+import io
 import os
 import sys
 
@@ -35,6 +36,5 @@ class Command(BaseCommand):
         if len(options['command']) == 0 or options['command'][0] not in self.available:
             raise CommandError('Command Does not exist! Please use one of the following: python manage.py health [%s]' % ", ".join(self.available))
 
-
         if options['command'][0] == "check":
-            print("Hello")
+            print("Nice!")

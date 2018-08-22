@@ -18,6 +18,7 @@ from app.modules.core.response import Response
 from app.modules.core.host import Host as Host_Module
 from app.modules.service.docker.status import Status
 from app.modules.core.task import Task as Task_Core
+from app.modules.core.notification import Notification as Notification_Core
 
 
 class Health_Check(View):

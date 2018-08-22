@@ -60,6 +60,13 @@ class Notification():
         return result
 
 
+    def update_task_notification(self, task_id, type, delivered=False):
+        return self.__notification_entity.update_one_by_task_id(task_id, {
+            "type": type,
+            "delivered": delivered
+        })
+
+
     def mark_notification(self, user_id, notification_id):
         if self.__notification_entity.get_one_by_id_and_user(notification_id, user_id):
             return self.__notification_entity.update_one_by_id(notification_id, {"delivered": True})

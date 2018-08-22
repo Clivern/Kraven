@@ -49,6 +49,15 @@ class Notification_Entity():
             return False
 
 
+    def get_one_by_task_id(self, task_id):
+        """Get Notification By Task ID"""
+        try:
+            notification = Notification.objects.get(task=task_id)
+            return False if notification.pk is None else notification
+        except:
+            return False
+
+
     def get_many_by_user(self, user_id, order_by, asc, count=5):
         """Get Many Notifications By User ID"""
         notifications = Notification.objects.filter(user=user_id).order_by(order_by if asc else "-%s" % order_by)[:count]
@@ -74,6 +83,46 @@ class Notification_Entity():
 
             if "delivered" in new_data:
                 notification.delivered = new_data["delivered"]
+
+            if "user_id" in new_data:
+                notification.user = User.objects.get(pk=new_data["user_id"])
+
+            if "task_id" in new_data:
+                notification.task = Task.objects.get(pk=notification["task_id"]) if notification["task_id"] != None else notification["task_id"]
+
+            if "host_id" in new_data:
+                notification.host = Host.objects.get(pk=notification["host_id"]) if notification["host_id"] != None else notification["host_id"]
+
+            notification.save()
+            return True
+        return False
+
+
+    def update_one_by_task_id(self, task_id, new_data):
+        notification = self.get_one_by_task_id(task_id)
+
+        if notification != False:
+
+            if "highlight" in new_data:
+                notification.highlight = new_data["highlight"]
+
+            if "notification" in new_data:
+                notification.notification = new_data["notification"]
+
+            if "url" in new_data:
+                notification.url = new_data["url"]
+
+            if "type" in new_data:
+                notification.type = new_data["type"]
+
+            if "delivered" in new_data:
+                notification.delivered = new_data["delivered"]
+
+            if "created_at" in new_data:
+                notification.created_at = new_data["created_at"]
+
+            if "updated_at" in new_data:
+                notification.updated_at = new_data["updated_at"]
 
             if "user_id" in new_data:
                 notification.user = User.objects.get(pk=new_data["user_id"])

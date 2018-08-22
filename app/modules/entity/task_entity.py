@@ -15,7 +15,6 @@ class Task_Entity():
     def insert_one(self, task):
         """Insert Task"""
         task = Task(
-            name=task["name"],
             uuid=task["uuid"],
             status=task["status"],
             executor=task["executor"],
@@ -64,9 +63,6 @@ class Task_Entity():
         task = self.get_one_by_id(id)
         if task != False:
 
-            if "name" in new_data:
-                task.name = new_data["name"]
-
             if "uuid" in new_data:
                 task.uuid = new_data["uuid"]
 
@@ -94,9 +90,6 @@ class Task_Entity():
         """Update Task By UUID"""
         task = self.get_one_by_uuid(uuid)
         if task != False:
-
-            if "name" in new_data:
-                task.name = new_data["name"]
 
             if "uuid" in new_data:
                 task.uuid = new_data["uuid"]

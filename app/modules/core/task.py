@@ -23,6 +23,10 @@ class Task():
         self.__logger = self.__helpers.get_logger(__name__)
 
 
+    def get_task_with_uuid(self, uuid):
+        return self.__task_entity.get_one_by_uuid(uuid)
+
+
     def update_task_with_uuid(self, uuid, task):
         return self.__task_entity.update_one_by_uuid(uuid, task)
 

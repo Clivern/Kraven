@@ -8,3 +8,4 @@ jsonschema==2.6.0
 docker==3.4.1
 celery==4.2.1
 redis==2.10.6
+cryptography==2.3.1

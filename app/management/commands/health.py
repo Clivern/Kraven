@@ -13,9 +13,6 @@ import sys
 from django.core.management import utils
 from django.core.management.base import BaseCommand, CommandError
 
-# local Django
-from app.settings.info import *
-
 
 class Command(BaseCommand):
 

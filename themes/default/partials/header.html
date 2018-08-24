@@ -14,7 +14,9 @@
     </script>
 {% endif %}
 <script type="text/javascript">
-    var _app_globals = {};
+    var app_globals = {
+        notifications_endpoint: "{% url 'app.api.private.v1.admin.notifications.endpoint' %}"
+    };
     var _i18n = {
         confirm_msg: "{% trans 'Are you sure!' %}"
     };

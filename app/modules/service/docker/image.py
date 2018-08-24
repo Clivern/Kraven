@@ -17,18 +17,26 @@ class Image(Auth):
 
 
     def pull(self, repository, tag=None):
+        if not self.check_health():
+            return False
         return self._client.images.pull(repository, tag)
 
 
     def build(self, **kwargs):
+        if not self.check_health():
+            return False
         return self._client.images.build(**kwargs)
 
 
     def prune(self, filters=None):
+        if not self.check_health():
+            return False
         return self._client.images.prune(filters)
 
 
     def remove(self, image, force=False, noprune=False):
+        if not self.check_health():
+            return False
         return self._client.images.remove(
             image=image,
             force=force,

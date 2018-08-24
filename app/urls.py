@@ -22,8 +22,9 @@ from app.controllers.web.admin.profile import Profile as Profile_View
 
 from app.controllers.web.admin.settings import Settings as Settings_View
 
-from app.controllers.web.metric import Metric as Metric_View
+from app.controllers.web.admin.activity import Activity as Activity_View
 
+from app.controllers.web.metric import Metric as Metric_View
 
 from app.controllers.web.admin.hosts import Hosts_List as Hosts_List_Web
 from app.controllers.web.admin.hosts import Host_Create as Host_Create_Web
@@ -36,7 +37,6 @@ from app.controllers.web.admin.hosts import Host_Services_View as Host_Services_
 from app.controllers.web.admin.hosts import Host_Volumes_View as Host_Volumes_View_Web
 from app.controllers.web.admin.hosts import Host_Activity_View as Host_Activity_View_Web
 
-
 from app.controllers.api.private.v1.install import Install as Install_V1_Endpoint_Private
 from app.controllers.api.private.v1.login import Login as Login_V1_Endpoint_Private
 from app.controllers.api.private.v1.register import Register as Register_V1_Endpoint_Private
@@ -48,13 +48,9 @@ from app.controllers.api.private.v1.admin.profile import Profile as Profile_Admi
 from app.controllers.api.private.v1.admin.hosts import Hosts as Hosts_Admin_V1_Endpoint_Private
 from app.controllers.api.private.v1.admin.hosts import Host as Host_Admin_V1_Endpoint_Private
 
+from app.controllers.api.private.v1.admin.notifications import Notifications as Notifications_Admin_V1_Endpoint_Private
 
 from app.controllers.api.private.v1.admin.actions.hosts import Health_Check as Health_Check_Action_Admin_V1_Endpoint_Private
-
-
-
-
-
 
 
 urlpatterns = [
@@ -85,7 +81,7 @@ urlpatterns = [
         path('hosts/view/<slug:host_slug>/services', Host_Services_View_Web.as_view(), name='app.web.admin.hosts.view.services'),
         path('hosts/view/<slug:host_slug>/volumes', Host_Volumes_View_Web.as_view(), name='app.web.admin.hosts.view.volumes'),
         path('hosts/view/<slug:host_slug>/activity', Host_Activity_View_Web.as_view(), name='app.web.admin.hosts.view.activity'),
-
+        path('activity', Activity_View.as_view(), name='app.web.admin.activity.list'),
         path('settings', Settings_View.as_view(), name='app.web.admin.settings'),
 
     ])),
@@ -102,7 +98,7 @@ urlpatterns = [
         path('admin/', include([
             path('settings', Settings_Admin_V1_Endpoint_Private.as_view(), name='app.api.private.v1.admin.settings.endpoint'),
             path('profile', Profile_Admin_V1_Endpoint_Private.as_view(), name='app.api.private.v1.admin.profile.endpoint'),
-
+            path('notification', Notifications_Admin_V1_Endpoint_Private.as_view(), name='app.api.private.v1.admin.notifications.endpoint'),
             path('host', Hosts_Admin_V1_Endpoint_Private.as_view(), name='app.api.private.v1.admin.hosts.endpoint'),
             path('host/<int:host_id>', Host_Admin_V1_Endpoint_Private.as_view(), name='app.api.private.v1.admin.host.endpoint'),
 

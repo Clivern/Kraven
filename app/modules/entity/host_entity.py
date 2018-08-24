@@ -10,20 +10,25 @@ from app.models import Host
 from app.models import Host_Meta
 from app.modules.util.helpers import Helpers
 
+# Third party
+from app.modules.util.crypto import Crypto
+
 
 class Host_Entity():
 
+    __crypto = Crypto()
 
     def insert_one(self, host):
         """Insert a New Host"""
-
+        token = self.__crypto.get_token()
         host = Host(
             name=host["name"],
             slug=host["slug"],
             type=host["type"],
-            server=host["server"],
-            auth_data=host["auth_data"],
-            user=User.objects.get(pk=host["user_id"])
+            server=self.__crypto.encrypt(host["server"], token),
+            auth_data=self.__crypto.encrypt(host["auth_data"], token),
+            user=User.objects.get(pk=host["user_id"]),
+            token=token
         )
 
         host.save()
@@ -42,6 +47,8 @@ class Host_Entity():
         """Get Host By ID"""
         try:
             host = Host.objects.get(pk=id)
+            host.server = self.__crypto.decrypt(host.server, host.token)
+            host.auth_data = self.__crypto.decrypt(host.auth_data, host.token)
             return False if host.pk is None else host
         except:
             return False
@@ -60,6 +67,8 @@ class Host_Entity():
         """Get Host By Slug"""
         try:
             host = Host.objects.get(slug=slug, user=user_id)
+            host.server = self.__crypto.decrypt(host.server, host.token)
+            host.auth_data = self.__crypto.decrypt(host.auth_data, host.token)
             return False if host.pk is None else host
         except:
             return False
@@ -88,16 +97,13 @@ class Host_Entity():
                 host.status = new_data["status"]
 
             if "server" in new_data:
-                host.server = new_data["server"]
+                host.server = self.__crypto.encrypt(new_data["server"], host.token)
 
             if "auth_data" in new_data:
-                host.auth_data = new_data["auth_data"]
+                host.auth_data = self.__crypto.encrypt(new_data["auth_data"], host.token)
 
             if "user_id" in new_data:
                 host.user = User.objects.get(pk=new_data["user_id"])
-
-            if "last_status_check" in new_data:
-                host.last_status_check = new_data["last_status_check"]
 
             host.save()
             return True

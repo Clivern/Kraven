@@ -11,7 +11,7 @@ config:
 
 lint:
 	@echo "\n==> Lint All .py Files:"
-	@find app -type f -name \*.py | while read file; do pycodestyle --first "$$file" || exit 1; done
+	@find app -type f -name \*.py | while read file; do pycodestyle --config=./pycodestyle --first "$$file" --format 'Code:%(code)s File:%(path)s Line:%(row)d Column:%(col)d Info:%(text)s' || exit 1; done
 
 
 test:

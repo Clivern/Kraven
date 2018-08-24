@@ -1,17 +1,27 @@
-PIP ?= pip3
 PYTHON ?= python3
+PIP ?= $(PYTHON) -m pip
 COVERAGE ?= coverage
 
 
 config:
 	$(PIP) install pycodestyle
 	$(PIP) install coverage
+	$(PIP) install flake8
 	$(PIP) install -r requirements.txt
 
 
-lint:
+lint-pycodestyle:
 	@echo "\n==> Lint All .py Files:"
-	@find app -type f -name \*.py | while read file; do pycodestyle --config=./pycodestyle --first "$$file" --format 'Code:%(code)s File:%(path)s Line:%(row)d Column:%(col)d Info:%(text)s' || exit 1; done
+	@find app -type f -name \*.py | while read file; do pycodestyle --config=./pycodestyle --first "$$file" || exit 1; done
+
+
+lint-flake8:
+	@echo "\n==> Lint All .py Files:"
+	@find app -type f -name \*.py | while read file; do flake8 --config=flake8.ini "$$file" || exit 1; done
+
+
+lint: lint-pycodestyle lint-flake8
+	@echo "\n==> Lint All .py Files:"
 
 
 test:
@@ -26,5 +36,6 @@ coverage:
 
 ci: test coverage lint
 	@echo "\n==> All quality checks passed"
+
 
 .PHONY: ci

@@ -4,11 +4,8 @@ Profile API Endpoint
 
 # Django
 from django.views import View
-from django.urls import reverse
 from django.http import JsonResponse
 from django.utils.translation import gettext as _
-from django.views.decorators.csrf import csrf_exempt
-from django.utils.decorators import method_decorator
 
 # local Django
 from app.modules.validation.form import Form
@@ -29,10 +26,8 @@ class Profile(View):
     __user_id = None
     __profile_module = Profile_Module()
 
-
     def __init__(self):
         self.__logger = self.__helpers.get_logger(__name__)
-
 
     def post(self, request):
 
@@ -40,14 +35,14 @@ class Profile(View):
 
         self.__request.set_request(request)
         request_data = self.__request.get_request_data("post", {
-            "action" : ""
+            "action": ""
         })
 
         self.__form.add_inputs({
             'action': {
                 'value': request_data["action"],
                 'validate': {
-                    'any_of':{
+                    'any_of': {
                         'param': [["_update_profile", "_update_password", "_update_access_token", "_update_refresh_token"]],
                         'error': _("Error! Invalid Request.")
                     }
@@ -69,21 +64,20 @@ class Profile(View):
         elif self.__form.get_input_value("action") == "_update_refresh_token":
             return self.__update_refresh_token(request)
 
-
     def __update_profile(self, request):
 
         self.__request.set_request(request)
         request_data = self.__request.get_request_data("post", {
-            "first_name" : "",
-            "last_name" : "",
-            "username" : "",
-            "email" : "",
-            "job_title" : "",
-            "company" : "",
-            "address" : "",
-            "github_url" : "",
-            "twitter_url" : "",
-            "facebook_url" : ""
+            "first_name": "",
+            "last_name": "",
+            "username": "",
+            "email": "",
+            "job_title": "",
+            "company": "",
+            "address": "",
+            "github_url": "",
+            "twitter_url": "",
+            "facebook_url": ""
         })
 
         self.__form.add_inputs({
@@ -96,7 +90,7 @@ class Profile(View):
                     'names': {
                         'error': _('Error! First name contains invalid characters.')
                     },
-                    'length_between':{
+                    'length_between': {
                         'param': [0, 20],
                         'error': _('Error! First name must be 1 to 20 characters long.')
                     }
@@ -111,7 +105,7 @@ class Profile(View):
                     'names': {
                         'error': _('Error! Last name contains invalid characters.')
                     },
-                    'length_between':{
+                    'length_between': {
                         'param': [0, 20],
                         'error': _('Error! Last name must be 1 to 20 characters long.')
                     }
@@ -127,7 +121,7 @@ class Profile(View):
                     'alpha_numeric': {
                         'error': _('Error! Username must be alpha numeric.')
                     },
-                    'length_between':{
+                    'length_between': {
                         'param': [4, 10],
                         'error': _('Error! Username must be 5 to 10 characters long.')
                     }
@@ -151,7 +145,7 @@ class Profile(View):
                     'strip': {}
                 },
                 'validate': {
-                    'length_between':{
+                    'length_between': {
                         'param': [0, 80],
                         'error': _('Error! Job title is very long.')
                     },
@@ -164,7 +158,7 @@ class Profile(View):
                     'strip': {}
                 },
                 'validate': {
-                    'length_between':{
+                    'length_between': {
                         'param': [0, 80],
                         'error': _('Error! Company is very long.')
                     },
@@ -177,7 +171,7 @@ class Profile(View):
                     'strip': {}
                 },
                 'validate': {
-                    'length_between':{
+                    'length_between': {
                         'param': [0, 80],
                         'error': _('Error! Address is very long.')
                     },
@@ -194,7 +188,7 @@ class Profile(View):
                     'url': {
                         'error': _('Error! Github url is invalid.')
                     },
-                    'length_between':{
+                    'length_between': {
                         'param': [0, 80],
                         'error': _('Error! Github url is very long.')
                     },
@@ -211,7 +205,7 @@ class Profile(View):
                     'url': {
                         'error': _('Error! Twitter url is invalid.')
                     },
-                    'length_between':{
+                    'length_between': {
                         'param': [0, 80],
                         'error': _('Error! Twitter url is very long.')
                     },
@@ -228,7 +222,7 @@ class Profile(View):
                     'url': {
                         'error': _('Error! Facebook url is invalid.')
                     },
-                    'length_between':{
+                    'length_between': {
                         'param': [0, 80],
                         'error': _('Error! Facebook url is very long.')
                     },
@@ -247,7 +241,6 @@ class Profile(View):
                 "type": "error",
                 "message": _("Error! Username is already used.")
             }]))
-
 
         if self.__profile_module.email_used_elsewhere(self.__user_id, self.__form.get_input_value("email")):
             return JsonResponse(self.__response.send_private_failure([{
@@ -280,13 +273,12 @@ class Profile(View):
                 "message": _("Error! Something goes wrong while updating your profile.")
             }]))
 
-
     def __update_password(self, request):
 
         self.__request.set_request(request)
         request_data = self.__request.get_request_data("post", {
-            "old_password" : "",
-            "new_password" : ""
+            "old_password": "",
+            "new_password": ""
         })
 
         self.__form.add_inputs({
@@ -296,7 +288,7 @@ class Profile(View):
                     'password': {
                         'error': _("Error! Old password is invalid.")
                     },
-                    'length_between':{
+                    'length_between': {
                         'param': [7, 20],
                         'error': _("Error! Old password is invalid.")
                     }
@@ -308,7 +300,7 @@ class Profile(View):
                     'password': {
                         'error': _('Error! New Password must contain at least uppercase letter, lowercase letter, numbers and special character.')
                     },
-                    'length_between':{
+                    'length_between': {
                         'param': [7, 20],
                         'error': _('Error! New Password length must be from 8 to 20 characters.')
                     }
@@ -342,19 +334,18 @@ class Profile(View):
                 "message": _("Error! Something goes wrong while updating your password.")
             }]))
 
-
     def __update_access_token(self, request):
 
         self.__request.set_request(request)
         request_data = self.__request.get_request_data("post", {
-            "token" : "",
+            "token": "",
         })
 
         self.__form.add_inputs({
             'token': {
                 'value': request_data["token"],
                 'validate': {
-                    'token':{
+                    'token': {
                         'error': _("Error! The provided token invalid, Please refresh the page.")
                     }
                 }
@@ -366,10 +357,9 @@ class Profile(View):
         if not self.__form.is_passed() and request_data["token"] != "":
             return JsonResponse(self.__response.send_private_failure(self.__form.get_errors(with_type=True)))
 
-
         result = self.__profile_module.update_access_token(self.__user_id)
 
-        if result != False:
+        if result:
             return JsonResponse(self.__response.send_private_success([{
                 "type": "success",
                 "message": _("Access token updated successfully.")
@@ -380,19 +370,18 @@ class Profile(View):
                 "message": _("Error! Something goes wrong while updating access token.")
             }]))
 
-
     def __update_refresh_token(self, request):
 
         self.__request.set_request(request)
         request_data = self.__request.get_request_data("post", {
-            "token" : "",
+            "token": "",
         })
 
         self.__form.add_inputs({
             'token': {
                 'value': request_data["token"],
                 'validate': {
-                    'token':{
+                    'token': {
                         'error': _("Error! The provided token invalid, Please refresh the page.")
                     }
                 }
@@ -404,10 +393,9 @@ class Profile(View):
         if not self.__form.is_passed() and request_data["token"] != "":
             return JsonResponse(self.__response.send_private_failure(self.__form.get_errors(with_type=True)))
 
-
         result = self.__profile_module.update_refresh_token(self.__user_id)
 
-        if result != False:
+        if result:
             return JsonResponse(self.__response.send_private_success([{
                 "type": "success",
                 "message": _("Refresh token updated successfully.")

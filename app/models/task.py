@@ -16,7 +16,6 @@ class Task(models.Model):
         ('error', 'ERROR')
     )
 
-
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,

@@ -3,7 +3,6 @@ Routes For Kraven
 """
 
 # Django
-from django.contrib import admin
 from django.urls import include, path
 
 # local Django
@@ -102,7 +101,11 @@ urlpatterns = [
             path('host', Hosts_Admin_V1_Endpoint_Private.as_view(), name='app.api.private.v1.admin.hosts.endpoint'),
             path('host/<int:host_id>', Host_Admin_V1_Endpoint_Private.as_view(), name='app.api.private.v1.admin.host.endpoint'),
 
-            path('action/host/health_check/<int:host_id>', Health_Check_Action_Admin_V1_Endpoint_Private.as_view(), name='app.api.private.v1.admin.action.host.health_check.endpoint'),
+            path(
+                'action/host/health_check/<int:host_id>',
+                Health_Check_Action_Admin_V1_Endpoint_Private.as_view(),
+                name='app.api.private.v1.admin.action.host.health_check.endpoint'
+            ),
 
         ]))
 

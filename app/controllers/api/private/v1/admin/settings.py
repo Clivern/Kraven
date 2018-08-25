@@ -4,11 +4,8 @@ Settings API Endpoint
 
 # Django
 from django.views import View
-from django.urls import reverse
 from django.http import JsonResponse
 from django.utils.translation import gettext as _
-from django.views.decorators.csrf import csrf_exempt
-from django.utils.decorators import method_decorator
 
 # local Django
 from app.modules.validation.form import Form
@@ -29,10 +26,8 @@ class Settings(View):
     __logger = None
     __acl = ACL()
 
-
     def __init__(self):
         self.__logger = self.__helpers.get_logger(__name__)
-
 
     def post(self, request):
 
@@ -66,7 +61,7 @@ class Settings(View):
                     'alpha_numeric': {
                         'error': _('Error! Application name must be alpha numeric.')
                     },
-                    'length_between':{
+                    'length_between': {
                         'param': [3, 10],
                         'error': _('Error! Application name must be 5 to 10 characters long.')
                     }
@@ -102,7 +97,7 @@ class Settings(View):
                     'strip': {}
                 },
                 'validate': {
-                    'length_between':{
+                    'length_between': {
                         'param': [0, 300],
                         'error': _('Error! App description is very long.')
                     },
@@ -115,7 +110,7 @@ class Settings(View):
                     'strip': {}
                 },
                 'validate': {
-                    'length_between':{
+                    'length_between': {
                         'param': [0, 100],
                         'error': _('Error! Prometheus token is invalid.')
                     },
@@ -128,7 +123,7 @@ class Settings(View):
                     'strip': {}
                 },
                 'validate': {
-                    'length_between':{
+                    'length_between': {
                         'param': [0, 30],
                         'error': _('Error! Google analytics account is invalid.')
                     },

@@ -11,17 +11,17 @@ config:
 
 
 lint-pycodestyle:
-	@echo "\n==> Lint All .py Files:"
+	@echo "\n==> Pycodestyle Linting:"
 	@find app -type f -name \*.py | while read file; do pycodestyle --config=./pycodestyle --first "$$file" || exit 1; done
 
 
 lint-flake8:
-	@echo "\n==> Lint All .py Files:"
+	@echo "\n==> Flake8 Linting:"
 	@find app -type f -name \*.py | while read file; do flake8 --config=flake8.ini "$$file" || exit 1; done
 
 
 lint: lint-pycodestyle lint-flake8
-	@echo "\n==> Lint All .py Files:"
+	@echo "\n==> All linting cases passed!"
 
 
 test:

@@ -17,10 +17,8 @@ class ACL():
     __helpers = Helpers()
     __logger = None
 
-
     def __init__(self):
         self.__logger = self.__helpers.get_logger(__name__)
-
 
     def new_role(self, name):
         group = Group()
@@ -28,7 +26,6 @@ class ACL():
         group.save()
 
         return False if group.pk is None else group
-
 
     def new_permission(self, name, content_type_id, codename):
         permission = Permission()
@@ -39,114 +36,100 @@ class ACL():
 
         return False if permission.pk is None else permission
 
-
     def get_role_by_name(self, name):
         try:
             role = Group.objects.get(name=name)
             return False if role.pk is None else role
-        except:
+        except Exception as e:
             return False
-
 
     def get_permission_by_name(self, name):
         try:
             permission = Permission.objects.get(name=name)
             return False if permission.pk is None else permission
-        except:
+        except Exception as e:
             return False
-
 
     def get_permission_by_codename(self, codename):
         try:
             permission = Permission.objects.get(codename=codename)
             return False if permission.pk is None else permission
-        except:
+        except Exception as e:
             return False
-
 
     def get_user_by_id(self, user_id):
         try:
             user = User.objects.get(id=user_id)
             return False if user.pk is None else user
-        except:
+        except Exception as e:
             return False
-
 
     def add_permission_to_role(self, permission_codename, role_name):
         role = self.get_role_by_name(role_name)
         permission = self.get_permission_by_codename(permission_codename)
 
-        if role != False and permission != False:
+        if role is not False and permission is not False:
             role.permissions.add(permission)
             return True
 
         return False
 
-
     def add_permission_to_user(self, permission_codename, user_id):
         user = self.get_user_by_id(user_id)
         permission = self.get_permission_by_codename(permission_codename)
 
-        if user != False and permission != False:
+        if user is not False and permission is not False:
             user.user_permissions.add(permission)
             return True
 
         return False
 
-
     def add_role_to_user(self, role_name, user_id):
         role = self.get_role_by_name(role_name)
         user = self.get_user_by_id(user_id)
 
-        if role != False and user != False:
+        if role is not False and user is not False:
             user.groups.add(role)
             return True
 
         return False
 
-
     def get_content_type(self, label, model):
         try:
             content_type = ContentType.objects.get(app_label=label, model=model)
             return False if content_type.pk is None else content_type
-        except:
+        except Exception as e:
             return False
-
 
     def get_user_content_type(self):
         return ContentType.objects.get_for_model(User)
-
 
     def get_content_type_id(self, label, model):
         try:
             content_type = ContentType.objects.get(app_label=label, model=model)
             return False if content_type.pk is None else content_type.id
-        except:
+        except Exception as e:
             return False
-
 
     def truncate_default_permissions(self):
         return Permission.objects.all().delete()
 
-
     def get_all_user_permissions(self, user_id):
         user = self.get_user_by_id(user_id)
-        if user != False:
+        if user is not False:
             return user.get_all_permissions()
         return {}
 
-
     def get_user_groups_permissions(self, user_id):
         user = self.get_user_by_id(user_id)
-        if user != False:
+        if user is not False:
             return user.get_group_permissions()
         return {}
-
 
     def user_has_permission(self, user_id, permission_codename):
         user = self.get_user_by_id(user_id)
 
-        if user != False:
+        if user is not False:
             return user.has_perm("auth.%s" % permission_codename)
 
         return False

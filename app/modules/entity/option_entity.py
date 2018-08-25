@@ -8,10 +8,9 @@ from app.models import Option
 
 class Option_Entity():
 
-
     def insert_one(self, option):
         """Insert a New Option"""
-        if self.get_one_by_key(option["key"]) != False:
+        if self.get_one_by_key(option["key"]) is not False:
             return False
 
         option = Option(
@@ -23,30 +22,27 @@ class Option_Entity():
         option.save()
         return False if option.pk is None else option
 
-
     def insert_many(self, options):
         """Insert Many Options"""
         status = True
         for option in options:
-            status &= True if self.insert_one(option) != False else False
+            status &= True if self.insert_one(option) is not False else False
         return status
-
 
     def get_one_by_id(self, id):
         """Get Option By ID"""
         try:
             option = Option.objects.get(pk=id)
             return False if option.pk is None else option
-        except:
+        except Exception as e:
             return False
-
 
     def get_one_by_key(self, key):
         """Get Option By Key"""
         try:
             option = Option.objects.get(key=key)
             return False if option.pk is None else option
-        except:
+        except Exception as e:
             return False
 
     def get_value_by_key(self, key, default=""):
@@ -54,7 +50,7 @@ class Option_Entity():
         try:
             option = Option.objects.get(key=key)
             return default if option.pk is None else option.value
-        except:
+        except Exception as e:
             return default
 
     def get_many_by_autoload(self, autoload):
@@ -62,46 +58,41 @@ class Option_Entity():
         options = Option.objects.filter(autoload=autoload)
         return options
 
-
     def get_many_by_keys(self, keys):
         """Get Many Options By Keys"""
         options = Option.objects.filter(key__in=keys)
         return options
 
-
     def update_value_by_id(self, id, value):
         """Update Option Value By ID"""
         option = self.get_one_by_id(id)
-        if option != False:
+        if option is not False:
             option.value = value
             option.save()
             return True
         return False
-
 
     def update_value_by_key(self, key, value):
         """Update Option Value By Key"""
         option = self.get_one_by_key(key)
-        if option != False:
+        if option is not False:
             option.value = value
             option.save()
             return True
         return False
 
-
     def delete_one_by_id(self, id):
         """Delete Option By ID"""
         option = self.get_one_by_id(id)
-        if option != False:
+        if option is not False:
             count, deleted = option.delete()
             return True if count > 0 else False
         return False
 
-
     def delete_one_by_key(self, key):
         """Delete Option By Key"""
         option = self.get_one_by_key(key)
-        if option != False:
+        if option is not False:
             count, deleted = option.delete()
             return True if count > 0 else False
         return False

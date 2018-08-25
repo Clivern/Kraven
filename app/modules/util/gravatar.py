@@ -4,7 +4,6 @@ Gravatar Module
 
 # standard library
 from hashlib import md5
-from xmlrpc.client import ServerProxy, Fault
 from urllib.parse import urlparse, urlencode
 
 
@@ -32,11 +31,9 @@ class Gravatar():
 
     PROFILE_FORMATS = ['json', 'xml', 'php', 'vcf', 'qr']
 
-
     def __init__(self, email):
         self.email = self.__sanitize_email(email)
         self.email_hash = self.__md5_hash(self.email)
-
 
     def get_image(self, size=DEFAULT_IMAGE_SIZE, default="", force_default=False, rating="", filetype_extension=False, use_ssl=False):
         base_url = '{protocol}://{domain}/avatar/' \
@@ -89,7 +86,6 @@ class Gravatar():
         }
         return base_url.format(**data)
 
-
     def get_profile(self, data_format=''):
         base_url = 'http://www.gravatar.com/{hash}{data_format}'
 
@@ -102,22 +98,18 @@ class Gravatar():
         }
         return base_url.format(**data)
 
-
     def __sanitize_email(self, email):
         return email.lower().strip()
 
-
     def __md5_hash(self, string):
         return md5(string.encode('utf-8')).hexdigest()
-
 
     def __default_url_is_valid(self, url):
         result = urlparse(url)
 
         if result.scheme == 'http' or result.scheme == 'https':
             path = result.path.lower()
-            if (path.endswith('.jpg') or path.endswith('.jpeg')
-                or path.endswith('.gif') or path.endswith('.png')):
+            if (path.endswith('.jpg') or path.endswith('.jpeg') or path.endswith('.gif') or path.endswith('.png')):
                 if not result.query:
                     return True
         return False

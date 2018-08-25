@@ -2,9 +2,6 @@
 Metric Web Controller
 """
 
-# standard library
-import os
-
 # Django
 from django.views import View
 from django.http import HttpResponse
@@ -22,12 +19,11 @@ class Metric(View):
     __prometheus = Prometheus()
     __metric = Metric()
 
-
     @redirect_if_not_installed
     @protect_metric_with_auth_key
     def get(self, request, type):
 
-        if not type in ("prometheus"):
+        if type not in ("prometheus"):
             raise Http404("Page not found.")
 
         if type == "prometheus":

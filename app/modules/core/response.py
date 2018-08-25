@@ -3,7 +3,6 @@ Response Module
 """
 
 # Django
-from django.http import JsonResponse
 from django.utils.translation import gettext as _
 
 # local Django
@@ -17,11 +16,9 @@ class Response():
     __helpers = None
     __logger = None
 
-
     def __init__(self):
         self.__helpers = Helpers()
         self.__logger = self.__helpers.get_logger(__name__)
-
 
     def send_private_success(self, messages, payload={}):
         self.__private["status"] = "success"
@@ -32,7 +29,6 @@ class Response():
         self.__logger.debug(_("App Response: ") + self.__helpers.json_dumps(self.__private) + "\n")
         return self.__private
 
-
     def send_private_failure(self, messages, payload={}):
         self.__private["status"] = "failure"
         self.__private["messages"] = messages
@@ -42,7 +38,6 @@ class Response():
         self.__logger.debug(_("App Response: ") + self.__helpers.json_dumps(self.__private) + "\n")
         return self.__private
 
-
     def send_public_success(self, messages, payload={}):
         self.__public["status"] = "success"
         self.__public["messages"] = messages
@@ -51,7 +46,6 @@ class Response():
 
         self.__logger.debug(_("App Response: ") + self.__helpers.json_dumps(self.__public) + "\n")
         return self.__public
-
 
     def send_public_failure(self, messages, payload={}):
         self.__public["status"] = "failure"

@@ -12,7 +12,8 @@ from django.core.management import utils
 from django.core.management.base import BaseCommand, CommandError
 
 # local Django
-from app.settings.info import *
+from app.settings.info import APP_ROOT
+from app.settings.info import VERSION
 
 
 class Command(BaseCommand):
@@ -25,11 +26,9 @@ class Command(BaseCommand):
         "update_env"
     ]
 
-
     def add_arguments(self, parser):
         """Config Command Args"""
         parser.add_argument('command', type=str, nargs='+', help='Available commands are %s' % ", ".join(self.available))
-
 
     def handle(self, *args, **options):
         """Command Handle"""
@@ -47,14 +46,13 @@ class Command(BaseCommand):
             env_data = options['command'][1].split("=")
             self.__update_env_var(env_data[0], env_data[1])
 
-
     def __update_env_var(self, key, value):
         """Update Env Variable"""
-        if not os.path.isfile(os.path.join(APP_ROOT,'.env')):
+        if not os.path.isfile(os.path.join(APP_ROOT, '.env')):
             self.stdout.write(self.style.ERROR('Error! .env File is Missing.'))
             return None
 
-        with open(os.path.join(APP_ROOT,'.env'), 'r') as file:
+        with open(os.path.join(APP_ROOT, '.env'), 'r') as file:
             data = file.readlines()
 
         i = 0
@@ -64,17 +62,16 @@ class Command(BaseCommand):
                 data[i] = "%s=%s\n" % (key, value)
             i += 1
 
-        with open(os.path.join(APP_ROOT,'.env'), 'w') as file:
-            file.writelines( data )
-
+        with open(os.path.join(APP_ROOT, '.env'), 'w') as file:
+            file.writelines(data)
 
     def __refresh_app_key(self):
         """Refresh APP Key"""
-        if not os.path.isfile(os.path.join(APP_ROOT,'.env')):
+        if not os.path.isfile(os.path.join(APP_ROOT, '.env')):
             self.stdout.write(self.style.ERROR('Error! .env File is Missing.'))
             return None
 
-        with open(os.path.join(APP_ROOT,'.env'), 'r') as file:
+        with open(os.path.join(APP_ROOT, '.env'), 'r') as file:
             data = file.readlines()
 
         i = 0
@@ -85,5 +82,5 @@ class Command(BaseCommand):
                 data[i] = "APP_KEY=%s\n" % key
             i += 1
 
-        with open(os.path.join(APP_ROOT,'.env'), 'w') as file:
-            file.writelines( data )
+        with open(os.path.join(APP_ROOT, '.env'), 'w') as file:
+            file.writelines(data)

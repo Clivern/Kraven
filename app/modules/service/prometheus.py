@@ -2,26 +2,19 @@
 Prometheus Service
 """
 
-# local Django
-from app.modules.util.helpers import Helpers
-
 
 class Prometheus():
 
     __metrics = []
 
-
-    def __init__(self, metrics = []):
+    def __init__(self, metrics=[]):
         self.__metrics = metrics
-
 
     def set_metrics(self, metrics):
         self.__metrics = metrics
 
-
     def push_to_metrics(self, record):
         self.__metrics.append(record)
-
 
     def get_plain_metrics(self):
         data = ""
@@ -30,7 +23,6 @@ class Prometheus():
                 data += self.__get_count_metric(metric)
 
         return data
-
 
     def __get_count_metric(self, item):
         data = ""

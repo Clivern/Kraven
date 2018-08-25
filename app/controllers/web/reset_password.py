@@ -8,7 +8,6 @@ import os
 # Django
 from django.views import View
 from django.shortcuts import render
-from django.http import HttpResponse
 from django.contrib import messages
 from django.shortcuts import redirect
 from django.utils.translation import gettext as _
@@ -27,7 +26,6 @@ class Reset_Password(View):
     __reset_password_core = Reset_Password_Module()
     __context = Context()
     __option_entity = Option_Entity()
-
 
     @redirect_if_not_installed
     @redirect_if_authenticated

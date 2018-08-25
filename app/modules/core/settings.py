@@ -13,10 +13,8 @@ class Settings():
     __helpers = Helpers()
     __logger = None
 
-
     def __init__(self):
         self.__logger = self.__helpers.get_logger(__name__)
-
 
     def update_options(self, options):
         status = True

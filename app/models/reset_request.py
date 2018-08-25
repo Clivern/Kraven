@@ -13,4 +13,4 @@ class Reset_Request(models.Model):
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Created at")
     updated_at = models.DateTimeField(auto_now=True, verbose_name="Updated at")
     expire_at = models.DateTimeField(verbose_name="Expire at")
-    messages_count=models.PositiveSmallIntegerField(verbose_name="Messages Count")
+    messages_count = models.PositiveSmallIntegerField(verbose_name="Messages Count")

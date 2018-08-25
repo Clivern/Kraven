@@ -18,10 +18,9 @@ class Auth():
     _retry = 3
     __crypto = Crypto()
 
-
-    def __init__(self, host_id = None):
+    def __init__(self, host_id=None):
         self._host_id = host_id
-        if host_id != None:
+        if host_id is not None:
             host = Host.objects.get(pk=host_id)
             if host.pk:
                 host.server = self.__crypto.decrypt(host.server, host.token)
@@ -29,7 +28,6 @@ class Auth():
                 self._host = host
             else:
                 self._host = False
-
 
     def set_host(self, host_id):
         self._host_id = host_id
@@ -43,13 +41,11 @@ class Auth():
 
         return self
 
-
     def check_health(self):
         for x in range(0, self._retry):
             if self._ping():
                 return True
         return False
-
 
     def _ping(self):
         try:

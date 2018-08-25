@@ -4,11 +4,7 @@ Notifications API Endpoint
 
 # Django
 from django.views import View
-from django.urls import reverse
 from django.http import JsonResponse
-from django.utils.translation import gettext as _
-from django.views.decorators.csrf import csrf_exempt
-from django.utils.decorators import method_decorator
 
 # local Django
 from app.modules.validation.form import Form

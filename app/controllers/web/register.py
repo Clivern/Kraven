@@ -8,7 +8,6 @@ import os
 # Django
 from django.views import View
 from django.shortcuts import render
-from django.http import HttpResponse
 from django.utils.translation import gettext as _
 
 # local Django
@@ -23,7 +22,6 @@ class Register(View):
     template_name = 'templates/register.html'
     __context = Context()
     __option_entity = Option_Entity()
-
 
     @redirect_if_not_installed
     @redirect_if_authenticated

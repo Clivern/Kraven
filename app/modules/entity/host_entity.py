@@ -7,8 +7,6 @@ from django.contrib.auth.models import User
 
 # local Django
 from app.models import Host
-from app.models import Host_Meta
-from app.modules.util.helpers import Helpers
 
 # Third party
 from app.modules.util.crypto import Crypto
@@ -34,14 +32,12 @@ class Host_Entity():
         host.save()
         return False if host.pk is None else host
 
-
     def insert_many(self, hosts):
         """Insert Many Hosts"""
         status = True
         for host in hosts:
-            status &= True if self.insert_one(host) != False else False
+            status &= True if self.insert_one(host) is not False else False
         return status
-
 
     def get_one_by_id(self, id):
         """Get Host By ID"""
@@ -50,18 +46,16 @@ class Host_Entity():
             host.server = self.__crypto.decrypt(host.server, host.token)
             host.auth_data = self.__crypto.decrypt(host.auth_data, host.token)
             return False if host.pk is None else host
-        except:
+        except Exception as e:
             return False
-
 
     def user_owns(self, host_id, user_id):
         """Get Host By ID and User ID"""
         try:
             host = Host.objects.get(pk=host_id, user=user_id)
             return False if host.pk is None else True
-        except:
+        except Exception as e:
             return False
-
 
     def get_one_by_slug_user_id(self, slug, user_id):
         """Get Host By Slug"""
@@ -70,20 +64,18 @@ class Host_Entity():
             host.server = self.__crypto.decrypt(host.server, host.token)
             host.auth_data = self.__crypto.decrypt(host.auth_data, host.token)
             return False if host.pk is None else host
-        except:
+        except Exception as e:
             return False
-
 
     def get_many_by_user(self, user_id, order_by, asc):
         """Get Many Hosts By User ID"""
         hosts = Host.objects.filter(user=user_id).order_by(order_by if asc else "-%s" % order_by)
         return hosts
 
-
     def update_one_by_id(self, id, new_data):
         """Update Host By ID"""
         host = self.get_one_by_id(id)
-        if host != False:
+        if host is not False:
             if "name" in new_data:
                 host.name = new_data["name"]
 
@@ -109,15 +101,13 @@ class Host_Entity():
             return True
         return False
 
-
     def delete_one_by_id(self, id):
         """Delete Host By ID"""
         host = self.get_one_by_id(id)
-        if host != False:
+        if host is not False:
             count, deleted = host.delete()
             return True if count > 0 else False
         return False
-
 
     def count_all_hosts(self):
         return Host.objects.count()

@@ -6,10 +6,7 @@ Error Web Controller
 import os
 
 # Django
-from django.views import View
 from django.shortcuts import render
-from django.http import HttpResponse
-from django.http import HttpResponseRedirect
 from django.utils.translation import gettext as _
 
 # local Django
@@ -22,7 +19,7 @@ def handler500(request, exception=None, template_name='templates/500.html'):
     helpers = Helpers()
     logger = helpers.get_logger(__name__)
 
-    if exception != None:
+    if exception is not None:
         logger.error("Server Error: %s" % exception)
 
     template_name = 'templates/500.html'

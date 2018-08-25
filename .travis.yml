@@ -12,7 +12,7 @@ python:
   - "3.7-dev"  # 3.7 development branch
 # command to install dependencies
 install:
-  - pip install -r requirements.txt
+  - make config
 
 before_script:
   - mysql -e 'CREATE DATABASE kraven;'
@@ -24,10 +24,7 @@ before_script:
   - python manage.py kraven update_env DB_PASSWORD=
   - python manage.py kraven update_app_key
   - python manage.py kraven update_env DB_CONNECTION=mysql
-  - pip install coverage
 
 # command to run tests
 script:
-  - python manage.py test
-  - coverage run --source='.' manage.py test app
-  - coverage report -m
+  - make ci

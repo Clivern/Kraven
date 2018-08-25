@@ -2,9 +2,6 @@
 Settings Module
 """
 
-# standard library
-import time
-
 # local Django
 from app.modules.util.helpers import Helpers
 from app.modules.entity.option_entity import Option_Entity
@@ -25,11 +22,9 @@ class Metric():
     __logger = None
     __app_name = ""
 
-
     def __init__(self):
         self.__logger = self.__helpers.get_logger(__name__)
         self.__app_name = self.__option_entity.get_value_by_key("app_name").lower()
-
 
     def get_all_users(self):
         return {
@@ -39,7 +34,6 @@ class Metric():
             "comment": "Current All Users on System"
         }
 
-
     def get_all_profiles(self):
         return {
             "type": "count",
@@ -48,7 +42,6 @@ class Metric():
             "comment": "Current All Profiles on System"
         }
 
-
     def get_all_tasks(self):
         return {
             "type": "count",
@@ -56,7 +49,6 @@ class Metric():
             "count": self.__task_entity.count_all_tasks(),
             "comment": "Current All Tasks on System"
         }
-
 
     def get_all_hosts(self):
         return {

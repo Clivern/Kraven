@@ -4,11 +4,8 @@ Hosts API Endpoint
 
 # Django
 from django.views import View
-from django.urls import reverse
 from django.http import JsonResponse
 from django.utils.translation import gettext as _
-from django.views.decorators.csrf import csrf_exempt
-from django.utils.decorators import method_decorator
 
 # local Django
 from app.modules.validation.form import Form
@@ -28,10 +25,8 @@ class Hosts(View):
     __user_id = None
     __host_module = Host_Module()
 
-
     def __init__(self):
         self.__logger = self.__helpers.get_logger(__name__)
-
 
     def post(self, request):
 
@@ -39,8 +34,8 @@ class Hosts(View):
 
         self.__request.set_request(request)
         request_data = self.__request.get_request_data("post", {
-            "name" : "",
-            "slug" : "",
+            "name": "",
+            "slug": "",
             "server": "",
             "type": "",
             "auth_type": "",
@@ -56,7 +51,7 @@ class Hosts(View):
                     'host_name': {
                         'error': _("Error! Host Name is invalid.")
                     },
-                    'length_between':{
+                    'length_between': {
                         'param': [3, 41],
                         'error': _("Error! Host slug length must be from 4 to 40 characters.")
                     }
@@ -68,7 +63,7 @@ class Hosts(View):
                     'host_slug': {
                         'error': _('Error! Host slug is not valid.')
                     },
-                    'length_between':{
+                    'length_between': {
                         'param': [3, 21],
                         'error': _('Error! Host slug length must be from 4 to 20 characters.')
                     }
@@ -80,7 +75,7 @@ class Hosts(View):
                     'host_server': {
                         'error': _('Error! Host server is not valid.')
                     },
-                    'length_between':{
+                    'length_between': {
                         'param': [3, 60],
                         'error': _('Error! Host server length must be from 4 to 20 characters.')
                     }
@@ -89,7 +84,7 @@ class Hosts(View):
             'type': {
                 'value': request_data["type"],
                 'validate': {
-                    'any_of':{
+                    'any_of': {
                         'param': [["docker"]],
                         'error': _('Error! Host type is invalid.')
                     }
@@ -98,7 +93,7 @@ class Hosts(View):
             'auth_type': {
                 'value': request_data["auth_type"],
                 'validate': {
-                    'any_of':{
+                    'any_of': {
                         'param': [["no_auth", "tls_server_client", "tls_client_only", "tls_server_only", "tls_only"]],
                         'error': _('Error! Auth type is invalid.')
                     }
@@ -144,7 +139,6 @@ class Hosts(View):
                 "message": _("Error! Host slug is already used.")
             }]))
 
-
         result = self.__host_module.insert_one({
             "name": self.__form.get_input_value("name"),
             "slug": self.__form.get_input_value("slug"),
@@ -172,7 +166,6 @@ class Hosts(View):
             }]))
 
 
-
 class Host(View):
 
     __request = Request()
@@ -184,13 +177,10 @@ class Host(View):
     __host_id = None
     __host_module = Host_Module()
 
-
     def __init__(self):
         self.__logger = self.__helpers.get_logger(__name__)
 
-
     def post(self, request, host_id):
-
 
         self.__user_id = request.user.id
         self.__host_id = host_id
@@ -203,8 +193,8 @@ class Host(View):
 
         self.__request.set_request(request)
         request_data = self.__request.get_request_data("post", {
-            "name" : "",
-            "slug" : "",
+            "name": "",
+            "slug": "",
             "server": "",
             "type": "",
             "auth_type": "",
@@ -220,7 +210,7 @@ class Host(View):
                     'host_name': {
                         'error': _("Error! Host Name is invalid.")
                     },
-                    'length_between':{
+                    'length_between': {
                         'param': [3, 41],
                         'error': _("Error! Host slug length must be from 4 to 40 characters.")
                     }
@@ -232,7 +222,7 @@ class Host(View):
                     'host_slug': {
                         'error': _('Error! Host slug is not valid.')
                     },
-                    'length_between':{
+                    'length_between': {
                         'param': [3, 21],
                         'error': _('Error! Host slug length must be from 4 to 20 characters.')
                     }
@@ -244,7 +234,7 @@ class Host(View):
                     'host_server': {
                         'error': _('Error! Host server is not valid.')
                     },
-                    'length_between':{
+                    'length_between': {
                         'param': [3, 60],
                         'error': _('Error! Host server length must be from 4 to 20 characters.')
                     }
@@ -253,7 +243,7 @@ class Host(View):
             'type': {
                 'value': request_data["type"],
                 'validate': {
-                    'any_of':{
+                    'any_of': {
                         'param': [["docker"]],
                         'error': _('Error! Host type is invalid.')
                     }
@@ -262,7 +252,7 @@ class Host(View):
             'auth_type': {
                 'value': request_data["auth_type"],
                 'validate': {
-                    'any_of':{
+                    'any_of': {
                         'param': [["no_auth", "tls_server_client", "tls_client_only", "tls_server_only", "tls_only"]],
                         'error': _('Error! Auth type is invalid.')
                     }
@@ -334,7 +324,6 @@ class Host(View):
                 "message": _("Error! Something goes wrong while creating host.")
             }]))
 
-
     def delete(self, request, host_id):
 
         self.__user_id = request.user.id
@@ -357,4 +346,3 @@ class Host(View):
                 "type": "error",
                 "message": _("Error! Something goes wrong while deleting a host.")
             }]))
-

@@ -14,11 +14,9 @@ class Logging():
     __helpers = Helpers()
     __logger = None
 
-
     def __init__(self, get_response):
         self.get_response = get_response
         self.__logger = self.__helpers.get_logger(__name__)
-
 
     def __call__(self, request):
         self.__logger.debug(_("Request Method: %s") % request.method)

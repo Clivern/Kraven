@@ -4,11 +4,8 @@ Install API Endpoint
 
 # Django
 from django.views import View
-from django.urls import reverse
 from django.http import JsonResponse
 from django.utils.translation import gettext as _
-from django.views.decorators.csrf import csrf_exempt
-from django.utils.decorators import method_decorator
 
 # local Django
 from app.modules.validation.form import Form
@@ -28,10 +25,8 @@ class Install(View):
     __install = Install_Module()
     __logger = None
 
-
     def __init__(self):
         self.__logger = self.__helpers.get_logger(__name__)
-
 
     @stop_request_if_installed
     def post(self, request):
@@ -45,12 +40,12 @@ class Install(View):
         self.__request.set_request(request)
 
         request_data = self.__request.get_request_data("post", {
-            "app_name" : "",
-            "app_email" : "",
-            "app_url" : "",
-            "admin_username" : "",
-            "admin_email" : "",
-            "admin_password" : ""
+            "app_name": "",
+            "app_email": "",
+            "app_url": "",
+            "admin_username": "",
+            "admin_email": "",
+            "admin_password": ""
         })
 
         self.__form.add_inputs({
@@ -64,7 +59,7 @@ class Install(View):
                     'alpha_numeric': {
                         'error': _('Error! Application name must be alpha numeric.')
                     },
-                    'length_between':{
+                    'length_between': {
                         'param': [3, 10],
                         'error': _('Error! Application name must be 5 to 10 characters long.')
                     }
@@ -104,7 +99,7 @@ class Install(View):
                     'alpha_numeric': {
                         'error': _('Error! Username must be alpha numeric.')
                     },
-                    'length_between':{
+                    'length_between': {
                         'param': [4, 10],
                         'error': _('Error! Username must be 5 to 10 characters long.')
                     }
@@ -128,7 +123,7 @@ class Install(View):
                     'password': {
                         'error': _('Error! Password must contain at least uppercase letter, lowercase letter, numbers and special character.')
                     },
-                    'length_between':{
+                    'length_between': {
                         'param': [7, 20],
                         'error': _('Error! Password length must be from 8 to 20 characters.')
                     }

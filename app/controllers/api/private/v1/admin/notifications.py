@@ -4,11 +4,7 @@ Notifications API Endpoint
 
 # Django
 from django.views import View
-from django.urls import reverse
 from django.http import JsonResponse
-from django.utils.translation import gettext as _
-from django.views.decorators.csrf import csrf_exempt
-from django.utils.decorators import method_decorator
 
 # local Django
 from app.modules.validation.form import Form
@@ -28,10 +24,8 @@ class Notifications(View):
     __user_id = None
     __notification_module = Notification_Module()
 
-
     def __init__(self):
         self.__logger = self.__helpers.get_logger(__name__)
-
 
     def get(self, request):
 
@@ -42,7 +36,6 @@ class Notifications(View):
             self.__notification_module.user_latest_notifications(self.__user_id)
         ))
 
-
     def post(self, request):
 
         self.__user_id = request.user.id
@@ -50,11 +43,11 @@ class Notifications(View):
         self.__request.set_request(request)
 
         request_data = self.__request.get_request_data("post", {
-            "notification_id" : ""
+            "notification_id": ""
         })
 
         try:
-            notification_id  = int(request_data["notification_id"])
+            notification_id = int(request_data["notification_id"])
         except Exception as e:
             return JsonResponse(self.__response.send_private_success([]))
 

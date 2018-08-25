@@ -2,16 +2,11 @@
 Task Module
 """
 
-# standard library
-import json
-from datetime import timedelta
-
 # local Django
 from app.modules.util.helpers import Helpers
 from app.modules.util.humanize import Humanize
 from app.modules.entity.option_entity import Option_Entity
 from app.modules.entity.notification_entity import Notification_Entity
-from django.utils.translation import gettext as _
 
 
 class Notification():
@@ -23,16 +18,13 @@ class Notification():
     __app_name = None
     __logger = None
 
-
     def __init__(self):
         self.__logger = self.__helpers.get_logger(__name__)
         option = self.__option_entity.get_one_by_key("app_name")
-        self.__app_name = option.value if option != False else ""
-
+        self.__app_name = option.value if option is not False else ""
 
     def create_notification(self, data):
         return self.__notification_entity.insert_one(data)
-
 
     def user_latest_notifications(self, user_id, count=5):
 
@@ -59,20 +51,17 @@ class Notification():
 
         return result
 
-
     def update_task_notification(self, task_id, type, delivered=False):
         return self.__notification_entity.update_one_by_task_id(task_id, {
             "type": type,
             "delivered": delivered
         })
 
-
     def mark_notification(self, user_id, notification_id):
         if self.__notification_entity.get_one_by_id_and_user(notification_id, user_id):
             return self.__notification_entity.update_one_by_id(notification_id, {"delivered": True})
 
         return False
-
 
     def __humanize_highlight(self, highlight, host):
         if host:
@@ -82,7 +71,6 @@ class Notification():
             return self.__app_name
 
         return highlight
-
 
     def __humanize_updated_at(self, created_at):
         return self.__humanize.datetime(created_at)

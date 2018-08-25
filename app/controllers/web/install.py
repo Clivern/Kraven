@@ -8,7 +8,6 @@ import os
 # Django
 from django.views import View
 from django.shortcuts import render
-from django.http import HttpResponse
 from django.shortcuts import redirect
 from django.utils.translation import gettext as _
 
@@ -24,7 +23,6 @@ class Install(View):
     __context = Context()
     __install = Install_Module()
     __option_entity = Option_Entity()
-
 
     def get(self, request):
 

@@ -6,18 +6,12 @@ User Entity Module
 from django.contrib.auth.models import User
 from django.contrib.auth.hashers import make_password
 
-# local Django
-from app.models import Profile
-from app.models import User_Meta
-from app.modules.util.helpers import Helpers
-
 
 class User_Entity():
 
-
     def insert_one(self, user):
         """Insert a New User"""
-        if self.get_one_by_username(user["username"]) != False:
+        if self.get_one_by_username(user["username"]) is not False:
             return False
 
         new_user = User()
@@ -54,10 +48,9 @@ class User_Entity():
         new_user.save()
         return False if new_user.pk is None else new_user
 
-
     def update_one_by_id(self, id, user_data):
         user = self.get_one_by_id(id)
-        if user != False:
+        if user is not False:
             if "username" in user_data:
                 user.username = user_data["username"]
 
@@ -92,58 +85,51 @@ class User_Entity():
             return True
         return False
 
-
     def get_one_by_id(self, user_id):
         try:
             user = User.objects.get(id=user_id)
             return False if user.pk is None else user
-        except:
+        except Exception as e:
             return False
-
 
     def get_one_by_username(self, username):
         """Get User By Username"""
         try:
             user = User.objects.get(username=username)
             return False if user.pk is None else user
-        except:
+        except Exception as e:
             return False
-
 
     def get_one_by_email(self, email):
         """Get User By Email"""
         try:
             user = User.objects.get(email=email)
             return False if user.pk is None else user
-        except:
+        except Exception as e:
             return False
-
 
     def update_password_by_email(self, email, new_password):
         """Update Password by Email"""
         user = self.get_one_by_email(email)
-        if user != False:
+        if user is not False:
             user.password = make_password(new_password)
             user.save()
             return True
         return False
-
 
     def validate_password_by_user_id(self, user_id, password):
         user = self.get_one_by_id(user_id)
-        if user != False and user.check_password(password) == True:
+        if user is not False and user.check_password(password) is True:
             return True
         return False
 
-
     def update_password_by_user_id(self, user_id, new_password):
         user = self.get_one_by_id(user_id)
-        if user != False:
+        if user is not False:
             user.password = make_password(new_password)
             user.save()
             return True
         return False
-
 
     def count_all_users(self):
         return User.objects.count()

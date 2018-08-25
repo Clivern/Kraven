@@ -6,11 +6,12 @@ Upgrade Module
 import requests
 
 # local Django
-from app.settings.info import *
+from app.settings.info import RELEASES
+from app.settings.info import VERSION
+from app.settings.info import DOWNLOAD_URL
 
 
 class Upgrade():
-
 
     def need_upgrade(self):
         latest = self.get_latest_version()
@@ -20,7 +21,6 @@ class Upgrade():
         current_version = int(current["version"].replace(".", ""))
 
         return latest_version > current_version
-
 
     def get_latest_version(self):
         r = requests.get(RELEASES)
@@ -37,7 +37,6 @@ class Upgrade():
                     "version": VERSION,
                     "download_url": DOWNLOAD_URL
                 }
-
 
     def get_current_version(self):
         return {

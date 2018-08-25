@@ -15,16 +15,13 @@ class Request():
     __helpers = None
     __logger = None
 
-
-    def __init__(self, request = None):
+    def __init__(self, request=None):
         self.__request = request
         self.__helpers = Helpers()
         self.__logger = self.__helpers.get_logger(__name__)
 
-
     def set_request(self, request):
         self.__request = request
-
 
     def get_request_data(self, method, predicted):
         request_data = {}

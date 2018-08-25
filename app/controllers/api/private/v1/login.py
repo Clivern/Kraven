@@ -4,11 +4,8 @@ Login API Endpoint
 
 # Django
 from django.views import View
-from django.urls import reverse
 from django.http import JsonResponse
 from django.utils.translation import gettext as _
-from django.views.decorators.csrf import csrf_exempt
-from django.utils.decorators import method_decorator
 
 # local Django
 from app.modules.validation.form import Form
@@ -28,10 +25,8 @@ class Login(View):
     __login = Login_Module()
     __logger = None
 
-
     def __init__(self):
         self.__logger = self.__helpers.get_logger(__name__)
-
 
     @stop_request_if_authenticated
     def post(self, request):
@@ -45,8 +40,8 @@ class Login(View):
         self.__request.set_request(request)
 
         request_data = self.__request.get_request_data("post", {
-            "username" : "",
-            "password" : ""
+            "username": "",
+            "password": ""
         })
 
         self.__form.add_inputs({
@@ -68,7 +63,7 @@ class Login(View):
                     'password': {
                         'error': _("Error! Username or password is invalid.")
                     },
-                    'length_between':{
+                    'length_between': {
                         'param': [7, 20],
                         'error': _("Error! Username or password is invalid.")
                     }

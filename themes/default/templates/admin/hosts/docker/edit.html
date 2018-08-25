@@ -9,7 +9,7 @@
             <div class="container">
                 <div class="row">
                     <div class="col-12">
-                        <form id="host_create" class="card _endpoint_connect" onsubmit="return false" action="{% url 'app.api.private.v1.admin.host.endpoint' host.id %}" method="post"data-succ-type="redirect" data-succ-url="{% url 'app.web.admin.hosts.list' %}" data-succ-wait="3000">
+                        <form id="host_create" class="card _endpoint_connect" onsubmit="return false" action="{% url 'app.api.private.v1.admin.host.endpoint' host.id %}" method="post" data-succ-type="redirect" data-succ-url="{% url 'app.web.admin.hosts.list' %}" data-succ-wait="3000">
                             {% csrf_token %}
                             <div class="card-status bg-green"></div>
                             <div class="card-header">

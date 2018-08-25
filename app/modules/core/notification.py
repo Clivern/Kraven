@@ -2,6 +2,9 @@
 Task Module
 """
 
+# Django
+from django.shortcuts import reverse
+
 # local Django
 from app.modules.util.helpers import Helpers
 from app.modules.util.humanize import Humanize
@@ -10,6 +13,12 @@ from app.modules.entity.notification_entity import Notification_Entity
 
 
 class Notification():
+
+    PENDING = "pending"
+    FAILED = "failed"
+    PASSED = "passed"
+    ERROR = "error"
+    MESSAGE = "message"
 
     __notification_entity = Notification_Entity()
     __option_entity = Option_Entity()
@@ -44,7 +53,7 @@ class Notification():
                 "type": notification.type,
                 "highlight": self.__humanize_highlight(notification.highlight, notification.host),
                 "description": notification.notification,
-                "url": notification.url,
+                "url": self.__get_url(notification.url, notification.host),
                 "delivered": notification.delivered,
                 "time": self.__humanize_updated_at(notification.created_at)
             })
@@ -62,6 +71,11 @@ class Notification():
             return self.__notification_entity.update_one_by_id(notification_id, {"delivered": True})
 
         return False
+
+    def __get_url(self, url, host):
+        if host:
+            return reverse("app.web.admin.hosts.view", kwargs={'host_slug': host.slug})
+        return url
 
     def __humanize_highlight(self, highlight, host):
         if host:

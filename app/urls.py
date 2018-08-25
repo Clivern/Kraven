@@ -50,6 +50,7 @@ from app.controllers.api.private.v1.admin.hosts import Host as Host_Admin_V1_End
 from app.controllers.api.private.v1.admin.notifications import Notifications as Notifications_Admin_V1_Endpoint_Private
 
 from app.controllers.api.private.v1.admin.actions.hosts import Health_Check as Health_Check_Action_Admin_V1_Endpoint_Private
+from app.controllers.api.private.v1.admin.actions.hosts import Pull_Image as Pull_Image_Action_Admin_V1_Endpoint_Private
 
 
 urlpatterns = [
@@ -106,7 +107,11 @@ urlpatterns = [
                 Health_Check_Action_Admin_V1_Endpoint_Private.as_view(),
                 name='app.api.private.v1.admin.action.host.health_check.endpoint'
             ),
-
+            path(
+                'action/host/pull_image/<int:host_id>',
+                Pull_Image_Action_Admin_V1_Endpoint_Private.as_view(),
+                name='app.api.private.v1.admin.action.host.pull_image.endpoint'
+            ),
         ]))
 
     ])),

@@ -14,7 +14,8 @@ from app.modules.core.request import Request
 from app.modules.core.response import Response
 from app.modules.core.host import Host as Host_Module
 from app.modules.service.docker.status import Status
-from app.modules.core.task import Task as Task_Core
+from app.modules.core.task import Task as Task_Module
+from app.modules.core.notification import Notification as Notification_Module
 
 
 class Health_Check(View):
@@ -67,7 +68,8 @@ class Pull_Image(View):
     __user_id = None
     __host_id = None
     __host_module = Host_Module()
-    __task_core = Task_Core()
+    __task_module = Task_Module()
+    __notification_module = Notification_Module()
 
     def __init__(self):
         self.__logger = self.__helpers.get_logger(__name__)
@@ -85,7 +87,15 @@ class Pull_Image(View):
         self.__form.add_inputs({
             'repository': {
                 'value': request_data["repository"],
-                'validate': {}
+                'validate': {
+                    'not_empty': {
+                        'error': _('Error! docker image is required!')
+                    },
+                    'length_between': {
+                        'param': [1, 100],
+                        'error': _('Error! a valid docker image is required!')
+                    }
+                }
             }
         })
 
@@ -102,18 +112,28 @@ class Pull_Image(View):
                 "message": _("Error! Invalid Request.")
             }]))
 
-        task = self.__task_core.delay("pull_image", {
+        task = self.__task_module.delay("pull_image", {
             "host_id": self.__host_id,
             "repository": self.__form.get_input_value("repository")
         }, self.__user_id)
 
         if task:
+
+            self.__notification_module.create_notification({
+                "highlight": "",
+                "notification": "pulling docker image %s" % self.__form.get_input_value("repository"),
+                "url": "#",
+                "type": Notification_Module.PENDING,
+                "delivered": False,
+                "user_id": self.__user_id,
+                "host_id": self.__host_id,
+                "task_id": task.id
+            })
+
             return JsonResponse(self.__response.send_private_success([{
                 "type": "success",
-                "message": _("Request is In Progress!")
-            }], {
-                "task_id": task.id
-            }))
+                "message": _("Request is in progress!")
+            }]))
 
         else:
             return JsonResponse(self.__response.send_private_failure([{

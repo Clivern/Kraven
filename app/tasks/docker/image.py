@@ -15,11 +15,11 @@ def pull_image(host_id, repository):
         _image = Image()
         result = _image.set_host(host_id).pull(repository)
         if result:
-            return {"status": "passed", "result": "{}"}
+            return {"status": "passed", "result": "{}", "notify_type": "passed"}
         else:
-            return {"status": "failed", "result": "{}"}
+            return {"status": "failed", "result": "{}", "notify_type": "failed"}
     except Exception as e:
-        return {"status": "failed", "result": str(e)}
+        return {"status": "failed", "result": str(e), "notify_type": "error"}
 
 
 @shared_task

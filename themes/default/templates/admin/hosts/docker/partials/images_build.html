@@ -1,0 +1,41 @@
+{% load staticfiles %}
+{% load i18n %}
+
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">{% trans "Build Image" %}</h3>
+        <div class="card-options"></div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-12">
+        <form id="host_create" class="card _endpoint_connect" onsubmit="return false" action="{% url 'app.api.private.v1.admin.action.host.pull_image.endpoint' host.id %}" data-succ-type="reset" method="post">
+            {% csrf_token %}
+            <div class="card-status bg-green"></div>
+            <div class="card-body">
+                <div class="dimmer">
+                    <div class="loader"></div>
+                    <div class="dimmer-content">
+                        <div class="row">
+                            <div class="col-md-12 col-lg-12">
+                                <div class="form-group">
+                                    <label class="form-label">{% trans "Image Name" %}</label>
+                                    <input type="text" class="form-control" name="name" placeholder="ubuntu:18.04" required>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">{% trans "Dockerfile" %}</label>
+                                    <textarea name="dockerfile" class="form-control" rows="10" required placeholder="FROM ubuntu:18.04"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer text-right">
+                <div class="d-flex">
+                    <button type="submit" class="btn btn-primary btn-sm ml-auto">{% trans "Build" %}</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

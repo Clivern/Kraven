@@ -16,6 +16,7 @@ from app.modules.core.host import Host as Host_Module
 from app.modules.service.docker.status import Status
 from app.modules.core.task import Task as Task_Module
 from app.modules.core.notification import Notification as Notification_Module
+from app.modules.service.docker.image import Image as Image_Module
 
 
 class Health_Check(View):
@@ -153,7 +154,69 @@ class Get_Image(View):
 
 
 class Get_Images(View):
-    pass
+
+    __request = Request()
+    __response = Response()
+    __helpers = Helpers()
+    __form = Form()
+    __logger = None
+    __user_id = None
+    __host_id = None
+    __host_module = Host_Module()
+    __image_module = Image_Module()
+
+    def __init__(self):
+        self.__logger = self.__helpers.get_logger(__name__)
+
+    def post(self, request, host_id):
+
+        self.__user_id = request.user.id
+        self.__host_id = host_id
+
+        self.__request.set_request(request)
+        request_data = self.__request.get_request_data("post", {
+            "repository": ""
+        })
+
+        self.__form.add_inputs({
+            'repository': {
+                'value': request_data["repository"],
+                'validate': {
+                    'not_empty': {
+                        'error': _('Error! docker image is required!')
+                    },
+                    'length_between': {
+                        'param': [1, 100],
+                        'error': _('Error! a valid docker image is required!')
+                    }
+                }
+            }
+        })
+
+        self.__form.process()
+
+        if not self.__form.is_passed():
+            return JsonResponse(self.__response.send_private_failure(
+                self.__form.get_errors(with_type=True)
+            ))
+
+        if not self.__host_module.user_owns(self.__host_id, self.__user_id):
+            return JsonResponse(self.__response.send_private_failure([{
+                "type": "error",
+                "message": _("Error! Invalid Request.")
+            }]))
+
+        if self.__image_module.set_host(self.__host_id).check_health():
+            result = self.__image_module.list()
+            print(result)
+            return JsonResponse(self.__response.send_private_success([], {}))
+        else:
+            return JsonResponse(self.__response.send_private_failure([{
+                "type": "error",
+                "message": _(
+                    "Error! Something goes wrong with your host!"
+                )
+            }]))
 
 
 class Tag_Image(View):
@@ -161,4 +224,66 @@ class Tag_Image(View):
 
 
 class Search_Community_Images(View):
-    pass
+
+    __request = Request()
+    __response = Response()
+    __helpers = Helpers()
+    __form = Form()
+    __logger = None
+    __user_id = None
+    __host_id = None
+    __host_module = Host_Module()
+    __image_module = Image_Module()
+
+    def __init__(self):
+        self.__logger = self.__helpers.get_logger(__name__)
+
+    def post(self, request, host_id):
+
+        self.__user_id = request.user.id
+        self.__host_id = host_id
+
+        self.__request.set_request(request)
+        request_data = self.__request.get_request_data("post", {
+            "term": ""
+        })
+
+        self.__form.add_inputs({
+            'term': {
+                'value': request_data["term"],
+                'validate': {
+                    'not_empty': {
+                        'error': _('Error! Search term is required!')
+                    },
+                    'length_between': {
+                        'param': [1, 100],
+                        'error': _('Error! a valid search term is required!')
+                    }
+                }
+            }
+        })
+
+        self.__form.process()
+
+        if not self.__form.is_passed():
+            return JsonResponse(self.__response.send_private_failure(
+                self.__form.get_errors(with_type=True)
+            ))
+
+        if not self.__host_module.user_owns(self.__host_id, self.__user_id):
+            return JsonResponse(self.__response.send_private_failure([{
+                "type": "error",
+                "message": _("Error! Invalid Request.")
+            }]))
+
+        if self.__image_module.set_host(self.__host_id).check_health():
+            result = self.__image_module.search(self.__form.get_input_value("term"))
+            print(result)
+            return JsonResponse(self.__response.send_private_success([], {}))
+        else:
+            return JsonResponse(self.__response.send_private_failure([{
+                "type": "error",
+                "message": _(
+                    "Error! Something goes wrong with your host!"
+                )
+            }]))

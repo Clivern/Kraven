@@ -9,34 +9,3 @@
         </div>
     </div>
 </div>
-<div class="row">
-    <div class="col-6">
-        <form id="host_create" class="card _endpoint_connect" onsubmit="return false" action="{% url 'app.api.private.v1.admin.action.host.pull_image.endpoint' host.id %}" data-succ-type="reset" method="post">
-            {% csrf_token %}
-            <div class="card-status bg-green"></div>
-            <div class="card-body">
-                <div class="dimmer">
-                    <div class="loader"></div>
-                    <div class="dimmer-content">
-                        <div class="row">
-                            <div class="col-md-12 col-lg-12">
-                                <div class="form-group">
-                                    <label class="form-label">{% trans "Image" %}</label>
-                                    <input type="text" class="form-control" name="repository" placeholder="ubuntu:18.04" required>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="card-footer text-right">
-                <div class="d-flex">
-                    <button type="submit" class="btn btn-primary btn-sm ml-auto">{% trans "Pull" %}</button>
-                </div>
-            </div>
-        </form>
-    </div>
-    <div class="col-6">
-
-    </div>
-</div>

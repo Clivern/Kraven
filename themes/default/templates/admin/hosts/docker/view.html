@@ -60,21 +60,7 @@
                         </div>
                     </div>
                     <div class="col-sm-6 col-lg-9">
-                        {% if screen == "main" %}
-                            {% include 'templates/admin/hosts/docker/partials/main.html' %}
-                        {% elif screen == "containers" %}
-                            {% include 'templates/admin/hosts/docker/partials/containers.html' %}
-                        {% elif screen == "images" %}
-                            {% include 'templates/admin/hosts/docker/partials/images.html' %}
-                        {% elif screen == "networks" %}
-                            {% include 'templates/admin/hosts/docker/partials/networks.html' %}
-                        {% elif screen == "services" %}
-                            {% include 'templates/admin/hosts/docker/partials/services.html' %}
-                        {% elif screen == "volumes" %}
-                            {% include 'templates/admin/hosts/docker/partials/volumes.html' %}
-                        {% elif screen == "activity" %}
-                            {% include 'templates/admin/hosts/docker/partials/activity.html' %}
-                        {% endif %}
+                        {% include "templates/admin/hosts/docker/partials/"|add:screen|add:".html" %}
                     </div>
                 </div>
             </div>

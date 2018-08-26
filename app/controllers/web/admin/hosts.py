@@ -160,6 +160,56 @@ class Host_Images_View(View):
         return render(request, self.template_name, self.__context.get())
 
 
+class Host_Images_Pull_View(View):
+
+    template_name = 'templates/admin/hosts/docker/view.html'
+    __context = Context()
+    __host_module = Host_Module()
+
+    @login_if_not_authenticated
+    def get(self, request, host_slug):
+
+        host = self.__host_module.get_one_by_slug_user_id(host_slug, request.user.id)
+
+        if not host or request.user.id != host.user.id:
+            raise Http404("Host not found.")
+
+        self.__context.autoload_options()
+        self.__context.autoload_user(request.user.id if request.user.is_authenticated else None)
+        self.__context.push({
+            "page_title": _("%s Host · %s") % (host.name, self.__context.get("app_name", os.getenv("APP_NAME", "Kraven"))),
+            "host": host,
+            "screen": "images_pull"
+        })
+
+        return render(request, self.template_name, self.__context.get())
+
+
+class Host_Images_Build_View(View):
+
+    template_name = 'templates/admin/hosts/docker/view.html'
+    __context = Context()
+    __host_module = Host_Module()
+
+    @login_if_not_authenticated
+    def get(self, request, host_slug):
+
+        host = self.__host_module.get_one_by_slug_user_id(host_slug, request.user.id)
+
+        if not host or request.user.id != host.user.id:
+            raise Http404("Host not found.")
+
+        self.__context.autoload_options()
+        self.__context.autoload_user(request.user.id if request.user.is_authenticated else None)
+        self.__context.push({
+            "page_title": _("%s Host · %s") % (host.name, self.__context.get("app_name", os.getenv("APP_NAME", "Kraven"))),
+            "host": host,
+            "screen": "images_build"
+        })
+
+        return render(request, self.template_name, self.__context.get())
+
+
 class Host_Networks_View(View):
 
     template_name = 'templates/admin/hosts/docker/view.html'

@@ -6,7 +6,6 @@ Client Module
 import json
 
 # Third Party
-import docker
 from docker import APIClient
 
 # local Django

@@ -36,7 +36,6 @@ def pull_image(host_id, repository):
         }
 
 
-
 @shared_task
 def build_image(host_id):
     pass

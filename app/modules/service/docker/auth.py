@@ -26,7 +26,6 @@ class Auth():
     __file = File()
     __host_auth_storage = "%s/storage/app/private/host/%d/auth_data"
 
-
     def __init__(self, host_id=None):
         self._host_id = host_id
         if host_id is not None:
@@ -72,7 +71,7 @@ class Auth():
             return False
         elif self._host.auth_data["auth_type"] == "tls_server_client":
             return docker.tls.TLSConfig(
-                ca_cert= (self.__host_auth_storage + '/ca.pem') % (APP_ROOT, self._host.id),
+                ca_cert=(self.__host_auth_storage + '/ca.pem') % (APP_ROOT, self._host.id),
                 client_cert=(
                     (self.__host_auth_storage + '/cert.pem') % (APP_ROOT, self._host.id),
                     (self.__host_auth_storage + '/key.pem') % (APP_ROOT, self._host.id)
@@ -116,7 +115,8 @@ class Auth():
             self.__file.write("%s/cert.pem" % host_path, self._host.auth_data["tls_certificate"])
             self.__file.write("%s/key.pem" % host_path, self._host.auth_data["tls_key"])
 
-        if not self.__file.exists("%s/ca.pem" % host_path) or not self.__file.exists("%s/cert.pem" % host_path) or not self.__file.exists("%s/key.pem" % host_path):
+        if not self.__file.exists("%s/ca.pem" % host_path) or \
+                not self.__file.exists("%s/cert.pem" % host_path) or not self.__file.exists("%s/key.pem" % host_path):
             self.__file.write("%s/cache_time.log" % host_path, "%s,%s" % (str(self._host.created_at), str(self._host.updated_at)))
             self.__file.write("%s/ca.pem" % host_path, self._host.auth_data["tls_ca_certificate"])
             self.__file.write("%s/cert.pem" % host_path, self._host.auth_data["tls_certificate"])

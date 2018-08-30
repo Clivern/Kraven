@@ -7,10 +7,6 @@ see https://docs.djangoproject.com/en/2.0/howto/custom-management-commands/
 # Django
 from django.core.management.base import BaseCommand, CommandError
 
-import json
-from docker import APIClient
-from app.modules.service.docker.low_level.image import Image
-
 
 class Command(BaseCommand):
 

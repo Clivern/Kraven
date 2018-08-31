@@ -53,15 +53,19 @@ class Auth():
 
         return self
 
-    def check_health(self):
+    def check_health(self, client_type="docker_client"):
         for x in range(0, self._retry):
-            if self._ping():
+            if self._ping(client_type):
                 return True
         return False
 
-    def _ping(self):
+    def _ping(self, client_type="docker_client"):
         try:
-            self._client = docker.DockerClient(base_url=self._host.server, tls=self.tls_config())
+            if client_type == "docker_client":
+                self._client = docker.DockerClient(base_url=self._host.server, tls=self.tls_config())
+            else:
+                self._client = docker.APIClient(base_url=self._host.server, tls=self.tls_config())
+
             return self._client.ping()
         except Exception as e:
             return False

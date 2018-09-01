@@ -18,14 +18,19 @@ from app.modules.core.decorators import stop_request_if_authenticated
 
 class Login(View):
 
-    __request = Request()
-    __response = Response()
-    __helpers = Helpers()
-    __form = Form()
-    __login = Login_Module()
+    __request = None
+    __response = None
+    __helpers = None
+    __form = None
+    __login = None
     __logger = None
 
     def __init__(self):
+        self.__request = Request()
+        self.__response = Response()
+        self.__helpers = Helpers()
+        self.__form = Form()
+        self.__login = Login_Module()
         self.__logger = self.__helpers.get_logger(__name__)
 
     @stop_request_if_authenticated

@@ -21,17 +21,23 @@ from app.modules.service.docker.image import Image as Image_Module
 
 class Health_Check(View):
 
-    __request = Request()
-    __response = Response()
-    __helpers = Helpers()
-    __form = Form()
+    __request = None
+    __response = None
+    __helpers = None
+    __form = None
     __logger = None
     __user_id = None
     __host_id = None
-    __host_module = Host_Module()
-    __status = Status()
+    __host_module = None
+    __status = None
 
     def __init__(self):
+        self.__request = Request()
+        self.__response = Response()
+        self.__helpers = Helpers()
+        self.__form = Form()
+        self.__host_module = Host_Module()
+        self.__status = Status()
         self.__logger = self.__helpers.get_logger(__name__)
 
     def get(self, request, host_id):
@@ -61,18 +67,25 @@ class Health_Check(View):
 
 class Pull_Image(View):
 
-    __request = Request()
-    __response = Response()
-    __helpers = Helpers()
-    __form = Form()
+    __request = None
+    __response = None
+    __helpers = None
+    __form = None
     __logger = None
     __user_id = None
     __host_id = None
-    __host_module = Host_Module()
-    __task_module = Task_Module()
-    __notification_module = Notification_Module()
+    __host_module = None
+    __task_module = None
+    __notification_module = None
 
     def __init__(self):
+        self.__request = Request()
+        self.__response = Response()
+        self.__helpers = Helpers()
+        self.__form = Form()
+        self.__host_module = Host_Module()
+        self.__task_module = Task_Module()
+        self.__notification_module = Notification_Module()
         self.__logger = self.__helpers.get_logger(__name__)
 
     def post(self, request, host_id):
@@ -155,17 +168,23 @@ class Get_Image(View):
 
 class Get_Images(View):
 
-    __request = Request()
-    __response = Response()
-    __helpers = Helpers()
-    __form = Form()
+    __request = None
+    __response = None
+    __helpers = None
+    __form = None
     __logger = None
     __user_id = None
     __host_id = None
-    __host_module = Host_Module()
-    __image_module = Image_Module()
+    __host_module = None
+    __image_module = None
 
     def __init__(self):
+        self.__request = Request()
+        self.__response = Response()
+        self.__helpers = Helpers()
+        self.__form = Form()
+        self.__host_module = Host_Module()
+        self.__image_module = Image_Module()
         self.__logger = self.__helpers.get_logger(__name__)
 
     def post(self, request, host_id):
@@ -225,17 +244,23 @@ class Tag_Image(View):
 
 class Search_Community_Images(View):
 
-    __request = Request()
-    __response = Response()
-    __helpers = Helpers()
-    __form = Form()
+    __request = None
+    __response = None
+    __helpers = None
+    __form = None
     __logger = None
     __user_id = None
     __host_id = None
-    __host_module = Host_Module()
-    __image_module = Image_Module()
+    __host_module = None
+    __image_module = None
 
     def __init__(self):
+        self.__request = Request()
+        self.__response = Response()
+        self.__helpers = Helpers()
+        self.__form = Form()
+        self.__host_module = Host_Module()
+        self.__image_module = Image_Module()
         self.__logger = self.__helpers.get_logger(__name__)
 
     def post(self, request, host_id):

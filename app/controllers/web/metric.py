@@ -16,12 +16,15 @@ from app.modules.core.metric import Metric
 
 class Metric(View):
 
-    __prometheus = Prometheus()
-    __metric = Metric()
+    __prometheus = None
+    __metric = None
 
     @redirect_if_not_installed
     @protect_metric_with_auth_key
     def get(self, request, type):
+
+        self.__prometheus = Prometheus()
+        self.__metric = Metric()
 
         if type not in ("prometheus"):
             raise Http404("Page not found.")

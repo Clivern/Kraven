@@ -21,12 +21,15 @@ from app.modules.core.decorators import redirect_if_not_installed
 class Login(View):
 
     template_name = 'templates/login.html'
-    __context = Context()
-    __option_entity = Option_Entity()
+    __context = None
+    __option_entity = None
 
     @redirect_if_not_installed
     @redirect_if_authenticated
     def get(self, request):
+
+        self.__context = Context()
+        self.__option_entity = Option_Entity()
 
         self.__context.autoload_options()
         self.__context.push({

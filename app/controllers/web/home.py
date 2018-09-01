@@ -19,11 +19,14 @@ from app.modules.core.decorators import redirect_if_not_installed
 class Home(View):
 
     template_name = 'templates/home.html'
-    __context = Context()
-    __option_entity = Option_Entity()
+    __context = None
+    __option_entity = None
 
     @redirect_if_not_installed
     def get(self, request):
+
+        self.__context = Context()
+        self.__option_entity = Option_Entity()
 
         self.__context.autoload_options()
         self.__context.push({

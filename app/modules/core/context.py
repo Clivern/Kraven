@@ -23,12 +23,17 @@ from app.modules.entity.user_entity import User_Entity
 class Context():
 
     __data = {}
-    __option_entity = Option_Entity()
-    __user_entity = User_Entity()
-    __helpers = Helpers()
+    __option_entity = None
+    __user_entity = None
+    __helpers = None
     __logger = None
 
     def __init__(self):
+
+        self.__option_entity = Option_Entity()
+        self.__user_entity = User_Entity()
+        self.__helpers = Helpers()
+
         self.__data["AUTHOR"] = AUTHOR
         self.__data["COPYRIGHT"] = COPYRIGHT
         self.__data["LICENSE"] = LICENSE

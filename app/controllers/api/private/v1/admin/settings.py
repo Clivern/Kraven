@@ -18,15 +18,21 @@ from app.modules.core.acl import ACL
 
 class Settings(View):
 
-    __request = Request()
-    __response = Response()
-    __helpers = Helpers()
-    __form = Form()
-    __settings_module = Settings_Module()
+    __request = None
+    __response = None
+    __helpers = None
+    __form = None
+    __settings_module = None
     __logger = None
-    __acl = ACL()
+    __acl = None
 
     def __init__(self):
+        self.__request = Request()
+        self.__response = Response()
+        self.__helpers = Helpers()
+        self.__form = Form()
+        self.__settings_module = Settings_Module()
+        self.__acl = ACL()
         self.__logger = self.__helpers.get_logger(__name__)
 
     def post(self, request):

@@ -21,12 +21,16 @@ class Auth():
     _host_id = None
     _host = None
     _retry = 3
-    __crypto = Crypto()
-    __directory = Directory()
-    __file = File()
+    __crypto = None
+    __directory = None
+    __file = None
     __host_auth_storage = "%s/storage/app/private/host/%d/auth_data"
 
     def __init__(self, host_id=None):
+        self.__crypto = Crypto()
+        self.__directory = Directory()
+        self.__file = File()
+
         self._host_id = host_id
         if host_id is not None:
             host = Host.objects.get(pk=host_id)

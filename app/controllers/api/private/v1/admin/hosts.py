@@ -17,15 +17,20 @@ from app.modules.core.host import Host as Host_Module
 
 class Hosts(View):
 
-    __request = Request()
-    __response = Response()
-    __helpers = Helpers()
-    __form = Form()
+    __request = None
+    __response = None
+    __helpers = None
+    __form = None
     __logger = None
     __user_id = None
-    __host_module = Host_Module()
+    __host_module = None
 
     def __init__(self):
+        self.__request = Request()
+        self.__response = Response()
+        self.__helpers = Helpers()
+        self.__form = Form()
+        self.__host_module = Host_Module()
         self.__logger = self.__helpers.get_logger(__name__)
 
     def post(self, request):
@@ -168,16 +173,21 @@ class Hosts(View):
 
 class Host(View):
 
-    __request = Request()
-    __response = Response()
-    __helpers = Helpers()
-    __form = Form()
+    __request = None
+    __response = None
+    __helpers = None
+    __form = None
     __logger = None
     __user_id = None
     __host_id = None
-    __host_module = Host_Module()
+    __host_module = None
 
     def __init__(self):
+        self.__request = Request()
+        self.__response = Response()
+        self.__helpers = Helpers()
+        self.__form = Form()
+        self.__host_module = Host_Module()
         self.__logger = self.__helpers.get_logger(__name__)
 
     def post(self, request, host_id):

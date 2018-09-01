@@ -23,13 +23,17 @@ from app.modules.core.reset_password import Reset_Password as Reset_Password_Mod
 class Reset_Password(View):
 
     template_name = 'templates/reset_password.html'
-    __reset_password_core = Reset_Password_Module()
-    __context = Context()
-    __option_entity = Option_Entity()
+    __reset_password_core = None
+    __context = None
+    __option_entity = None
 
     @redirect_if_not_installed
     @redirect_if_authenticated
     def get(self, request, token):
+
+        self.__reset_password_core = Reset_Password_Module()
+        self.__context = Context()
+        self.__option_entity = Option_Entity()
 
         self.__context.autoload_options()
         self.__context.push({

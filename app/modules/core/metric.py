@@ -13,16 +13,22 @@ from app.modules.entity.task_entity import Task_Entity
 
 class Metric():
 
-    __option_entity = Option_Entity()
-    __user_entity = User_Entity()
-    __host_entity = Host_Entity()
-    __task_entity = Task_Entity()
-    __profile_entity = Profile_Entity()
-    __helpers = Helpers()
+    __option_entity = None
+    __user_entity = None
+    __host_entity = None
+    __task_entity = None
+    __profile_entity = None
+    __helpers = None
     __logger = None
     __app_name = ""
 
     def __init__(self):
+        self.__option_entity = Option_Entity()
+        self.__user_entity = User_Entity()
+        self.__host_entity = Host_Entity()
+        self.__task_entity = Task_Entity()
+        self.__profile_entity = Profile_Entity()
+        self.__helpers = Helpers()
         self.__logger = self.__helpers.get_logger(__name__)
         self.__app_name = self.__option_entity.get_value_by_key("app_name").lower()
 

@@ -18,14 +18,19 @@ from app.modules.core.install import Install as Install_Module
 
 class Install(View):
 
-    __request = Request()
-    __response = Response()
-    __helpers = Helpers()
-    __form = Form()
-    __install = Install_Module()
+    __request = None
+    __response = None
+    __helpers = None
+    __form = None
+    __install = None
     __logger = None
 
     def __init__(self):
+        self.__request = Request()
+        self.__response = Response()
+        self.__helpers = Helpers()
+        self.__form = Form()
+        self.__install = Install_Module()
         self.__logger = self.__helpers.get_logger(__name__)
 
     @stop_request_if_installed

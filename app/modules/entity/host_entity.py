@@ -14,7 +14,10 @@ from app.modules.util.crypto import Crypto
 
 class Host_Entity():
 
-    __crypto = Crypto()
+    __crypto = None
+
+    def __init__(self):
+        self.__crypto = Crypto()
 
     def insert_one(self, host):
         """Insert a New Host"""

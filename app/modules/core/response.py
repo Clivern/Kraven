@@ -49,6 +49,7 @@ class Response():
         return __public
 
     def send_public_failure(self, messages, payload={}):
+        __public = {}
         __public["status"] = "failure"
         __public["messages"] = messages
         if len(payload) > 0:

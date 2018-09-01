@@ -170,6 +170,10 @@ class Remove_Image(View):
     pass
 
 
+class Prune_Images(View):
+    pass
+
+
 class Get_Image(View):
     pass
 

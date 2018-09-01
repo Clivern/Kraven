@@ -10,10 +10,10 @@ from app.modules.service.docker.image import Image
 
 
 @shared_task
-def pull_image(host_id, repository):
+def pull_image(host_id, image_name):
     try:
         _image = Image()
-        result = _image.set_host(host_id).pull(repository)
+        result = _image.set_host(host_id).pull(image_name)
         if result:
             return {
                 "status": "passed",

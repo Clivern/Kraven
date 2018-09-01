@@ -21,21 +21,9 @@
                         <div class="row">
                             <div class="col-md-12 col-lg-12">
                                 <div class="form-group">
-                                    <label class="form-label">{% trans "Image" %}</label>
-                                    <select name="repository" id="select-beast" class="form-control custom-select" placeholder="Start Typing...">
-                                        <option value=""></option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label class="custom-switch">
-                                        <input type="checkbox" name="custom-switch-checkbox" class="custom-switch-input">
-                                        <span class="custom-switch-indicator"></span>
-                                        <span class="custom-switch-description">I can't find the image!</span>
-                                    </label>
-                                </div>
-                                <div class="form-group">
-                                    <label class="form-label">{% trans "Specific Image" %}</label>
-                                    <input type="text" class="form-control" name="name" placeholder="ubuntu:18.04">
+                                    <label class="form-label">{% trans "Image name" %}</label>
+                                    <input type="text" class="form-control" name="image_name" placeholder="ubuntu:18.04">
+                                    <div class="form-text text-muted">{% trans "Note: if you don't specify the tag in the image name, latest will be used." %}</div>
                                 </div>
                             </div>
                         </div>
@@ -44,7 +32,7 @@
             </div>
             <div class="card-footer text-right">
                 <div class="d-flex">
-                    <button type="submit" class="btn btn-primary btn-sm ml-auto">{% trans "Pull" %}</button>
+                    <button type="submit" class="btn btn-primary ml-auto">{% trans "Pull" %}</button>
                 </div>
             </div>
         </form>

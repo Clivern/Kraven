@@ -26,7 +26,7 @@ class Validator():
         return self.__input == ''
 
     def not_empty(self):
-        return not self.__input == ''
+        return not self.__input.replace(' ', '') == ''
 
     def length_between(self, from_length, to_length):
         if to_length > len(self.__input) > from_length:

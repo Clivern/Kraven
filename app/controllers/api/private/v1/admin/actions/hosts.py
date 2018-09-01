@@ -95,12 +95,15 @@ class Pull_Image(View):
 
         self.__request.set_request(request)
         request_data = self.__request.get_request_data("post", {
-            "repository": ""
+            "image_name": ""
         })
 
         self.__form.add_inputs({
-            'repository': {
-                'value': request_data["repository"],
+            'image_name': {
+                'value': request_data["image_name"],
+                'sanitize': {
+                    'strip': {}
+                },
                 'validate': {
                     'not_empty': {
                         'error': _('Error! docker image is required!')
@@ -126,16 +129,21 @@ class Pull_Image(View):
                 "message": _("Error! Invalid Request.")
             }]))
 
+        _image_name = self.__form.get_input_value("image_name")
+
+        if ":" not in _image_name:
+            _image_name = "%s:latest" % _image_name
+
         task = self.__task_module.delay("pull_image", {
             "host_id": self.__host_id,
-            "repository": self.__form.get_input_value("repository")
+            "image_name": _image_name
         }, self.__user_id)
 
         if task:
 
             self.__notification_module.create_notification({
                 "highlight": "",
-                "notification": "pulling docker image %s" % self.__form.get_input_value("repository"),
+                "notification": "pulling docker image %s" % _image_name,
                 "url": "#",
                 "type": Notification_Module.PENDING,
                 "delivered": False,

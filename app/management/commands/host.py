@@ -74,7 +74,7 @@ class Command(BaseCommand):
         if _image.set_host(configs["host_id"]).check_health():
             print(_image.get_by_id(configs["image_id"]))
 
-    def tag__imageby_id(self, configs={}):
+    def tag_image_by_id(self, configs={}):
         _image = Image_Module()
         if _image.set_host(configs["host_id"]).check_health():
             print(_image.tag_by_id(configs["image_id"], configs["repository"], configs["tag"]))

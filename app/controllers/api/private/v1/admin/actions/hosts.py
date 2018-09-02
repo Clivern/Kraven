@@ -166,6 +166,10 @@ class Pull_Image(View):
             }]))
 
 
+class Build_Image(View):
+    pass
+
+
 class Remove_Image(View):
     pass
 

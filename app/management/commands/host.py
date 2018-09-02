@@ -1,5 +1,5 @@
 """
-Test Command
+Hosts Management Command
 
 see https://docs.djangoproject.com/en/2.0/howto/custom-management-commands/
 """
@@ -11,7 +11,7 @@ from app.modules.util.io import File
 
 class Command(BaseCommand):
 
-    help = "Test Stuff!"
+    help = "Manage Hosts!"
 
     available = [
         "exec"
@@ -26,13 +26,17 @@ class Command(BaseCommand):
         if len(options['command']) == 0 or options['command'][0] not in self.available:
             raise CommandError('Command Does not exist! Please use one of the following: python manage.py health [%s]' % ", ".join(self.available))
 
-        if options['command'][0] == "exec":
+        try:
             configs = {}
             for param in options["command"]:
                 if "=" in param:
                     param = param.split("=")
                     configs[param[0]] = param[1]
-            getattr(self, options["command"][1])(configs)
+
+            if options['command'][0] == "exec":
+                getattr(self, options["command"][1])(configs)
+        except Exception as e:
+            print("Something goes wrong: %s" % str(e))
 
     def pull_image(self, configs={}):
         _image = Image_Module()
@@ -45,37 +49,37 @@ class Command(BaseCommand):
             for image in _image.list():
                 print(image)
 
-    def prune_unused(self, configs={}):
+    def prune_unused_images(self, configs={}):
         _image = Image_Module()
         if _image.set_host(configs["host_id"]).check_health():
             print(_image.prune_unused())
 
-    def prune_all_unused(self, configs={}):
+    def prune_all_unused_images(self, configs={}):
         _image = Image_Module()
         if _image.set_host(configs["host_id"]).check_health():
             print(_image.prune_all_unused())
 
-    def remove_by_name(self, configs={}):
+    def remove_image_by_name(self, configs={}):
         _image = Image_Module()
         if _image.set_host(configs["host_id"]).check_health():
             print(_image.remove_by_name(configs["repository"], configs["tag"]))
 
-    def remove_by_id(self, configs={}):
+    def remove_image_by_id(self, configs={}):
         _image = Image_Module()
         if _image.set_host(configs["host_id"]).check_health():
             print(_image.remove_by_id(configs["image_id"], configs["force"] == "True"))
 
-    def get_by_id(self, configs={}):
+    def get_image_by_id(self, configs={}):
         _image = Image_Module()
         if _image.set_host(configs["host_id"]).check_health():
             print(_image.get_by_id(configs["image_id"]))
 
-    def tag_by_id(self, configs={}):
+    def tag__imageby_id(self, configs={}):
         _image = Image_Module()
         if _image.set_host(configs["host_id"]).check_health():
             print(_image.tag_by_id(configs["image_id"], configs["repository"], configs["tag"]))
 
-    def build(self, configs={}):
+    def build_image(self, configs={}):
         _image = Image_Module()
         if _image.set_host(configs["host_id"]).check_health():
             print(_image.build(File().read(configs["dockerfile"]), configs["tag"]))

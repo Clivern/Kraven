@@ -1,0 +1,81 @@
+"""
+Test Command
+
+see https://docs.djangoproject.com/en/2.0/howto/custom-management-commands/
+"""
+# Django
+from django.core.management.base import BaseCommand, CommandError
+from app.modules.service.docker.image import Image as Image_Module
+from app.modules.util.io import File
+
+
+class Command(BaseCommand):
+
+    help = "Test Stuff!"
+
+    available = [
+        "exec"
+    ]
+
+    def add_arguments(self, parser):
+        """Config Command Args"""
+        parser.add_argument('command', type=str, nargs='+', help='Available commands are %s' % ", ".join(self.available))
+
+    def handle(self, *args, **options):
+        """Command Handle"""
+        if len(options['command']) == 0 or options['command'][0] not in self.available:
+            raise CommandError('Command Does not exist! Please use one of the following: python manage.py health [%s]' % ", ".join(self.available))
+
+        if options['command'][0] == "exec":
+            configs = {}
+            for param in options["command"]:
+                if "=" in param:
+                    param = param.split("=")
+                    configs[param[0]] = param[1]
+            getattr(self, options["command"][1])(configs)
+
+    def pull_image(self, configs={}):
+        _image = Image_Module()
+        if _image.set_host(configs["host_id"]).check_health():
+            print(_image.pull(configs["repository"], configs["tag"]))
+
+    def list_images(self, configs={}):
+        _image = Image_Module()
+        if _image.set_host(configs["host_id"]).check_health():
+            for image in _image.list():
+                print(image)
+
+    def prune_unused(self, configs={}):
+        _image = Image_Module()
+        if _image.set_host(configs["host_id"]).check_health():
+            print(_image.prune_unused())
+
+    def prune_all_unused(self, configs={}):
+        _image = Image_Module()
+        if _image.set_host(configs["host_id"]).check_health():
+            print(_image.prune_all_unused())
+
+    def remove_by_name(self, configs={}):
+        _image = Image_Module()
+        if _image.set_host(configs["host_id"]).check_health():
+            print(_image.remove_by_name(configs["repository"], configs["tag"]))
+
+    def remove_by_id(self, configs={}):
+        _image = Image_Module()
+        if _image.set_host(configs["host_id"]).check_health():
+            print(_image.remove_by_id(configs["image_id"], configs["force"] == "True"))
+
+    def get_by_id(self, configs={}):
+        _image = Image_Module()
+        if _image.set_host(configs["host_id"]).check_health():
+            print(_image.get_by_id(configs["image_id"]))
+
+    def tag_by_id(self, configs={}):
+        _image = Image_Module()
+        if _image.set_host(configs["host_id"]).check_health():
+            print(_image.tag_by_id(configs["image_id"], configs["repository"], configs["tag"]))
+
+    def build(self, configs={}):
+        _image = Image_Module()
+        if _image.set_host(configs["host_id"]).check_health():
+            print(_image.build(File().read(configs["dockerfile"]), configs["tag"]))

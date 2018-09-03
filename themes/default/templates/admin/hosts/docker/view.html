@@ -38,21 +38,27 @@
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td><i class="fe fe-cpu text-muted"></i></td>
-                                        <td>
-                                            <a href="{% url 'app.web.admin.hosts.view.services' host.slug %}">{% trans "Services" %}</a>
-                                        </td>
-                                    </tr>
-                                    <tr>
                                         <td><i class="fe fe-hard-drive text-muted"></i></td>
                                         <td>
                                             <a href="{% url 'app.web.admin.hosts.view.volumes' host.slug %}">{% trans "Volumes" %}</a>
                                         </td>
                                     </tr>
                                     <tr>
+                                        <td><i class="fe fe-settings text-muted"></i></td>
+                                        <td>
+                                            <a href="{% url 'app.web.admin.hosts.view.configs' host.slug %}">{% trans "Configs" %}</a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><i class="fe fe-eye-off text-muted"></i></td>
+                                        <td>
+                                            <a href="{% url 'app.web.admin.hosts.view.secrets' host.slug %}">{% trans "Secrets" %}</a>
+                                        </td>
+                                    </tr>
+                                    <tr>
                                         <td><i class="fe fe-activity text-muted"></i></td>
                                         <td>
-                                            <a href="{% url 'app.web.admin.hosts.view.activity' host.slug %}">{% trans "Activity" %}</a>
+                                            <a href="{% url 'app.web.admin.hosts.view.actions' host.slug %}">{% trans "Actions" %}</a>
                                         </td>
                                     </tr>
                                 </tbody>

@@ -285,7 +285,7 @@ class Host_Volumes_View(View):
         return render(request, self.template_name, self.__context.get())
 
 
-class Host_Activity_View(View):
+class Host_Actions_View(View):
 
     template_name = 'templates/admin/hosts/docker/view.html'
     __context = Context()
@@ -304,7 +304,57 @@ class Host_Activity_View(View):
         self.__context.push({
             "page_title": _("%s Host · %s") % (host.name, self.__context.get("app_name", os.getenv("APP_NAME", "Kraven"))),
             "host": host,
-            "screen": "activity"
+            "screen": "actions"
+        })
+
+        return render(request, self.template_name, self.__context.get())
+
+
+class Host_Secrets_View(View):
+
+    template_name = 'templates/admin/hosts/docker/view.html'
+    __context = Context()
+    __host_module = Host_Module()
+
+    @login_if_not_authenticated
+    def get(self, request, host_slug):
+
+        host = self.__host_module.get_one_by_slug_user_id(host_slug, request.user.id)
+
+        if not host or request.user.id != host.user.id:
+            raise Http404("Host not found.")
+
+        self.__context.autoload_options()
+        self.__context.autoload_user(request.user.id if request.user.is_authenticated else None)
+        self.__context.push({
+            "page_title": _("%s Host · %s") % (host.name, self.__context.get("app_name", os.getenv("APP_NAME", "Kraven"))),
+            "host": host,
+            "screen": "secrets"
+        })
+
+        return render(request, self.template_name, self.__context.get())
+
+
+class Host_Configs_View(View):
+
+    template_name = 'templates/admin/hosts/docker/view.html'
+    __context = Context()
+    __host_module = Host_Module()
+
+    @login_if_not_authenticated
+    def get(self, request, host_slug):
+
+        host = self.__host_module.get_one_by_slug_user_id(host_slug, request.user.id)
+
+        if not host or request.user.id != host.user.id:
+            raise Http404("Host not found.")
+
+        self.__context.autoload_options()
+        self.__context.autoload_user(request.user.id if request.user.is_authenticated else None)
+        self.__context.push({
+            "page_title": _("%s Host · %s") % (host.name, self.__context.get("app_name", os.getenv("APP_NAME", "Kraven"))),
+            "host": host,
+            "screen": "configs"
         })
 
         return render(request, self.template_name, self.__context.get())

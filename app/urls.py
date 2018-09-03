@@ -34,12 +34,11 @@ from app.controllers.web.admin.hosts import Host_Containers_View as Host_Contain
 from app.controllers.web.admin.hosts import Host_Images_View as Host_Images_View_Web
 from app.controllers.web.admin.hosts import Host_Images_Pull_View as Host_Images_Pull_View_Web
 from app.controllers.web.admin.hosts import Host_Images_Build_View as Host_Images_Build_View_Web
-
-
 from app.controllers.web.admin.hosts import Host_Networks_View as Host_Networks_View_Web
-from app.controllers.web.admin.hosts import Host_Services_View as Host_Services_View_Web
 from app.controllers.web.admin.hosts import Host_Volumes_View as Host_Volumes_View_Web
-from app.controllers.web.admin.hosts import Host_Activity_View as Host_Activity_View_Web
+from app.controllers.web.admin.hosts import Host_Actions_View as Host_Actions_View_Web
+from app.controllers.web.admin.hosts import Host_Secrets_View as Host_Secrets_View_Web
+from app.controllers.web.admin.hosts import Host_Configs_View as Host_Configs_View_Web
 
 from app.controllers.api.private.v1.install import Install as Install_V1_Endpoint_Private
 from app.controllers.api.private.v1.login import Login as Login_V1_Endpoint_Private
@@ -58,6 +57,8 @@ from app.controllers.api.private.v1.admin.actions.hosts import Health_Check as H
 from app.controllers.api.private.v1.admin.actions.hosts import Pull_Image as Pull_Image_Action_Admin_V1_Endpoint_Private
 from app.controllers.api.private.v1.admin.actions.hosts import Get_Images as Get_Images_Action_Admin_V1_Endpoint_Private
 from app.controllers.api.private.v1.admin.actions.hosts import Search_Community_Images as Search_Community_Images_Action_Admin_V1_Endpoint_Private
+from app.controllers.api.private.v1.admin.actions.hosts import Prune_Unused_Images as Prune_Unused_Images_Action_Admin_V1_Endpoint_Private
+from app.controllers.api.private.v1.admin.actions.hosts import Prune_All_Unused_Images as Prune_All_Unused_Images_Action_Admin_V1_Endpoint_Private
 
 
 urlpatterns = [
@@ -89,9 +90,10 @@ urlpatterns = [
         path('hosts/view/<slug:host_slug>/images/build', Host_Images_Build_View_Web.as_view(), name='app.web.admin.hosts.view.build.images'),
 
         path('hosts/view/<slug:host_slug>/networks', Host_Networks_View_Web.as_view(), name='app.web.admin.hosts.view.networks'),
-        path('hosts/view/<slug:host_slug>/services', Host_Services_View_Web.as_view(), name='app.web.admin.hosts.view.services'),
         path('hosts/view/<slug:host_slug>/volumes', Host_Volumes_View_Web.as_view(), name='app.web.admin.hosts.view.volumes'),
-        path('hosts/view/<slug:host_slug>/activity', Host_Activity_View_Web.as_view(), name='app.web.admin.hosts.view.activity'),
+        path('hosts/view/<slug:host_slug>/actions', Host_Actions_View_Web.as_view(), name='app.web.admin.hosts.view.actions'),
+        path('hosts/view/<slug:host_slug>/configs', Host_Configs_View_Web.as_view(), name='app.web.admin.hosts.view.configs'),
+        path('hosts/view/<slug:host_slug>/secrets', Host_Secrets_View_Web.as_view(), name='app.web.admin.hosts.view.secrets'),
         path('activity', Activity_View.as_view(), name='app.web.admin.activity.list'),
         path('settings', Settings_View.as_view(), name='app.web.admin.settings'),
 
@@ -123,19 +125,26 @@ urlpatterns = [
                 Pull_Image_Action_Admin_V1_Endpoint_Private.as_view(),
                 name='app.api.private.v1.admin.action.host.pull_image.endpoint'
             ),
-
             path(
                 'action/host/get_images/<int:host_id>',
                 Get_Images_Action_Admin_V1_Endpoint_Private.as_view(),
                 name='app.api.private.v1.admin.action.host.get_images.endpoint'
             ),
-
             path(
                 'action/host/search_community_images/<int:host_id>',
                 Search_Community_Images_Action_Admin_V1_Endpoint_Private.as_view(),
                 name='app.api.private.v1.admin.action.host.search_community_images.endpoint'
             ),
-
+            path(
+                'action/host/prune_unused_images/<int:host_id>',
+                Prune_Unused_Images_Action_Admin_V1_Endpoint_Private.as_view(),
+                name='app.api.private.v1.admin.action.host.prune_unused_images.endpoint'
+            ),
+            path(
+                'action/host/prune_all_unused_images/<int:host_id>',
+                Prune_All_Unused_Images_Action_Admin_V1_Endpoint_Private.as_view(),
+                name='app.api.private.v1.admin.action.host.prune_all_unused_images.endpoint'
+            ),
         ]))
 
     ])),

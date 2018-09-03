@@ -9,3 +9,50 @@
         </div>
     </div>
 </div>
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <div class="dropdown">
+                    <button type="button" class="btn btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown">
+                        <i class="fe fe-terminal"></i> {% trans "Actions" %}
+                    </button>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item prune_unused_images" href="javascript:void(0)" data-url="{% url 'app.api.private.v1.admin.action.host.prune_unused_images.endpoint' host.id %}">{% trans "Prune unused images" %}</a>
+                        <a class="dropdown-item prune_all_unused_images" href="javascript:void(0)" data-url="{% url 'app.api.private.v1.admin.action.host.prune_all_unused_images.endpoint' host.id %}">{% trans "Prune all unused images" %}</a>
+                    </div>
+                </div>
+            </div>
+            <div class="table-responsive">
+                <table class="table card-table table-vcenter text-nowrap">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th class="text-center"></th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><a href="#" class="text-inherit"></a></td>
+                            <td></td>
+                            <td>
+
+                            </td>
+                            <td class="text-center">
+
+                            </td>
+                            <td colspan="2" class="text-right">
+
+                            </td>
+                        </tr>
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

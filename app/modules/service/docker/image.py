@@ -11,6 +11,8 @@ from .auth import Auth
 
 class Image(Auth):
 
+    __CONVERT_B_TO_MB = 1000000
+
     def __init__(self, host_id=None):
         Auth.__init__(self, host_id)
 
@@ -57,6 +59,11 @@ class Image(Auth):
                 "short_id": image.short_id,
                 "labels": image.labels,
                 "tags": image.tags,
+                "created": image.attrs["Created"],
+                "size": {
+                    "B": image.attrs["Size"],
+                    "MB": round(image.attrs["Size"]/self.__CONVERT_B_TO_MB, 1)
+                }
             })
         return result
 

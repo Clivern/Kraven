@@ -27,26 +27,32 @@
                 <table class="table card-table table-vcenter text-nowrap">
                     <thead>
                         <tr>
-                            <th></th>
-                            <th></th>
-                            <th></th>
-                            <th class="text-center"></th>
+                            <th>ID</th>
+                            <th>Tags</th>
+                            <th>Size</th>
+                            <th>Created</th>
                             <th></th>
                             <th></th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <td><a href="#" class="text-inherit"></a></td>
-                            <td></td>
+                            <td><a href="#" class="text-inherit">sha256:8789038981</a></td>
                             <td>
-
+                                <p><div class="tag">Ubuntu<span class="tag-addon tag-success">1.0.0</span></div></p>
                             </td>
-                            <td class="text-center">
-
-                            </td>
+                            <td>124.7MB</td>
+                            <td>2018-09-01</td>
                             <td colspan="2" class="text-right">
-
+                                <a href="#" class="btn btn-secondary btn-sm">{% trans "Manage" %}</a>
+                                <div class="dropdown">
+                                    <button class="btn btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown">{% trans "Actions" %}</button>
+                                    <div class="dropdown-menu dropdown-menu-right">
+                                        <a href="javascript:void(0)" data-url="#" class="dropdown-item delete_host_image">
+                                            <i class="dropdown-icon fe fe-trash"></i> {% trans "Delete" %}
+                                        </a>
+                                    </div>
+                                </div>
                             </td>
                         </tr>
 

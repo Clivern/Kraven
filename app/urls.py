@@ -37,8 +37,6 @@ from app.controllers.web.admin.hosts import Host_Images_Build_View as Host_Image
 from app.controllers.web.admin.hosts import Host_Networks_View as Host_Networks_View_Web
 from app.controllers.web.admin.hosts import Host_Volumes_View as Host_Volumes_View_Web
 from app.controllers.web.admin.hosts import Host_Actions_View as Host_Actions_View_Web
-from app.controllers.web.admin.hosts import Host_Secrets_View as Host_Secrets_View_Web
-from app.controllers.web.admin.hosts import Host_Configs_View as Host_Configs_View_Web
 
 from app.controllers.api.private.v1.install import Install as Install_V1_Endpoint_Private
 from app.controllers.api.private.v1.login import Login as Login_V1_Endpoint_Private
@@ -92,8 +90,6 @@ urlpatterns = [
         path('hosts/view/<slug:host_slug>/networks', Host_Networks_View_Web.as_view(), name='app.web.admin.hosts.view.networks'),
         path('hosts/view/<slug:host_slug>/volumes', Host_Volumes_View_Web.as_view(), name='app.web.admin.hosts.view.volumes'),
         path('hosts/view/<slug:host_slug>/actions', Host_Actions_View_Web.as_view(), name='app.web.admin.hosts.view.actions'),
-        path('hosts/view/<slug:host_slug>/configs', Host_Configs_View_Web.as_view(), name='app.web.admin.hosts.view.configs'),
-        path('hosts/view/<slug:host_slug>/secrets', Host_Secrets_View_Web.as_view(), name='app.web.admin.hosts.view.secrets'),
         path('activity', Activity_View.as_view(), name='app.web.admin.activity.list'),
         path('settings', Settings_View.as_view(), name='app.web.admin.settings'),
 

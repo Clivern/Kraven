@@ -46,8 +46,7 @@ class Command(BaseCommand):
     def list_images(self, configs={}):
         _image = Image_Module()
         if _image.set_host(configs["host_id"]).check_health():
-            for image in _image.list():
-                print(image)
+            print(_image.list())
 
     def prune_unused_images(self, configs={}):
         _image = Image_Module()

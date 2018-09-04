@@ -62,7 +62,7 @@ class Image(Auth):
                 "created": image.attrs["Created"],
                 "size": {
                     "B": image.attrs["Size"],
-                    "MB": round(image.attrs["Size"]/self.__CONVERT_B_TO_MB, 1)
+                    "MB": round(image.attrs["Size"] / self.__CONVERT_B_TO_MB, 1)
                 }
             })
         return result

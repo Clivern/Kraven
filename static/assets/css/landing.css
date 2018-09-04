@@ -224,7 +224,6 @@ body {
 }
 
 .footer {
-  border-top: 1px solid #eee;
   padding: 2rem 0;
   font-size: 0.875rem;
   color: #8d96a7;
@@ -298,10 +297,10 @@ body {
 .welcome {
   text-align: center;
   position: relative;
-  color: #fff;
+  color: black;
   padding-bottom: 1px;
   margin-bottom: 8rem;
-  background: linear-gradient(to right, #1488cc, #2b32b2);
+  background: #f1f2f6;
 }
 
 .welcome:before {
@@ -3967,15 +3966,15 @@ table th {
 }
 
 .section-action {
-  background: linear-gradient(to right, #1488cc, #2b32b2);
-  color: #fff;
+  background: #f1f2f6;
+  color: black;
   text-align: center;
   padding-top: 4rem;
   padding-bottom: 4rem;
 }
 
 .section-action .section-description {
-  color: #fff;
+  color: black;
 }
 
 .feature {

@@ -195,6 +195,7 @@ class Build_Image(View):
         self.__host_id = host_id
 
         self.__request.set_request(request)
+
         request_data = self.__request.get_request_data("post", {
             "tag": "",
             "fileobj": "",
@@ -263,7 +264,7 @@ class Build_Image(View):
 
             self.__notification_module.create_notification({
                 "highlight": "",
-                "notification": "Building docker image %s" % _tag,
+                "notification": "building docker image %s" % _tag,
                 "url": "#",
                 "type": Notification_Module.PENDING,
                 "delivered": False,

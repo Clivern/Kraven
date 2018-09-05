@@ -8,7 +8,6 @@ import os
 # Django
 from django.views import View
 from django.shortcuts import render
-from django.utils.translation import gettext as _
 
 # local Django
 from app.modules.core.context import Context

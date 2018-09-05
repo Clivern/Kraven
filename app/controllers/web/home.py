@@ -30,7 +30,8 @@ class Home(View):
 
         self.__context.autoload_options()
         self.__context.push({
-            "page_title": _("Home · %s") % self.__context.get("app_name", os.getenv("APP_NAME", "Kraven"))
+            "page_title": self.__context.get("app_name", os.getenv("APP_NAME", "Kraven")),
+            "is_authenticated": request.user and request.user.is_authenticated
         })
 
         return render(request, self.template_name, self.__context.get())

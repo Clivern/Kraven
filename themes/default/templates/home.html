@@ -8,11 +8,16 @@
 				<div class="welcome-header">
 					<img src="{% static 'assets/images/logo.png' %}" width="100"><br/><br/>
 					<p class="welcome-description">{% trans "A SaaS Docker Management Dashboard." %}</p>
-
-					<div class="mt-6">
-						<a href="{% url 'app.web.register' %}" class="btn btn-green">{% trans "Register" %}</a>
-						<a href="{% url 'app.web.login' %}" class="btn btn-green">{% trans "Login" %}</a>
-					</div>
+					{% if is_authenticated %}
+						<div class="mt-6">
+							<a href="{% url 'app.web.admin.dashboard' %}" class="btn btn-green">{% trans "Dashboard" %}</a>
+						</div>
+					{% else %}
+						<div class="mt-6">
+							<a href="{% url 'app.web.register' %}" class="btn btn-green">{% trans "Register" %}</a>
+							<a href="{% url 'app.web.login' %}" class="btn btn-green">{% trans "Login" %}</a>
+						</div>
+					{% endif %}
 				</div>
 			</div>
 		</section>
@@ -66,9 +71,9 @@
 						</div>
 						<div class="feature-description">
 							<h3 class="feature-name">{% trans "Open Source Code" %}</h3>
-							<p>{% trans "You can see the code of Kraven on GitHub. If you miss any feature feel free to create a pull request there, we'll definitely check it." %}</p>
+							<p>{% trans "You can see the code of Kraven on GitHub. If you killed a bug, miss any feature feel free to create a pull request there, we'll definitely check it." %}</p>
 							<div class="mt-5">
-								<a href="https://github.com/Clivern/Kraven" class="btn btn-small btn-outline-dark">{% trans "View source code" %}</a>
+								<a href="https://github.com/Clivern/Kraven" class="btn btn-small btn-outline-dark">{% trans "Source Code" %}</a>
 							</div>
 						</div>
 					</div>

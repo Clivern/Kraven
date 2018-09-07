@@ -7,7 +7,7 @@
 			<div class="container">
 				<div class="welcome-header">
 					<img src="{% static 'assets/images/logo.png' %}" width="100"><br/><br/>
-					<p class="welcome-description">{% trans "A SaaS Docker Management Dashboard." %}</p>
+					<p class="welcome-description">{% trans "A SaaS Docker Management Dashboard" %}</p>
 					{% if is_authenticated %}
 						<div class="mt-6">
 							<a href="{% url 'app.web.admin.dashboard' %}" class="btn btn-green">{% trans "Dashboard" %}</a>

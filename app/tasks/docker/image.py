@@ -190,24 +190,17 @@ def remove_image_by_id(host_id, long_id, force=False, noprune=False):
                 "notify_type": "failed"
             }
 
-        result = _image.remove_by_id(
+        _image.remove_by_id(
             long_id=long_id,
             force=force,
             noprune=noprune
         )
 
-        if result:
-            return {
-                "status": "passed",
-                "result": "{}",
-                "notify_type": "passed"
-            }
-        else:
-            return {
-                "status": "failed",
-                "result": "{}",
-                "notify_type": "failed"
-            }
+        return {
+            "status": "passed",
+            "result": "{}",
+            "notify_type": "passed"
+        }
 
     except Exception as e:
         return {

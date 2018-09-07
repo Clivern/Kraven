@@ -455,104 +455,6 @@ kraven_app.host_health_check_action =  (function (window, document, $) {
 })(window, document, jQuery);
 
 
-/**
- * Host Images Endpoints
- */
-kraven_app.hostImage = (function (window, document, $) {
-
-    'use strict';
-
-    var base = {
-
-        el: {
-            pruneUnsedImages: $('a.prune_unused_images'),
-            pruneAllUnsedImages: $('a.prune_all_unused_images')
-        },
-        init: function(){
-            if( base.el.pruneUnsedImages.length ){
-                base.el.pruneUnsedImages.on("click", base.pruneUnsedImages);
-            }
-            if( base.el.pruneAllUnsedImages.length ){
-                base.el.pruneAllUnsedImages.on("click", base.pruneAllUnsedImages);
-            }
-        },
-        pruneUnsedImages: function(event) {
-            event.preventDefault();
-
-            if( !confirm(_i18n.confirm_msg) ){
-                return false;
-            }
-
-            var _self = $(this);
-            require(['pace', 'jscookie'], function(Pace, Cookies) {
-                Pace.track(function(){
-                    $.ajax({
-                      method: "POST",
-                      url: _self.attr('data-url'),
-                      data: { "csrfmiddlewaretoken": Cookies.get('csrftoken') }
-                    }).done(function( response ) {
-                        if( response.status == "success" ){
-                            base.success(response.messages);
-                        }else{
-                            base.error(response.messages);
-                        }
-                    });
-                });
-            });
-        },
-        pruneAllUnsedImages: function(event) {
-            event.preventDefault();
-
-            if( !confirm(_i18n.confirm_msg) ){
-                return false;
-            }
-
-            var _self = $(this);
-            require(['pace', 'jscookie'], function(Pace, Cookies) {
-                Pace.track(function(){
-                    $.ajax({
-                      method: "POST",
-                      url: _self.attr('data-url'),
-                      data: { "csrfmiddlewaretoken": Cookies.get('csrftoken') }
-                    }).done(function( response ) {
-                        if( response.status == "success" ){
-                            base.success(response.messages);
-                        }else{
-                            base.error(response.messages);
-                        }
-                    });
-                });
-            });
-        },
-        success : function(messages){
-            for(var messageObj of messages) {
-                require(['toastr'], function(toastr) {
-                    toastr.clear();
-                    toastr.success(messageObj.message);
-                });
-                break;
-            }
-        },
-        error : function(messages){
-            for(var messageObj of messages) {
-                require(['toastr'], function(toastr) {
-                    toastr.clear();
-                    toastr.error(messageObj.message);
-                });
-                break;
-            }
-        }
-    };
-
-   return {
-        init: base.init
-    };
-
-})(window, document, jQuery);
-
-
-
-
 kraven_app.load_tabular_data = function(Vue, axios){
     return new Vue({
         delimiters: ['${', '}'],
@@ -626,6 +528,172 @@ kraven_app.notifications = function(Vue, axios){
 }
 
 
+kraven_app.host_images_list = function(Vue, axios, $, Pace, Cookies, toastr){
+    return new Vue({
+        delimiters: ['${', '}'],
+        el: '#host_images_list',
+        data () {
+            return {
+                info: null,
+                items: [],
+                isDimmerActive: true,
+                errored: false,
+                i18n: {
+                    manage: "Manage",
+                    actions: "Actions",
+                    delete: "Delete",
+                    force_delete: "Force Delete"
+                }
+            }
+        },
+        mounted () {
+            this.fetch();
+            setInterval(function(){ this.fetch() }.bind(this), 4000)
+        },
+        methods:{
+            fetch () {
+                axios.get($('#images_list').attr('data-fetch'))
+                    .then(response => {
+                        this.items = response.data.payload.images;
+                    })
+                    .catch(error => {
+                        console.log(error)
+                    })
+                    .finally(() => this.isDimmerActive = false)
+            },
+            pruneUnusedImagesAction (event) {
+                event.preventDefault();
+
+                if( !confirm(_i18n.confirm_msg) ){
+                    return false;
+                }
+
+                var _self = $(event.target);
+
+                Pace.track(function(){
+                    $.ajax({
+                      method: "POST",
+                      url: _self.attr('data-url'),
+                      data: { "csrfmiddlewaretoken": Cookies.get('csrftoken') }
+                    }).done(function( response ) {
+                        if( response.status == "success" ){
+                            for(var messageObj of response.messages) {
+                                toastr.clear();
+                                toastr.success(messageObj.message);
+                                break;
+                            }
+                        }else{
+                            for(var messageObj of response.messages) {
+                                toastr.clear();
+                                toastr.error(messageObj.message);
+                                break;
+                            }
+                        }
+                    });
+                });
+            },
+            pruneAllUnusedImagesAction (event) {
+                event.preventDefault();
+
+                if( !confirm(_i18n.confirm_msg) ){
+                    return false;
+                }
+
+                var _self = $(event.target);
+
+                Pace.track(function(){
+                    $.ajax({
+                      method: "POST",
+                      url: _self.attr('data-url'),
+                      data: { "csrfmiddlewaretoken": Cookies.get('csrftoken') }
+                    }).done(function( response ) {
+                        if( response.status == "success" ){
+                            for(var messageObj of response.messages) {
+                                toastr.clear();
+                                toastr.success(messageObj.message);
+                                break;
+                            }
+                        }else{
+                            for(var messageObj of response.messages) {
+                                toastr.clear();
+                                toastr.error(messageObj.message);
+                                break;
+                            }
+                        }
+                    });
+                });
+            },
+            forceDeleteHostImageAction (event) {
+                event.preventDefault();
+
+                if( !confirm(_i18n.confirm_msg) ){
+                    return false;
+                }
+
+                var _self = $(event.target);
+
+                _self.attr('disabled', 'disabled');
+                Pace.track(function(){
+                    $.ajax({
+                      method: "POST",
+                      url: _self.attr('data-url'),
+                      data: { "csrfmiddlewaretoken": Cookies.get('csrftoken'), "long_id": _self.attr("data-long-id"), "force": "on" }
+                    }).done(function( response ) {
+                        _self.removeAttr("disabled");
+                        if( response.status == "success" ){
+                            for(var messageObj of response.messages) {
+                                toastr.clear();
+                                toastr.success(messageObj.message);
+                                break;
+                            }
+                        }else{
+                            for(var messageObj of response.messages) {
+                                toastr.clear();
+                                toastr.error(messageObj.message);
+                                break;
+                            }
+                        }
+                    });
+                });
+            },
+            deleteHostImageAction (event) {
+                event.preventDefault();
+
+                if( !confirm(_i18n.confirm_msg) ){
+                    return false;
+                }
+
+                var _self = $(event.target);
+
+                _self.attr('disabled', 'disabled');
+                Pace.track(function(){
+                    $.ajax({
+                      method: "POST",
+                      url: _self.attr('data-url'),
+                      data: { "csrfmiddlewaretoken": Cookies.get('csrftoken'), "long_id": _self.attr("data-long-id"), "force": "off" }
+                    }).done(function( response ) {
+                        _self.removeAttr("disabled");
+                        if( response.status == "success" ){
+                            for(var messageObj of response.messages) {
+                                toastr.clear();
+                                toastr.success(messageObj.message);
+                                break;
+                            }
+                        }else{
+                            for(var messageObj of response.messages) {
+                                toastr.clear();
+                                toastr.error(messageObj.message);
+                                break;
+                            }
+                        }
+                    });
+                });
+            }
+        }
+    });
+}
+
+
 /**
  *
  */
@@ -650,13 +718,18 @@ $(document).ready(function() {
         });
     });
 
-
-    require(['vue', 'axios', 'jscookie'], function(Vue, axios, Cookies) {
+    require(['vue', 'axios', 'jscookie', 'jquery', 'pace', 'toastr'], function(Vue, axios, Cookies, $, Pace, toastr) {
         axios.defaults.headers.common = {
             'X-Requested-With': 'XMLHttpRequest',
             'X-CSRFToken' : Cookies.get('csrftoken')
         };
-        kraven_app.notifications(Vue, axios);
+
+        if(document.getElementById("app_notifications")){
+            kraven_app.notifications(Vue, axios);
+        }
+        if(document.getElementById("host_images_list")){
+            kraven_app.host_images_list(Vue, axios, $, Pace, Cookies, toastr);
+        }
     });
 
 
@@ -667,7 +740,6 @@ $(document).ready(function() {
     kraven_app.profile.init();
     kraven_app.host.init();
     kraven_app.host_health_check_action.init();
-    kraven_app.hostImage.init();
 
     require(['jscookie'], function(Cookies) {
         $.ajaxSetup({

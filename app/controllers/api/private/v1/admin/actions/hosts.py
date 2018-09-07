@@ -6,6 +6,7 @@ Hosts Actions API Endpoints
 from django.views import View
 from django.http import JsonResponse
 from django.utils.translation import gettext as _
+from django.urls import reverse
 
 # local Django
 from app.modules.validation.form import Form
@@ -363,8 +364,8 @@ class Remove_Image_By_Id(View):
             }]))
 
         _long_id = self.__form.get_input_value("long_id")
-        _force = self.__form.get_input_value("force")
-        _noprune = self.__form.get_input_value("noprune")
+        _force = bool(self.__form.get_input_value("force") == "on")
+        _noprune = bool(self.__form.get_input_value("noprune") == "on")
 
         task = self.__task_module.delay("remove_image_by_id", {
             "host_id": self.__host_id,
@@ -679,37 +680,10 @@ class Get_Images(View):
         self.__image_module = Image_Module()
         self.__logger = self.__helpers.get_logger(__name__)
 
-    def post(self, request, host_id):
+    def get(self, request, host_id):
 
         self.__user_id = request.user.id
         self.__host_id = host_id
-
-        self.__request.set_request(request)
-        request_data = self.__request.get_request_data("post", {
-            "repository": ""
-        })
-
-        self.__form.add_inputs({
-            'repository': {
-                'value': request_data["repository"],
-                'validate': {
-                    'not_empty': {
-                        'error': _('Error! docker image is required!')
-                    },
-                    'length_between': {
-                        'param': [1, 100],
-                        'error': _('Error! a valid docker image is required!')
-                    }
-                }
-            }
-        })
-
-        self.__form.process()
-
-        if not self.__form.is_passed():
-            return JsonResponse(self.__response.send_private_failure(
-                self.__form.get_errors(with_type=True)
-            ))
 
         if not self.__host_module.user_owns(self.__host_id, self.__user_id):
             return JsonResponse(self.__response.send_private_failure([{
@@ -718,9 +692,9 @@ class Get_Images(View):
             }]))
 
         if self.__image_module.set_host(self.__host_id).check_health():
-            result = self.__image_module.list()
-            print(result)
-            return JsonResponse(self.__response.send_private_success([], {}))
+            return JsonResponse(self.__response.send_private_success([], {
+                'images': self.__format_image(self.__image_module.list(), host_id)
+            }))
         else:
             return JsonResponse(self.__response.send_private_failure([{
                 "type": "error",
@@ -728,6 +702,24 @@ class Get_Images(View):
                     "Error! Something goes wrong with your host!"
                 )
             }]))
+
+    def __format_image(self, images_list, host_id):
+        _image_list = []
+
+        for image in images_list:
+            date = image["created"].split("T")
+            image["created_at"] = date[0]
+            image["size"] = image["size"]["MB"]
+            _tags = []
+            for tag in image["tags"]:
+                tag = tag.split(":")
+                _tags.append({"name": tag[0], "version": tag[1]})
+            image["tags"] = _tags
+            image["url"] = "#view"
+            image["delete_url"] = reverse("app.api.private.v1.admin.action.host.delete_image.endpoint", kwargs={'host_id': host_id})
+            _image_list.append(image)
+
+        return _image_list
 
 
 class Tag_Image_By_Id(View):

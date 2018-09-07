@@ -57,6 +57,7 @@ from app.controllers.api.private.v1.admin.actions.hosts import Get_Images as Get
 from app.controllers.api.private.v1.admin.actions.hosts import Search_Community_Images as Search_Community_Images_Action_Admin_V1_Endpoint_Private
 from app.controllers.api.private.v1.admin.actions.hosts import Prune_Unused_Images as Prune_Unused_Images_Action_Admin_V1_Endpoint_Private
 from app.controllers.api.private.v1.admin.actions.hosts import Prune_All_Unused_Images as Prune_All_Unused_Images_Action_Admin_V1_Endpoint_Private
+from app.controllers.api.private.v1.admin.actions.hosts import Remove_Image_By_Id as Remove_Image_By_Id_Action_Admin_V1_Endpoint_Private
 
 
 urlpatterns = [
@@ -140,6 +141,11 @@ urlpatterns = [
                 'action/host/prune_all_unused_images/<int:host_id>',
                 Prune_All_Unused_Images_Action_Admin_V1_Endpoint_Private.as_view(),
                 name='app.api.private.v1.admin.action.host.prune_all_unused_images.endpoint'
+            ),
+            path(
+                'action/host/delete_image/<int:host_id>',
+                Remove_Image_By_Id_Action_Admin_V1_Endpoint_Private.as_view(),
+                name='app.api.private.v1.admin.action.host.delete_image.endpoint'
             ),
         ]))
 

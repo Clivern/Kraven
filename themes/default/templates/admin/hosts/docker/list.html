@@ -71,7 +71,7 @@
                                                             <div class="dropdown">
                                                                 <button class="btn btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown">${i18n.actions}</button>
                                                                 <div class="dropdown-menu dropdown-menu-right">
-                                                                    <a v-bind:data-url="item.edit_url" class="dropdown-item">
+                                                                    <a v-bind:href="item.edit_url" class="dropdown-item">
                                                                         <i class="dropdown-icon fe fe-edit"></i> ${i18n.edit}
                                                                     </a>
                                                                     <a href="javascript:void(0)" v-bind:data-url="item.delete_url" class="dropdown-item" v-on:click="deleteHostAction">

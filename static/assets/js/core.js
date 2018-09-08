@@ -6,7 +6,7 @@ var kraven_app = kraven_app || {};
 /**
  * App Install
  */
-kraven_app.install_screen = function(Vue, axios, $, Pace, Cookies, toastr) {
+kraven_app.install_screen = (Vue, axios, $, Pace, Cookies, toastr) => {
 
     return new Vue({
         delimiters: ['${', '}'],
@@ -25,7 +25,7 @@ kraven_app.install_screen = function(Vue, axios, $, Pace, Cookies, toastr) {
                 var _form = _self.closest("form");
 
                 var inputs = {};
-                _form.serializeArray().map(function(item, index) {
+                _form.serializeArray().map((item, index) => {
                     inputs[item.name] = item.value;
                 });
 
@@ -67,7 +67,7 @@ kraven_app.install_screen = function(Vue, axios, $, Pace, Cookies, toastr) {
 /**
  * App Notifications
  */
-kraven_app.notifications = function(Vue, axios, $, Pace, Cookies, toastr) {
+kraven_app.notifications = (Vue, axios, $, Pace, Cookies, toastr) => {
 
     return new Vue({
         delimiters: ['${', '}'],
@@ -80,9 +80,9 @@ kraven_app.notifications = function(Vue, axios, $, Pace, Cookies, toastr) {
         },
         mounted() {
             this.fetch();
-            setInterval(function() {
+            setInterval(() => {
                 this.fetch()
-            }.bind(this), 3000)
+            }, 3000)
         },
         methods: {
             fetch() {
@@ -116,7 +116,7 @@ kraven_app.notifications = function(Vue, axios, $, Pace, Cookies, toastr) {
 /**
  * Manage Settings
  */
-kraven_app.manage_settings_screen = function(Vue, axios, $, Pace, Cookies, toastr) {
+kraven_app.manage_settings_screen = (Vue, axios, $, Pace, Cookies, toastr) => {
 
     return new Vue({
         delimiters: ['${', '}'],
@@ -135,7 +135,7 @@ kraven_app.manage_settings_screen = function(Vue, axios, $, Pace, Cookies, toast
                 var _form = _self.closest("form");
 
                 var inputs = {};
-                _form.serializeArray().map(function(item, index) {
+                _form.serializeArray().map((item, index) => {
                     inputs[item.name] = item.value;
                 });
 
@@ -174,7 +174,7 @@ kraven_app.manage_settings_screen = function(Vue, axios, $, Pace, Cookies, toast
 /**
  * App Hosts Images List
  */
-kraven_app.host_images_list_screen = function(Vue, axios, $, Pace, Cookies, toastr) {
+kraven_app.host_images_list_screen = (Vue, axios, $, Pace, Cookies, toastr) => {
 
     return new Vue({
         delimiters: ['${', '}'],
@@ -368,7 +368,7 @@ kraven_app.host_images_list_screen = function(Vue, axios, $, Pace, Cookies, toas
 /**
  * App Pull Image for Host
  */
-kraven_app.host_images_pull_screen = function(Vue, axios, $, Pace, Cookies, toastr) {
+kraven_app.host_images_pull_screen = (Vue, axios, $, Pace, Cookies, toastr) => {
 
     return new Vue({
         delimiters: ['${', '}'],
@@ -387,7 +387,7 @@ kraven_app.host_images_pull_screen = function(Vue, axios, $, Pace, Cookies, toas
                 var _form = _self.closest("form");
 
                 var inputs = {};
-                _form.serializeArray().map(function(item, index) {
+                _form.serializeArray().map((item, index) => {
                     inputs[item.name] = item.value;
                 });
 
@@ -428,7 +428,7 @@ kraven_app.host_images_pull_screen = function(Vue, axios, $, Pace, Cookies, toas
 /**
  * App Build Image for Host
  */
-kraven_app.host_images_build_screen = function(Vue, axios, $, Pace, Cookies, toastr) {
+kraven_app.host_images_build_screen = (Vue, axios, $, Pace, Cookies, toastr) => {
 
     return new Vue({
         delimiters: ['${', '}'],
@@ -447,7 +447,7 @@ kraven_app.host_images_build_screen = function(Vue, axios, $, Pace, Cookies, toa
                 var _form = _self.closest("form");
 
                 var inputs = {};
-                _form.serializeArray().map(function(item, index) {
+                _form.serializeArray().map((item, index) => {
                     inputs[item.name] = item.value;
                 });
 
@@ -488,7 +488,7 @@ kraven_app.host_images_build_screen = function(Vue, axios, $, Pace, Cookies, toa
 /**
  * App Login
  */
-kraven_app.login_screen = function(Vue, axios, $, Pace, Cookies, toastr) {
+kraven_app.login_screen = (Vue, axios, $, Pace, Cookies, toastr) => {
 
     return new Vue({
         delimiters: ['${', '}'],
@@ -507,7 +507,7 @@ kraven_app.login_screen = function(Vue, axios, $, Pace, Cookies, toastr) {
                 var _form = _self.closest("form");
 
                 var inputs = {};
-                _form.serializeArray().map(function(item, index) {
+                _form.serializeArray().map((item, index) => {
                     inputs[item.name] = item.value;
                 });
 
@@ -549,7 +549,7 @@ kraven_app.login_screen = function(Vue, axios, $, Pace, Cookies, toastr) {
 /**
  * App Register
  */
-kraven_app.register_screen = function(Vue, axios, $, Pace, Cookies, toastr) {
+kraven_app.register_screen = (Vue, axios, $, Pace, Cookies, toastr) => {
 
     return new Vue({
         delimiters: ['${', '}'],
@@ -568,7 +568,7 @@ kraven_app.register_screen = function(Vue, axios, $, Pace, Cookies, toastr) {
                 var _form = _self.closest("form");
 
                 var inputs = {};
-                _form.serializeArray().map(function(item, index) {
+                _form.serializeArray().map((item, index) => {
                     inputs[item.name] = item.value;
                 });
 
@@ -610,7 +610,7 @@ kraven_app.register_screen = function(Vue, axios, $, Pace, Cookies, toastr) {
 /**
  * App Forgot Password
  */
-kraven_app.forgot_password_screen = function(Vue, axios, $, Pace, Cookies, toastr) {
+kraven_app.forgot_password_screen = (Vue, axios, $, Pace, Cookies, toastr) => {
 
     return new Vue({
         delimiters: ['${', '}'],
@@ -629,7 +629,7 @@ kraven_app.forgot_password_screen = function(Vue, axios, $, Pace, Cookies, toast
                 var _form = _self.closest("form");
 
                 var inputs = {};
-                _form.serializeArray().map(function(item, index) {
+                _form.serializeArray().map((item, index) => {
                     inputs[item.name] = item.value;
                 });
 
@@ -671,7 +671,7 @@ kraven_app.forgot_password_screen = function(Vue, axios, $, Pace, Cookies, toast
 /**
  * App Reset Password
  */
-kraven_app.reset_password_screen = function(Vue, axios, $, Pace, Cookies, toastr) {
+kraven_app.reset_password_screen = (Vue, axios, $, Pace, Cookies, toastr) => {
 
     return new Vue({
         delimiters: ['${', '}'],
@@ -690,7 +690,7 @@ kraven_app.reset_password_screen = function(Vue, axios, $, Pace, Cookies, toastr
                 var _form = _self.closest("form");
 
                 var inputs = {};
-                _form.serializeArray().map(function(item, index) {
+                _form.serializeArray().map((item, index) => {
                     inputs[item.name] = item.value;
                 });
 
@@ -732,7 +732,7 @@ kraven_app.reset_password_screen = function(Vue, axios, $, Pace, Cookies, toastr
 /**
  * App Profile
  */
-kraven_app.profile_screen = function(Vue, axios, $, Pace, Cookies, toastr) {
+kraven_app.profile_screen = (Vue, axios, $, Pace, Cookies, toastr) => {
 
     return new Vue({
         delimiters: ['${', '}'],
@@ -754,7 +754,7 @@ kraven_app.profile_screen = function(Vue, axios, $, Pace, Cookies, toastr) {
                 var _form = _self.closest("form");
 
                 var inputs = {};
-                _form.serializeArray().map(function(item, index) {
+                _form.serializeArray().map((item, index) => {
                     inputs[item.name] = item.value;
                 });
 
@@ -796,7 +796,7 @@ kraven_app.profile_screen = function(Vue, axios, $, Pace, Cookies, toastr) {
                 var _form = _self.closest("form");
 
                 var inputs = {};
-                _form.serializeArray().map(function(item, index) {
+                _form.serializeArray().map((item, index) => {
                     inputs[item.name] = item.value;
                 });
 
@@ -926,7 +926,7 @@ kraven_app.profile_screen = function(Vue, axios, $, Pace, Cookies, toastr) {
 /**
  * Host Create
  */
-kraven_app.create_host_screen = function(Vue, axios, $, Pace, Cookies, toastr) {
+kraven_app.create_host_screen = (Vue, axios, $, Pace, Cookies, toastr) => {
 
     return new Vue({
         delimiters: ['${', '}'],
@@ -947,7 +947,7 @@ kraven_app.create_host_screen = function(Vue, axios, $, Pace, Cookies, toastr) {
                 var _form = _self.closest("form");
 
                 var inputs = {};
-                _form.serializeArray().map(function(item, index) {
+                _form.serializeArray().map((item, index) => {
                     inputs[item.name] = item.value;
                 });
 
@@ -998,7 +998,7 @@ kraven_app.create_host_screen = function(Vue, axios, $, Pace, Cookies, toastr) {
 /**
  * Host Edit
  */
-kraven_app.edit_host_screen = function(Vue, axios, $, Pace, Cookies, toastr) {
+kraven_app.edit_host_screen = (Vue, axios, $, Pace, Cookies, toastr) => {
 
     return new Vue({
         delimiters: ['${', '}'],
@@ -1019,7 +1019,7 @@ kraven_app.edit_host_screen = function(Vue, axios, $, Pace, Cookies, toastr) {
                 var _form = _self.closest("form");
 
                 var inputs = {};
-                _form.serializeArray().map(function(item, index) {
+                _form.serializeArray().map((item, index) => {
                     inputs[item.name] = item.value;
                 });
 
@@ -1070,7 +1070,7 @@ kraven_app.edit_host_screen = function(Vue, axios, $, Pace, Cookies, toastr) {
 /**
  * App Hosts List
  */
-kraven_app.hosts_list_screen = function(Vue, axios, $, Pace, Cookies, toastr) {
+kraven_app.hosts_list_screen = (Vue, axios, $, Pace, Cookies, toastr) => {
 
     return new Vue({
         delimiters: ['${', '}'],
@@ -1145,15 +1145,15 @@ kraven_app.hosts_list_screen = function(Vue, axios, $, Pace, Cookies, toastr) {
 
 
 
-$(document).ready(function() {
+$(document).ready(() => {
 
-    $(document).ajaxStart(function() {
-        require(['pace'], function(Pace) {
+    $(document).ajaxStart(() => {
+        require(['pace'], (Pace) => {
             Pace.restart();
         });
     });
 
-    require(['vue', 'axios', 'jscookie', 'jquery', 'pace', 'toastr'], function(Vue, axios, Cookies, $, Pace, toastr) {
+    require(['vue', 'axios', 'jscookie', 'jquery', 'pace', 'toastr'], (Vue, axios, Cookies, $, Pace, toastr) => {
         axios.defaults.headers.common = {
             'X-Requested-With': 'XMLHttpRequest',
             'X-CSRFToken': Cookies.get('csrftoken')

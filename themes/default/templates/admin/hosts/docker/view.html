@@ -2,6 +2,16 @@
 {% load staticfiles %}
 {% load i18n %}
 
+{% block customer_header %}
+    <script type="text/javascript">
+        var _host_images_view_i18n = {
+            manage: "{% trans "Manage" %}",
+            actions: "{% trans "Actions" %}",
+            delete: "{% trans "Delete" %}",
+            force_delete: "{% trans "Force Delete" %}"
+        }
+    </script>
+{% endblock %}
 
 {% block content %}
     <div class="page-main">

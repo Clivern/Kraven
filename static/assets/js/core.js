@@ -455,38 +455,11 @@ kraven_app.host_health_check_action =  (function (window, document, $) {
 })(window, document, jQuery);
 
 
-kraven_app.load_tabular_data = function(Vue, axios){
-    return new Vue({
-        delimiters: ['${', '}'],
-        el: '#app',
-        data () {
-            return {
-                info: null,
-                items: [
-                    { no: '12', subject: "Carl" },
-                    { no: '13', subject: "Duck" }
-                ],
-                isDimmerActive: true,
-                errored: false
-            }
-        },
-        mounted () {
-            axios
-                .get('https://api.coindesk.com/v1/bpi/currentprice.json')
-                .then(response => {
-                    this.info = response
-                })
-                .catch(error => {
-                    console.log(error)
-                    this.errored = true
-                })
-                .finally(() => this.isDimmerActive = false)
-        }
-    });
-}
+/**
+ * App Notifications
+ */
+kraven_app.notifications = function(Vue, axios, $, Pace, Cookies, toastr){
 
-
-kraven_app.notifications = function(Vue, axios){
     return new Vue({
         delimiters: ['${', '}'],
         el: '#app_notifications',
@@ -508,9 +481,9 @@ kraven_app.notifications = function(Vue, axios){
                         this.notification_status = response.data.payload.status;
                     })
                     .catch(error => {
-                        console.log(error)
+                        toastr.clear();
+                        toastr.error(error);
                     })
-                    .finally(() => console.log("Done!"))
             },
             mouseOver (id, delivered){
                 if (delivered == false){
@@ -525,10 +498,14 @@ kraven_app.notifications = function(Vue, axios){
             }
         }
     });
+
 }
 
+/**
+ * App Hosts Images List
+ */
+kraven_app.host_images_list_screen = function(Vue, axios, $, Pace, Cookies, toastr){
 
-kraven_app.host_images_list = function(Vue, axios, $, Pace, Cookies, toastr){
     return new Vue({
         delimiters: ['${', '}'],
         el: '#host_images_list',
@@ -538,28 +515,28 @@ kraven_app.host_images_list = function(Vue, axios, $, Pace, Cookies, toastr){
                 items: [],
                 isDimmerActive: true,
                 errored: false,
-                i18n: {
-                    manage: "Manage",
-                    actions: "Actions",
-                    delete: "Delete",
-                    force_delete: "Force Delete"
-                }
+                i18n: _host_images_view_i18n
             }
         },
         mounted () {
             this.fetch();
-            setInterval(function(){ this.fetch() }.bind(this), 4000)
+            //setInterval(function(){ this.fetch() }.bind(this), 4000)
         },
         methods:{
             fetch () {
-                axios.get($('#images_list').attr('data-fetch'))
+                axios.get($('#host_images_list').attr('data-fetch-images'))
                     .then(response => {
                         this.items = response.data.payload.images;
                     })
                     .catch(error => {
-                        console.log(error)
+                        toastr.clear();
+                        toastr.error(error);
                     })
                     .finally(() => this.isDimmerActive = false)
+            },
+            reloadHostsImages () {
+                this.isDimmerActive = true;
+                this.fetch();
             },
             pruneUnusedImagesAction (event) {
                 event.preventDefault();
@@ -691,6 +668,7 @@ kraven_app.host_images_list = function(Vue, axios, $, Pace, Cookies, toastr){
             }
         }
     });
+
 }
 
 
@@ -707,9 +685,7 @@ let hexToRgba = function(hex, opacity) {
     return 'rgba(' + rgb.r + ', ' + rgb.g + ', ' + rgb.b + ', ' + opacity + ')';
 };
 
-/**
- *
- */
+
 $(document).ready(function() {
 
     $(document).ajaxStart(function() {
@@ -724,11 +700,30 @@ $(document).ready(function() {
             'X-CSRFToken' : Cookies.get('csrftoken')
         };
 
+        $.ajaxSetup({
+            headers:
+            { 'X-CSRFToken': Cookies.get('csrftoken') }
+        });
+
         if(document.getElementById("app_notifications")){
-            kraven_app.notifications(Vue, axios);
+            kraven_app.notifications(
+                Vue,
+                axios,
+                $,
+                Pace,
+                Cookies,
+                toastr
+            );
         }
         if(document.getElementById("host_images_list")){
-            kraven_app.host_images_list(Vue, axios, $, Pace, Cookies, toastr);
+            kraven_app.host_images_list_screen(
+                Vue,
+                axios,
+                $,
+                Pace,
+                Cookies,
+                toastr
+            );
         }
     });
 
@@ -740,14 +735,6 @@ $(document).ready(function() {
     kraven_app.profile.init();
     kraven_app.host.init();
     kraven_app.host_health_check_action.init();
-
-    require(['jscookie'], function(Cookies) {
-        $.ajaxSetup({
-            headers:
-            { 'X-CSRFToken': Cookies.get('csrftoken') }
-        });
-        console.log(Cookies.get('csrftoken'))
-    })
 
     /** Initialize tooltips */
     $('[data-toggle="tooltip"]').tooltip();

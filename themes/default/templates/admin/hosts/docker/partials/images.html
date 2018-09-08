@@ -9,7 +9,7 @@
         </div>
     </div>
 </div>
-<div class="row" id="host_images_list">
+<div class="row" id="host_images_list" data-fetch-images="{% url 'app.api.private.v1.admin.action.host.get_images.endpoint' host.id %}">
     <div class="col-12">
         <div class="card">
             <div class="card-header">
@@ -18,16 +18,19 @@
                         <i class="fe fe-terminal"></i> {% trans "Actions" %}
                     </button>
                     <div class="dropdown-menu">
+                        <a class="dropdown-item" href="{% url 'app.web.admin.hosts.view.pull.images' host.slug %}">{% trans "Pull image" %}</a>
+                        <a class="dropdown-item" href="{% url 'app.web.admin.hosts.view.build.images' host.slug %}">{% trans "Build image" %}</a>
                         <a class="dropdown-item" href="javascript:void(0)" v-on:click="pruneUnusedImagesAction" data-url="{% url 'app.api.private.v1.admin.action.host.prune_unused_images.endpoint' host.id %}">{% trans "Prune unused images" %}</a>
                         <a class="dropdown-item" href="javascript:void(0)" v-on:click="pruneAllUnusedImagesAction" data-url="{% url 'app.api.private.v1.admin.action.host.prune_all_unused_images.endpoint' host.id %}">{% trans "Prune all unused images" %}</a>
                     </div>
+                    <button type="button" class="btn btn-icon btn-secondary btn-sm" v-on:click="reloadHostsImages"><i class="fe fe fe-rotate-cw"></i></button>
                 </div>
             </div>
             <div class="dimmer" v-bind:class="{ active: isDimmerActive }">
                 <div class="loader"></div>
                 <div class="dimmer-content">
                     <div class="table-responsive">
-                        <table class="table card-table table-vcenter text-nowrap" id="images_list" data-fetch="{% url 'app.api.private.v1.admin.action.host.get_images.endpoint' host.id %}">
+                        <table class="table card-table table-vcenter text-nowrap">
                             <thead>
                                 <tr>
                                     <th>{% trans "ID" %}</th>

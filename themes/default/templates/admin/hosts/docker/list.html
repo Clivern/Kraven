@@ -8,7 +8,8 @@
             manage: "{% trans "Manage" %}",
             actions: "{% trans "Actions" %}",
             delete: "{% trans "Delete" %}",
-            edit: "{% trans "Edit" %}"
+            edit: "{% trans "Edit" %}",
+            noHosts: "{% trans "You miss a lot of fun, create some hosts!" %}"
         }
     </script>
 {% endblock %}
@@ -44,33 +45,43 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <tr v-for="item in items">
-                                                    <td><a v-bind:href="item.view_url" class="text-inherit">${item.name}</a></td>
-                                                    <td>${item.type}</td>
-                                                    <td>${item.created_at}</td>
-                                                    <td class="text-center">
-                                                        <template v-if="item.status === 'up'">
-                                                            <span class="avatar avatar-green"><i class="fe fe-check"></i></span>
-                                                        </template>
-                                                        <template v-if="item.status === 'down'">
-                                                            <span class="avatar avatar-red"><i class="fe fe-x"></i></span>
-                                                        </template>
-                                                    </td>
-                                                    <td colspan="2" class="text-right">
-                                                        <a v-bind:href="item.view_url" class="btn btn-secondary btn-sm">${i18n.manage}</a>
-                                                        <div class="dropdown">
-                                                            <button class="btn btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown">${i18n.actions}</button>
-                                                            <div class="dropdown-menu dropdown-menu-right">
-                                                                <a v-bind:data-url="item.edit_url" class="dropdown-item">
-                                                                    <i class="dropdown-icon fe fe-edit"></i> ${i18n.edit}
-                                                                </a>
-                                                                <a href="javascript:void(0)" v-bind:data-url="item.delete_url" class="dropdown-item" v-on:click="deleteHostAction">
-                                                                    <i class="dropdown-icon fe fe-trash"></i> ${i18n.delete}
-                                                                </a>
+                                                <template v-if="Object.keys(items).length === 0">
+                                                    <tr>
+                                                        <td colspan="6" class="text-center small text-muted">
+                                                            <br/>
+                                                            ${i18n.noHosts}
+                                                        </td>
+                                                    </tr>
+                                                </template>
+                                                <template v-if="Object.keys(items).length > 0">
+                                                    <tr v-for="item in items">
+                                                        <td><a v-bind:href="item.view_url" class="text-inherit">${item.name}</a></td>
+                                                        <td>${item.type}</td>
+                                                        <td>${item.created_at}</td>
+                                                        <td class="text-center">
+                                                            <template v-if="item.status === 'up'">
+                                                                <span class="avatar avatar-green"><i class="fe fe-check"></i></span>
+                                                            </template>
+                                                            <template v-if="item.status === 'down'">
+                                                                <span class="avatar avatar-red"><i class="fe fe-x"></i></span>
+                                                            </template>
+                                                        </td>
+                                                        <td colspan="2" class="text-right">
+                                                            <a v-bind:href="item.view_url" class="btn btn-secondary btn-sm">${i18n.manage}</a>
+                                                            <div class="dropdown">
+                                                                <button class="btn btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown">${i18n.actions}</button>
+                                                                <div class="dropdown-menu dropdown-menu-right">
+                                                                    <a v-bind:data-url="item.edit_url" class="dropdown-item">
+                                                                        <i class="dropdown-icon fe fe-edit"></i> ${i18n.edit}
+                                                                    </a>
+                                                                    <a href="javascript:void(0)" v-bind:data-url="item.delete_url" class="dropdown-item" v-on:click="deleteHostAction">
+                                                                        <i class="dropdown-icon fe fe-trash"></i> ${i18n.delete}
+                                                                    </a>
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                    </td>
-                                                </tr>
+                                                        </td>
+                                                    </tr>
+                                                </template>
                                             </tbody>
                                         </table>
                                         <br/><br/>

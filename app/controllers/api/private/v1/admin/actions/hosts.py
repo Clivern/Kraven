@@ -701,7 +701,9 @@ class Get_Images(View):
                 "message": _(
                     "Error! Something goes wrong with your host!"
                 )
-            }]))
+            }], {
+                'images': []
+            }))
 
     def __format_image(self, images_list, host_id):
         _image_list = []

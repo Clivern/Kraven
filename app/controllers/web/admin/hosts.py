@@ -33,10 +33,6 @@ class Hosts_List(View):
             "page_title": _("Hosts · %s") % self.__context.get("app_name", os.getenv("APP_NAME", "Kraven"))
         })
 
-        self.__context.push({
-            "hosts": self.__host_module.get_many_by_user(request.user.id, "created_at", False)
-        })
-
         return render(request, self.template_name, self.__context.get())
 
 

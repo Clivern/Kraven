@@ -4,17 +4,1073 @@ var kraven_app = kraven_app || {};
 
 
 /**
+ * App Install
+ */
+kraven_app.install_screen = function(Vue, axios, $, Pace, Cookies, toastr) {
+
+    return new Vue({
+        delimiters: ['${', '}'],
+        el: '#app_install',
+        data() {
+            return {
+                isInProgress: false,
+            }
+        },
+        methods: {
+            installAction(event) {
+                event.preventDefault();
+                this.isInProgress = true;
+
+                var _self = $(event.target);
+                var _form = _self.closest("form");
+
+                var inputs = {};
+                _form.serializeArray().map(function(item, index) {
+                    inputs[item.name] = item.value;
+                });
+
+                Pace.track(() => {
+                    $.ajax({
+                        method: "POST",
+                        url: _form.attr('action'),
+                        data: inputs
+                    }).done((response, textStatus, jqXHR) => {
+                        if (response.status == "success") {
+                            for (var messageObj of response.messages) {
+                                toastr.clear();
+                                toastr.success(messageObj.message);
+                                break;
+                            }
+                            setTimeout(() => {
+                                location.href = _form.attr('data-redirect-url');
+                            }, _form.attr('data-redirect-after'));
+                        } else {
+                            for (var messageObj of response.messages) {
+                                toastr.clear();
+                                toastr.error(messageObj.message);
+                                break;
+                            }
+                            this.isInProgress = false;
+                        }
+                    }).fail((jqXHR, textStatus, error) => {
+                        toastr.clear();
+                        toastr.error(error);
+                        this.isInProgress = false;
+                    });
+                });
+            }
+        }
+    });
+}
+
+
+/**
+ * App Notifications
+ */
+kraven_app.notifications = function(Vue, axios, $, Pace, Cookies, toastr) {
+
+    return new Vue({
+        delimiters: ['${', '}'],
+        el: '#app_notifications',
+        data() {
+            return {
+                notification_status: 'read',
+                notifications: []
+            }
+        },
+        mounted() {
+            this.fetch();
+            setInterval(function() {
+                this.fetch()
+            }.bind(this), 3000)
+        },
+        methods: {
+            fetch() {
+                axios.get(app_globals.notifications_endpoint)
+                    .then(response => {
+                        this.notifications = response.data.payload.notifications;
+                        this.notification_status = response.data.payload.status;
+                    })
+                    .catch(error => {
+                        toastr.clear();
+                        toastr.error(error);
+                    })
+            },
+            mouseOver(id, delivered) {
+                if (delivered == false) {
+                    const params = new URLSearchParams();
+                    params.append('notification_id', id);
+                    axios({
+                        method: 'post',
+                        url: app_globals.notifications_endpoint,
+                        data: params
+                    });
+                }
+            }
+        }
+    });
+
+}
+
+
+/**
+ * Manage Settings
+ */
+kraven_app.manage_settings_screen = function(Vue, axios, $, Pace, Cookies, toastr) {
+
+    return new Vue({
+        delimiters: ['${', '}'],
+        el: '#manage_settings',
+        data() {
+            return {
+                isInProgress: false,
+            }
+        },
+        methods: {
+            updateSettingsAction(event) {
+                event.preventDefault();
+                this.isInProgress = true;
+
+                var _self = $(event.target);
+                var _form = _self.closest("form");
+
+                var inputs = {};
+                _form.serializeArray().map(function(item, index) {
+                    inputs[item.name] = item.value;
+                });
+
+                Pace.track(() => {
+                    $.ajax({
+                        method: "POST",
+                        url: _form.attr('action'),
+                        data: inputs
+                    }).done((response, textStatus, jqXHR) => {
+                        if (response.status == "success") {
+                            for (var messageObj of response.messages) {
+                                toastr.clear();
+                                toastr.success(messageObj.message);
+                                break;
+                            }
+                        } else {
+                            for (var messageObj of response.messages) {
+                                toastr.clear();
+                                toastr.error(messageObj.message);
+                                break;
+                            }
+                        }
+                        this.isInProgress = false;
+                    }).fail((jqXHR, textStatus, error) => {
+                        toastr.clear();
+                        toastr.error(error);
+                        this.isInProgress = false;
+                    });
+                });
+            }
+        }
+    });
+}
+
+
+/**
+ * App Hosts Images List
+ */
+kraven_app.host_images_list_screen = function(Vue, axios, $, Pace, Cookies, toastr) {
+
+    return new Vue({
+        delimiters: ['${', '}'],
+        el: '#host_images_list',
+        data() {
+            return {
+                info: null,
+                items: [],
+                isDimmerActive: true,
+                errored: false,
+                i18n: _host_images_view_i18n
+            }
+        },
+        mounted() {
+            this.fetch();
+        },
+        methods: {
+            fetch() {
+                axios.get($('#host_images_list').attr('data-fetch-images'))
+                    .then(response => {
+                        this.items = response.data.payload.images;
+                    })
+                    .catch(error => {
+                        toastr.clear();
+                        toastr.error(error);
+                    })
+                    .finally(() => this.isDimmerActive = false)
+            },
+            reloadHostsImagesAction() {
+                this.isDimmerActive = true;
+                this.fetch();
+            },
+            pruneUnusedImagesAction(event) {
+                event.preventDefault();
+
+                if (!confirm(_i18n.confirm_msg)) {
+                    return false;
+                }
+
+                var _self = $(event.target);
+
+                Pace.track(() => {
+                    $.ajax({
+                        method: "POST",
+                        url: _self.attr('data-url'),
+                        data: {
+                            "csrfmiddlewaretoken": Cookies.get('csrftoken')
+                        }
+                    }).done((response) => {
+                        if (response.status == "success") {
+                            for (var messageObj of response.messages) {
+                                toastr.clear();
+                                toastr.success(messageObj.message);
+                                break;
+                            }
+                        } else {
+                            for (var messageObj of response.messages) {
+                                toastr.clear();
+                                toastr.error(messageObj.message);
+                                break;
+                            }
+                        }
+                    }).fail((jqXHR, textStatus, error) => {
+                        toastr.clear();
+                        toastr.error(error);
+                    });
+                });
+            },
+            pruneAllUnusedImagesAction(event) {
+                event.preventDefault();
+
+                if (!confirm(_i18n.confirm_msg)) {
+                    return false;
+                }
+
+                var _self = $(event.target);
+
+                Pace.track(() => {
+                    $.ajax({
+                        method: "POST",
+                        url: _self.attr('data-url'),
+                        data: {
+                            "csrfmiddlewaretoken": Cookies.get('csrftoken')
+                        }
+                    }).done((response) => {
+                        if (response.status == "success") {
+                            for (var messageObj of response.messages) {
+                                toastr.clear();
+                                toastr.success(messageObj.message);
+                                break;
+                            }
+                        } else {
+                            for (var messageObj of response.messages) {
+                                toastr.clear();
+                                toastr.error(messageObj.message);
+                                break;
+                            }
+                        }
+                    }).fail((jqXHR, textStatus, error) => {
+                        toastr.clear();
+                        toastr.error(error);
+                    });
+                });
+            },
+            forceDeleteHostImageAction(event) {
+                event.preventDefault();
+
+                if (!confirm(_i18n.confirm_msg)) {
+                    return false;
+                }
+
+                var _self = $(event.target);
+
+                _self.attr('disabled', 'disabled');
+                Pace.track(() => {
+                    $.ajax({
+                        method: "POST",
+                        url: _self.attr('data-url'),
+                        data: {
+                            "csrfmiddlewaretoken": Cookies.get('csrftoken'),
+                            "long_id": _self.attr("data-long-id"),
+                            "force": "on"
+                        }
+                    }).done((response) => {
+                        _self.removeAttr("disabled");
+                        if (response.status == "success") {
+                            for (var messageObj of response.messages) {
+                                toastr.clear();
+                                toastr.success(messageObj.message);
+                                break;
+                            }
+                        } else {
+                            for (var messageObj of response.messages) {
+                                toastr.clear();
+                                toastr.error(messageObj.message);
+                                break;
+                            }
+                        }
+                    }).fail((jqXHR, textStatus, error) => {
+                        toastr.clear();
+                        toastr.error(error);
+                    });
+                });
+            },
+            deleteHostImageAction(event) {
+                event.preventDefault();
+
+                if (!confirm(_i18n.confirm_msg)) {
+                    return false;
+                }
+
+                var _self = $(event.target);
+
+                _self.attr('disabled', 'disabled');
+                Pace.track(() => {
+                    $.ajax({
+                        method: "POST",
+                        url: _self.attr('data-url'),
+                        data: {
+                            "csrfmiddlewaretoken": Cookies.get('csrftoken'),
+                            "long_id": _self.attr("data-long-id"),
+                            "force": "off"
+                        }
+                    }).done((response) => {
+                        _self.removeAttr("disabled");
+                        if (response.status == "success") {
+                            for (var messageObj of response.messages) {
+                                toastr.clear();
+                                toastr.success(messageObj.message);
+                                break;
+                            }
+                        } else {
+                            for (var messageObj of response.messages) {
+                                toastr.clear();
+                                toastr.error(messageObj.message);
+                                break;
+                            }
+                        }
+                    }).fail((jqXHR, textStatus, error) => {
+                        toastr.clear();
+                        toastr.error(error);
+                    });
+                });
+            }
+        }
+    });
+
+}
+
+
+/**
+ * App Pull Image for Host
+ */
+kraven_app.host_images_pull_screen = function(Vue, axios, $, Pace, Cookies, toastr) {
+
+    return new Vue({
+        delimiters: ['${', '}'],
+        el: '#host_images_pull',
+        data() {
+            return {
+                isInProgress: false,
+            }
+        },
+        methods: {
+            pullHostImageAction(event) {
+                event.preventDefault();
+                this.isInProgress = true;
+
+                var _self = $(event.target);
+                var _form = _self.closest("form");
+
+                var inputs = {};
+                _form.serializeArray().map(function(item, index) {
+                    inputs[item.name] = item.value;
+                });
+
+                Pace.track(() => {
+                    $.ajax({
+                        method: "POST",
+                        url: _form.attr('action'),
+                        data: inputs
+                    }).done((response, textStatus, jqXHR) => {
+                        if (response.status == "success") {
+                            for (var messageObj of response.messages) {
+                                toastr.clear();
+                                toastr.success(messageObj.message);
+                                break;
+                            }
+                        } else {
+                            for (var messageObj of response.messages) {
+                                toastr.clear();
+                                toastr.error(messageObj.message);
+                                break;
+                            }
+                        }
+                        this.isInProgress = false;
+                        _form[0].reset();
+                    }).fail((jqXHR, textStatus, error) => {
+                        toastr.clear();
+                        toastr.error(error);
+                        this.isInProgress = false;
+                        _form[0].reset();
+                    });
+                });
+            }
+        }
+    });
+}
+
+
+/**
+ * App Build Image for Host
+ */
+kraven_app.host_images_build_screen = function(Vue, axios, $, Pace, Cookies, toastr) {
+
+    return new Vue({
+        delimiters: ['${', '}'],
+        el: '#host_images_build',
+        data() {
+            return {
+                isInProgress: false,
+            }
+        },
+        methods: {
+            pullHostImageAction(event) {
+                event.preventDefault();
+                this.isInProgress = true;
+
+                var _self = $(event.target);
+                var _form = _self.closest("form");
+
+                var inputs = {};
+                _form.serializeArray().map(function(item, index) {
+                    inputs[item.name] = item.value;
+                });
+
+                Pace.track(() => {
+                    $.ajax({
+                        method: "POST",
+                        url: _form.attr('action'),
+                        data: inputs
+                    }).done((response, textStatus, jqXHR) => {
+                        if (response.status == "success") {
+                            for (var messageObj of response.messages) {
+                                toastr.clear();
+                                toastr.success(messageObj.message);
+                                break;
+                            }
+                        } else {
+                            for (var messageObj of response.messages) {
+                                toastr.clear();
+                                toastr.error(messageObj.message);
+                                break;
+                            }
+                        }
+                        this.isInProgress = false;
+                        _form[0].reset();
+                    }).fail((jqXHR, textStatus, error) => {
+                        toastr.clear();
+                        toastr.error(error);
+                        this.isInProgress = false;
+                        _form[0].reset();
+                    });
+                });
+            }
+        }
+    });
+}
+
+
+/**
+ * App Login
+ */
+kraven_app.login_screen = function(Vue, axios, $, Pace, Cookies, toastr) {
+
+    return new Vue({
+        delimiters: ['${', '}'],
+        el: '#app_login',
+        data() {
+            return {
+                isInProgress: false,
+            }
+        },
+        methods: {
+            loginAction(event) {
+                event.preventDefault();
+                this.isInProgress = true;
+
+                var _self = $(event.target);
+                var _form = _self.closest("form");
+
+                var inputs = {};
+                _form.serializeArray().map(function(item, index) {
+                    inputs[item.name] = item.value;
+                });
+
+                Pace.track(() => {
+                    $.ajax({
+                        method: "POST",
+                        url: _form.attr('action'),
+                        data: inputs
+                    }).done((response, textStatus, jqXHR) => {
+                        if (response.status == "success") {
+                            for (var messageObj of response.messages) {
+                                toastr.clear();
+                                toastr.success(messageObj.message);
+                                break;
+                            }
+                            setTimeout(() => {
+                                location.href = _form.attr('data-redirect-url');
+                            }, _form.attr('data-redirect-after'));
+                        } else {
+                            for (var messageObj of response.messages) {
+                                toastr.clear();
+                                toastr.error(messageObj.message);
+                                break;
+                            }
+                            this.isInProgress = false;
+                        }
+                    }).fail((jqXHR, textStatus, error) => {
+                        toastr.clear();
+                        toastr.error(error);
+                        this.isInProgress = false;
+                    });
+                });
+            }
+        }
+    });
+}
+
+
+/**
+ * App Register
+ */
+kraven_app.register_screen = function(Vue, axios, $, Pace, Cookies, toastr) {
+
+    return new Vue({
+        delimiters: ['${', '}'],
+        el: '#app_register',
+        data() {
+            return {
+                isInProgress: false,
+            }
+        },
+        methods: {
+            registerAction(event) {
+                event.preventDefault();
+                this.isInProgress = true;
+
+                var _self = $(event.target);
+                var _form = _self.closest("form");
+
+                var inputs = {};
+                _form.serializeArray().map(function(item, index) {
+                    inputs[item.name] = item.value;
+                });
+
+                Pace.track(() => {
+                    $.ajax({
+                        method: "POST",
+                        url: _form.attr('action'),
+                        data: inputs
+                    }).done((response, textStatus, jqXHR) => {
+                        if (response.status == "success") {
+                            for (var messageObj of response.messages) {
+                                toastr.clear();
+                                toastr.success(messageObj.message);
+                                break;
+                            }
+                            setTimeout(() => {
+                                location.href = _form.attr('data-redirect-url');
+                            }, _form.attr('data-redirect-after'));
+                        } else {
+                            for (var messageObj of response.messages) {
+                                toastr.clear();
+                                toastr.error(messageObj.message);
+                                break;
+                            }
+                            this.isInProgress = false;
+                        }
+                    }).fail((jqXHR, textStatus, error) => {
+                        toastr.clear();
+                        toastr.error(error);
+                        this.isInProgress = false;
+                    });
+                });
+            }
+        }
+    });
+}
+
+
+/**
+ * App Forgot Password
+ */
+kraven_app.forgot_password_screen = function(Vue, axios, $, Pace, Cookies, toastr) {
+
+    return new Vue({
+        delimiters: ['${', '}'],
+        el: '#app_forgot_password',
+        data() {
+            return {
+                isInProgress: false,
+            }
+        },
+        methods: {
+            forgotPasswordAction(event) {
+                event.preventDefault();
+                this.isInProgress = true;
+
+                var _self = $(event.target);
+                var _form = _self.closest("form");
+
+                var inputs = {};
+                _form.serializeArray().map(function(item, index) {
+                    inputs[item.name] = item.value;
+                });
+
+                Pace.track(() => {
+                    $.ajax({
+                        method: "POST",
+                        url: _form.attr('action'),
+                        data: inputs
+                    }).done((response, textStatus, jqXHR) => {
+                        if (response.status == "success") {
+                            for (var messageObj of response.messages) {
+                                toastr.clear();
+                                toastr.success(messageObj.message);
+                                break;
+                            }
+                            setTimeout(() => {
+                                location.href = _form.attr('data-redirect-url');
+                            }, _form.attr('data-redirect-after'));
+                        } else {
+                            for (var messageObj of response.messages) {
+                                toastr.clear();
+                                toastr.error(messageObj.message);
+                                break;
+                            }
+                            this.isInProgress = false;
+                        }
+                    }).fail((jqXHR, textStatus, error) => {
+                        toastr.clear();
+                        toastr.error(error);
+                        this.isInProgress = false;
+                    });
+                });
+            }
+        }
+    });
+}
+
+
+/**
+ * App Reset Password
+ */
+kraven_app.reset_password_screen = function(Vue, axios, $, Pace, Cookies, toastr) {
+
+    return new Vue({
+        delimiters: ['${', '}'],
+        el: '#app_reset_password',
+        data() {
+            return {
+                isInProgress: false,
+            }
+        },
+        methods: {
+            resetPasswordAction(event) {
+                event.preventDefault();
+                this.isInProgress = true;
+
+                var _self = $(event.target);
+                var _form = _self.closest("form");
+
+                var inputs = {};
+                _form.serializeArray().map(function(item, index) {
+                    inputs[item.name] = item.value;
+                });
+
+                Pace.track(() => {
+                    $.ajax({
+                        method: "POST",
+                        url: _form.attr('action'),
+                        data: inputs
+                    }).done((response, textStatus, jqXHR) => {
+                        if (response.status == "success") {
+                            for (var messageObj of response.messages) {
+                                toastr.clear();
+                                toastr.success(messageObj.message);
+                                break;
+                            }
+                            setTimeout(() => {
+                                location.href = _form.attr('data-redirect-url');
+                            }, _form.attr('data-redirect-after'));
+                        } else {
+                            for (var messageObj of response.messages) {
+                                toastr.clear();
+                                toastr.error(messageObj.message);
+                                break;
+                            }
+                            this.isInProgress = false;
+                        }
+                    }).fail((jqXHR, textStatus, error) => {
+                        toastr.clear();
+                        toastr.error(error);
+                        this.isInProgress = false;
+                    });
+                });
+            }
+        }
+    });
+}
+
+
+/**
+ * App Profile
+ */
+kraven_app.profile_screen = function(Vue, axios, $, Pace, Cookies, toastr) {
+
+    return new Vue({
+        delimiters: ['${', '}'],
+        el: '#app_profile',
+        data() {
+            return {
+                isUpdatePasswordInProgress: false,
+                isUpdateProfileInProgress: false,
+                isUpdateAccessTokenInProgress: false,
+                isUpdateRefreshTokenInProgress: false
+            }
+        },
+        methods: {
+            updatePassword(event) {
+                event.preventDefault();
+                this.isUpdatePasswordInProgress = true;
+
+                var _self = $(event.target);
+                var _form = _self.closest("form");
+
+                var inputs = {};
+                _form.serializeArray().map(function(item, index) {
+                    inputs[item.name] = item.value;
+                });
+
+                Pace.track(() => {
+                    $.ajax({
+                        method: "POST",
+                        url: _form.attr('action'),
+                        data: inputs
+                    }).done((response, textStatus, jqXHR) => {
+                        if (response.status == "success") {
+                            for (var messageObj of response.messages) {
+                                toastr.clear();
+                                toastr.success(messageObj.message);
+                                break;
+                            }
+                            setTimeout(() => {
+                                location.reload();
+                            }, _form.attr('data-reload-after'));
+                        } else {
+                            for (var messageObj of response.messages) {
+                                toastr.clear();
+                                toastr.error(messageObj.message);
+                                break;
+                            }
+                            this.isUpdatePasswordInProgress = false;
+                        }
+                    }).fail((jqXHR, textStatus, error) => {
+                        toastr.clear();
+                        toastr.error(error);
+                        this.isUpdatePasswordInProgress = false;
+                    });
+                });
+            },
+            updateProfile(event) {
+                event.preventDefault();
+                this.isUpdateProfileInProgress = true;
+
+                var _self = $(event.target);
+                var _form = _self.closest("form");
+
+                var inputs = {};
+                _form.serializeArray().map(function(item, index) {
+                    inputs[item.name] = item.value;
+                });
+
+                Pace.track(() => {
+                    $.ajax({
+                        method: "POST",
+                        url: _form.attr('action'),
+                        data: inputs
+                    }).done((response, textStatus, jqXHR) => {
+                        if (response.status == "success") {
+                            for (var messageObj of response.messages) {
+                                toastr.clear();
+                                toastr.success(messageObj.message);
+                                break;
+                            }
+                            setTimeout(() => {
+                                location.reload();
+                            }, _form.attr('data-reload-after'));
+                        } else {
+                            for (var messageObj of response.messages) {
+                                toastr.clear();
+                                toastr.error(messageObj.message);
+                                break;
+                            }
+                            this.isUpdateProfileInProgress = false;
+                        }
+                    }).fail((jqXHR, textStatus, error) => {
+                        toastr.clear();
+                        toastr.error(error);
+                        this.isUpdateProfileInProgress = false;
+                    });
+                });
+            },
+
+            updateAccessToken(event) {
+                event.preventDefault();
+
+                if (!confirm(_i18n.confirm_msg)) {
+                    return false;
+                }
+
+                this.isUpdateAccessTokenInProgress = true;
+
+                var _self = $(event.target);
+
+                Pace.track(() => {
+                    $.ajax({
+                        method: "POST",
+                        url: _self.attr('data-url'),
+                        data: {
+                            "csrfmiddlewaretoken": Cookies.get('csrftoken'),
+                            "action": "_update_access_token",
+                            "token": $('input[name="access_token"]').val()
+                        }
+                    }).done((response) => {
+                        if (response.status == "success") {
+                            for (var messageObj of response.messages) {
+                                toastr.clear();
+                                toastr.success(messageObj.message);
+                                break;
+                            }
+                            $('input[name="access_token"]').val(response.payload.token);
+                        } else {
+                            for (var messageObj of response.messages) {
+                                toastr.clear();
+                                toastr.error(messageObj.message);
+                                break;
+                            }
+                        }
+                        this.isUpdateAccessTokenInProgress = false;
+                    }).fail((jqXHR, textStatus, error) => {
+                        toastr.clear();
+                        toastr.error(error);
+                        this.isUpdateAccessTokenInProgress = false;
+                    });
+                });
+            },
+            updateRefreshToken(event) {
+                event.preventDefault();
+
+                if (!confirm(_i18n.confirm_msg)) {
+                    return false;
+                }
+
+                this.isUpdateRefreshTokenInProgress = true;
+
+                var _self = $(event.target);
+
+                Pace.track(() => {
+                    $.ajax({
+                        method: "POST",
+                        url: _self.attr('data-url'),
+                        data: {
+                            "csrfmiddlewaretoken": Cookies.get('csrftoken'),
+                            "action": "_update_refresh_token",
+                            "token": $('input[name="refresh_token"]').val()
+                        }
+                    }).done((response) => {
+                        if (response.status == "success") {
+                            for (var messageObj of response.messages) {
+                                toastr.clear();
+                                toastr.success(messageObj.message);
+                                break;
+                            }
+                            $('input[name="refresh_token"]').val(response.payload.token);
+                        } else {
+                            for (var messageObj of response.messages) {
+                                toastr.clear();
+                                toastr.error(messageObj.message);
+                                break;
+                            }
+                        }
+                        this.isUpdateRefreshTokenInProgress = false;
+                    }).fail((jqXHR, textStatus, error) => {
+                        toastr.clear();
+                        toastr.error(error);
+                        this.isUpdateRefreshTokenInProgress = false;
+                    });
+                });
+            },
+
+        }
+    });
+}
+
+
+
+$(document).ready(function() {
+
+    $(document).ajaxStart(function() {
+        require(['pace'], function(Pace) {
+            Pace.restart();
+        });
+    });
+
+    require(['vue', 'axios', 'jscookie', 'jquery', 'pace', 'toastr'], function(Vue, axios, Cookies, $, Pace, toastr) {
+        axios.defaults.headers.common = {
+            'X-Requested-With': 'XMLHttpRequest',
+            'X-CSRFToken': Cookies.get('csrftoken')
+        };
+
+        $.ajaxSetup({
+            headers: {
+                'X-CSRFToken': Cookies.get('csrftoken')
+            }
+        });
+
+        if (document.getElementById("app_notifications")) {
+            kraven_app.notifications(
+                Vue,
+                axios,
+                $,
+                Pace,
+                Cookies,
+                toastr
+            );
+        }
+        if (document.getElementById("host_images_list")) {
+            kraven_app.host_images_list_screen(
+                Vue,
+                axios,
+                $,
+                Pace,
+                Cookies,
+                toastr
+            );
+        }
+        if (document.getElementById("host_images_pull")) {
+            kraven_app.host_images_pull_screen(
+                Vue,
+                axios,
+                $,
+                Pace,
+                Cookies,
+                toastr
+            );
+        }
+        if (document.getElementById("host_images_build")) {
+            kraven_app.host_images_build_screen(
+                Vue,
+                axios,
+                $,
+                Pace,
+                Cookies,
+                toastr
+            );
+        }
+        if (document.getElementById("manage_settings")) {
+            kraven_app.manage_settings_screen(
+                Vue,
+                axios,
+                $,
+                Pace,
+                Cookies,
+                toastr
+            );
+        }
+        if (document.getElementById("app_login")) {
+            kraven_app.login_screen(
+                Vue,
+                axios,
+                $,
+                Pace,
+                Cookies,
+                toastr
+            );
+        }
+        if (document.getElementById("app_register")) {
+            kraven_app.register_screen(
+                Vue,
+                axios,
+                $,
+                Pace,
+                Cookies,
+                toastr
+            );
+        }
+        if (document.getElementById("app_forgot_password")) {
+            kraven_app.forgot_password_screen(
+                Vue,
+                axios,
+                $,
+                Pace,
+                Cookies,
+                toastr
+            );
+        }
+        if (document.getElementById("app_reset_password")) {
+            kraven_app.reset_password_screen(
+                Vue,
+                axios,
+                $,
+                Pace,
+                Cookies,
+                toastr
+            );
+        }
+        if (document.getElementById("app_install")) {
+            kraven_app.install_screen(
+                Vue,
+                axios,
+                $,
+                Pace,
+                Cookies,
+                toastr
+            );
+        }
+        if (document.getElementById("app_profile")) {
+            kraven_app.profile_screen(
+                Vue,
+                axios,
+                $,
+                Pace,
+                Cookies,
+                toastr
+            );
+        }
+    });
+
+});
+
+
+/**
  * Form to Enpoint Connect
  */
-kraven_app.endpoint_connect = (function (window, document, $) {
+kraven_app.endpoint_connect = (function(window, document, $) {
 
     'use strict';
 
     var base = {
 
         el: {
-            form : $("form._endpoint_connect"),
-            submitButt : $("form._endpoint_connect button[type='submit']"),
+            form: $("form._endpoint_connect"),
+            submitButt: $("form._endpoint_connect button[type='submit']"),
         },
         actions: {
             after_success: {
@@ -24,12 +1080,12 @@ kraven_app.endpoint_connect = (function (window, document, $) {
             }
 
         },
-        init: function(){
-            if( base.el.form.length ){
+        init: function() {
+            if (base.el.form.length) {
                 base.submit();
             }
         },
-        submit : function(){
+        submit: function() {
             base.el.form.on("submit", base.handler);
         },
         handler: function(event) {
@@ -59,12 +1115,12 @@ kraven_app.endpoint_connect = (function (window, document, $) {
             _button.attr('disabled', 'disabled');
             _button.addClass("btn-loading");
             require(['pace'], function(Pace) {
-                Pace.track(function(){
-                    $.post(_form.attr('action'), base.data(_form, _button), function( response, textStatus, jqXHR ){
-                        if( jqXHR.status == 200 && textStatus == 'success' ) {
-                            if( response.status == "success" ){
+                Pace.track(function() {
+                    $.post(_form.attr('action'), base.data(_form, _button), function(response, textStatus, jqXHR) {
+                        if (jqXHR.status == 200 && textStatus == 'success') {
+                            if (response.status == "success") {
                                 base.success(response.messages, _form, _button);
-                            }else{
+                            } else {
                                 base.error(response.messages, _form, _button);
                             }
                         }
@@ -72,54 +1128,54 @@ kraven_app.endpoint_connect = (function (window, document, $) {
                 });
             });
         },
-        data : function(form, button){
+        data: function(form, button) {
             var inputs = {};
             form.serializeArray().map(function(item, index) {
                 inputs[item.name] = item.value;
             });
             return inputs;
         },
-        success : function(messages, form, button){
-            for(var messageObj of messages) {
+        success: function(messages, form, button) {
+            for (var messageObj of messages) {
                 require(['toastr'], function(toastr) {
                     toastr.clear();
                     toastr.success(messageObj.message);
                 });
                 break;
             }
-            if( base.actions.after_success.type == "reload" ){
-                if( base.actions.after_success.wait != false ){
-                    setTimeout(function(){
+            if (base.actions.after_success.type == "reload") {
+                if (base.actions.after_success.wait != false) {
+                    setTimeout(function() {
                         location.reload();
                     }, base.actions.after_success.wait);
-                }else{
+                } else {
                     location.reload();
                 }
             }
-            if( base.actions.after_success.type == "redirect" ){
-                if( base.actions.after_success.wait != false ){
-                    setTimeout(function(){
+            if (base.actions.after_success.type == "redirect") {
+                if (base.actions.after_success.wait != false) {
+                    setTimeout(function() {
                         location.href = base.actions.after_success.url;
                     }, base.actions.after_success.wait);
-                }else{
+                } else {
                     location.href = base.actions.after_success.url;
                 }
             }
 
-            if( base.actions.after_success.type == "nothing" ){
+            if (base.actions.after_success.type == "nothing") {
                 button.removeAttr('disabled');
                 button.removeClass('btn-loading');
             }
-            if( base.actions.after_success.type == "reset" ){
+            if (base.actions.after_success.type == "reset") {
                 form[0].reset();
                 button.removeAttr('disabled');
                 button.removeClass('btn-loading');
             }
         },
-        error : function(messages, form, button){
+        error: function(messages, form, button) {
             button.removeAttr('disabled');
             button.removeClass('btn-loading');
-            for(var messageObj of messages) {
+            for (var messageObj of messages) {
                 require(['toastr'], function(toastr) {
                     toastr.clear();
                     toastr.error(messageObj.message);
@@ -129,7 +1185,7 @@ kraven_app.endpoint_connect = (function (window, document, $) {
         }
     };
 
-   return {
+    return {
         init: base.init
     };
 
@@ -137,22 +1193,22 @@ kraven_app.endpoint_connect = (function (window, document, $) {
 
 
 
-kraven_app.profile = (function (window, document, $) {
+kraven_app.profile = (function(window, document, $) {
 
     'use strict';
 
     var base = {
 
         el: {
-            update_access_token : $("#profile_update_access_token"),
-            update_refresh_token : $("#profile_update_refresh_token"),
+            update_access_token: $("#profile_update_access_token"),
+            update_refresh_token: $("#profile_update_refresh_token"),
         },
-        init: function(){
-            if( base.el.update_access_token.length ){
-                base.el.update_access_token.find("button").on("click", function(event){
+        init: function() {
+            if (base.el.update_access_token.length) {
+                base.el.update_access_token.find("button").on("click", function(event) {
                     event.preventDefault();
 
-                    if( !confirm(_i18n.confirm_msg) ){
+                    if (!confirm(_i18n.confirm_msg)) {
                         return false;
                     }
 
@@ -161,19 +1217,19 @@ kraven_app.profile = (function (window, document, $) {
                     _self.addClass("btn-loading");
 
                     require(['pace', 'jscookie'], function(Pace, Cookies) {
-                        Pace.track(function(){
+                        Pace.track(function() {
                             $.post(_self.attr('data-url'), {
                                 "action": _self.attr('data-action'),
                                 "token": base.el.update_access_token.find("input").val(),
                                 "csrfmiddlewaretoken": Cookies.get('csrftoken')
-                            }, function( response, textStatus, jqXHR ){
-                                if( jqXHR.status == 200 && textStatus == 'success' ) {
-                                    if( response.status == "success" ){
+                            }, function(response, textStatus, jqXHR) {
+                                if (jqXHR.status == 200 && textStatus == 'success') {
+                                    if (response.status == "success") {
                                         base.success(response.messages);
                                         base.el.update_access_token.find("input").val(response.payload.token);
                                         _self.removeAttr('disabled');
                                         _self.removeClass("btn-loading");
-                                    }else{
+                                    } else {
                                         base.error(response.messages);
                                         _self.removeAttr('disabled');
                                         _self.removeClass("btn-loading");
@@ -184,11 +1240,11 @@ kraven_app.profile = (function (window, document, $) {
                     });
                 })
             }
-            if( base.el.update_refresh_token.length ){
-                base.el.update_refresh_token.find("button").on("click", function(event){
+            if (base.el.update_refresh_token.length) {
+                base.el.update_refresh_token.find("button").on("click", function(event) {
                     event.preventDefault();
 
-                    if( !confirm(_i18n.confirm_msg) ){
+                    if (!confirm(_i18n.confirm_msg)) {
                         return false;
                     }
 
@@ -197,19 +1253,19 @@ kraven_app.profile = (function (window, document, $) {
                     _self.addClass("btn-loading");
 
                     require(['pace', 'jscookie'], function(Pace, Cookies) {
-                        Pace.track(function(){
+                        Pace.track(function() {
                             $.post(_self.attr('data-url'), {
                                 "action": _self.attr('data-action'),
                                 "token": base.el.update_refresh_token.find("input").val(),
                                 "csrfmiddlewaretoken": Cookies.get('csrftoken')
-                            }, function( response, textStatus, jqXHR ){
-                                if( jqXHR.status == 200 && textStatus == 'success' ) {
-                                    if( response.status == "success" ){
+                            }, function(response, textStatus, jqXHR) {
+                                if (jqXHR.status == 200 && textStatus == 'success') {
+                                    if (response.status == "success") {
                                         base.success(response.messages);
                                         base.el.update_refresh_token.find("input").val(response.payload.token);
                                         _self.removeAttr('disabled');
                                         _self.removeClass("btn-loading");
-                                    }else{
+                                    } else {
                                         base.error(response.messages);
                                         _self.removeAttr('disabled');
                                         _self.removeClass("btn-loading");
@@ -221,8 +1277,8 @@ kraven_app.profile = (function (window, document, $) {
                 })
             }
         },
-        success : function(messages){
-            for(var messageObj of messages) {
+        success: function(messages) {
+            for (var messageObj of messages) {
                 require(['toastr'], function(toastr) {
                     toastr.clear();
                     toastr.success(messageObj.message);
@@ -230,8 +1286,8 @@ kraven_app.profile = (function (window, document, $) {
                 break;
             }
         },
-        error : function(messages){
-            for(var messageObj of messages) {
+        error: function(messages) {
+            for (var messageObj of messages) {
                 require(['toastr'], function(toastr) {
                     toastr.clear();
                     toastr.error(messageObj.message);
@@ -241,56 +1297,55 @@ kraven_app.profile = (function (window, document, $) {
         }
     };
 
-   return {
+    return {
         init: base.init
     };
 
 })(window, document, jQuery);
 
 
-
 /**
  * Host Endpoints
  */
-kraven_app.host = (function (window, document, $) {
+kraven_app.host = (function(window, document, $) {
 
     'use strict';
 
     var base = {
 
         el: {
-            hostName : $('form#host_create input[name="name"]'),
-            hostSlug : $('form#host_create input[name="slug"]'),
+            hostName: $('form#host_create input[name="name"]'),
+            hostSlug: $('form#host_create input[name="slug"]'),
             hostDelete: $('a.delete_host'),
             authSwitcher: $('form#host_create select[name="auth_type"]')
         },
-        init: function(){
-            if( base.el.hostName.length ){
+        init: function() {
+            if (base.el.hostName.length) {
                 base.el.hostName.on("change", base.hostNameChange);
             }
-            if( base.el.hostDelete.length ){
+            if (base.el.hostDelete.length) {
                 base.el.hostDelete.on("click", base.deleteHost);
             }
-            if( base.el.authSwitcher.length ){
+            if (base.el.authSwitcher.length) {
                 base.authSwitcherActionInitial();
                 base.el.authSwitcher.on("change", base.authSwitcherAction);
             }
         },
-        authSwitcherActionInitial: function(){
+        authSwitcherActionInitial: function() {
             var _self = base.el.authSwitcher;
 
             $('[name="tls_ca_certificate"]').closest('div.form-group').hide();
             $('[name="tls_certificate"]').closest('div.form-group').hide();
             $('[name="tls_key"]').closest('div.form-group').hide();
 
-            if( _self.val() == "tls_server_client"){
+            if (_self.val() == "tls_server_client") {
                 $('[name="tls_ca_certificate"]').closest('div.form-group').show();
                 $('[name="tls_certificate"]').closest('div.form-group').show();
                 $('[name="tls_key"]').closest('div.form-group').show();
-            }else if( _self.val() == "tls_client_only"){
+            } else if (_self.val() == "tls_client_only") {
                 $('[name="tls_certificate"]').closest('div.form-group').show();
                 $('[name="tls_key"]').closest('div.form-group').show();
-            }else if( _self.val() == "tls_server_only"){
+            } else if (_self.val() == "tls_server_only") {
                 $('[name="tls_ca_certificate"]').closest('div.form-group').show();
             }
         },
@@ -301,37 +1356,39 @@ kraven_app.host = (function (window, document, $) {
             $('[name="tls_certificate"]').closest('div.form-group').hide();
             $('[name="tls_key"]').closest('div.form-group').hide();
 
-            if( _self.val() == "tls_server_client"){
+            if (_self.val() == "tls_server_client") {
                 $('[name="tls_ca_certificate"]').closest('div.form-group').show();
                 $('[name="tls_certificate"]').closest('div.form-group').show();
                 $('[name="tls_key"]').closest('div.form-group').show();
-            }else if( _self.val() == "tls_client_only"){
+            } else if (_self.val() == "tls_client_only") {
                 $('[name="tls_certificate"]').closest('div.form-group').show();
                 $('[name="tls_key"]').closest('div.form-group').show();
-            }else if( _self.val() == "tls_server_only"){
+            } else if (_self.val() == "tls_server_only") {
                 $('[name="tls_ca_certificate"]').closest('div.form-group').show();
             }
         },
         deleteHost: function(event) {
             event.preventDefault();
 
-            if( !confirm(_i18n.confirm_msg) ){
+            if (!confirm(_i18n.confirm_msg)) {
                 return false;
             }
 
             var _self = $(this);
             _self.attr('disabled', 'disabled');
             require(['pace', 'jscookie'], function(Pace, Cookies) {
-                Pace.track(function(){
+                Pace.track(function() {
                     $.ajax({
-                      method: "DELETE",
-                      url: _self.attr('data-url') + "?csrfmiddlewaretoken=" + Cookies.get('csrftoken'),
-                      data: { "csrfmiddlewaretoken": Cookies.get('csrftoken') }
-                    }).done(function( response ) {
-                        if( response.status == "success" ){
+                        method: "DELETE",
+                        url: _self.attr('data-url') + "?csrfmiddlewaretoken=" + Cookies.get('csrftoken'),
+                        data: {
+                            "csrfmiddlewaretoken": Cookies.get('csrftoken')
+                        }
+                    }).done(function(response) {
+                        if (response.status == "success") {
                             base.success(response.messages);
                             _self.closest("tr").remove();
-                        }else{
+                        } else {
                             base.error(response.messages);
                         }
                     });
@@ -344,15 +1401,15 @@ kraven_app.host = (function (window, document, $) {
             base.el.hostSlug.val(base.slugify(base.el.hostName.val()))
         },
         slugify: function(text) {
-          return text.toString().toLowerCase()
-            .replace(/\s+/g, '-')           // Replace spaces with -
-            .replace(/[^\w\-]+/g, '')       // Remove all non-word chars
-            .replace(/\-\-+/g, '-')         // Replace multiple - with single -
-            .replace(/^-+/, '')             // Trim - from start of text
-            .replace(/-+$/, '');            // Trim - from end of text
+            return text.toString().toLowerCase()
+                .replace(/\s+/g, '-') // Replace spaces with -
+                .replace(/[^\w\-]+/g, '') // Remove all non-word chars
+                .replace(/\-\-+/g, '-') // Replace multiple - with single -
+                .replace(/^-+/, '') // Trim - from start of text
+                .replace(/-+$/, ''); // Trim - from end of text
         },
-        success : function(messages){
-            for(var messageObj of messages) {
+        success: function(messages) {
+            for (var messageObj of messages) {
                 require(['toastr'], function(toastr) {
                     toastr.clear();
                     toastr.success(messageObj.message);
@@ -360,8 +1417,8 @@ kraven_app.host = (function (window, document, $) {
                 break;
             }
         },
-        error : function(messages){
-            for(var messageObj of messages) {
+        error: function(messages) {
+            for (var messageObj of messages) {
                 require(['toastr'], function(toastr) {
                     toastr.clear();
                     toastr.error(messageObj.message);
@@ -371,7 +1428,7 @@ kraven_app.host = (function (window, document, $) {
         }
     };
 
-   return {
+    return {
         init: base.init
     };
 
@@ -379,44 +1436,44 @@ kraven_app.host = (function (window, document, $) {
 
 
 
-kraven_app.host_health_check_action =  (function (window, document, $) {
+kraven_app.host_health_check_action = (function(window, document, $) {
 
     'use strict';
 
     var base = {
 
         el: {
-            healthIndicator : $('[data-action="host_health_check"]')
+            healthIndicator: $('[data-action="host_health_check"]')
         },
-        init: function(){
-            if( base.el.healthIndicator.length ){
+        init: function() {
+            if (base.el.healthIndicator.length) {
                 base.healthCheck();
             }
         },
         healthCheck: function() {
-            base.el.healthIndicator.each(function( index ) {
+            base.el.healthIndicator.each(function(index) {
                 var _self = $(this);
-                setTimeout(function(){
+                setTimeout(function() {
                     require(['pace', 'jscookie'], function(Pace, Cookies) {
-                        Pace.track(function(){
+                        Pace.track(function() {
                             $.ajax({
-                              method: "GET",
-                              url: _self.attr('data-action-url') + "?csrfmiddlewaretoken=" + Cookies.get('csrftoken'),
-                              data: {}
-                            }).done(function( response ) {
-                                if( response.status == "success" ){
-                                    if( response.payload.status == "up" ){
+                                method: "GET",
+                                url: _self.attr('data-action-url') + "?csrfmiddlewaretoken=" + Cookies.get('csrftoken'),
+                                data: {}
+                            }).done(function(response) {
+                                if (response.status == "success") {
+                                    if (response.payload.status == "up") {
                                         _self.removeClass("btn-loading");
                                         _self.removeClass("avatar-yellow");
                                         _self.addClass("avatar-green");
                                         _self.find("i").removeClass("fe-refresh-ccw").addClass("fe-check");
-                                    }else{
+                                    } else {
                                         _self.removeClass("btn-loading");
                                         _self.removeClass("avatar-yellow");
                                         _self.addClass("avatar-red");
                                         _self.find("i").removeClass("fe-refresh-ccw").addClass("fe-x");
                                     }
-                                }else{
+                                } else {
                                     _self.removeClass("btn-loading");
                                     _self.find("i").removeClass("fe-refresh-ccw").addClass("fe fe-alert-circle");
                                     base.error(response.messages);
@@ -425,11 +1482,11 @@ kraven_app.host_health_check_action =  (function (window, document, $) {
                         });
                     });
 
-                 }, (index + 1) * 1500, _self);
+                }, (index + 1) * 1500, _self);
             });
         },
-        success : function(messages){
-            for(var messageObj of messages) {
+        success: function(messages) {
+            for (var messageObj of messages) {
                 require(['toastr'], function(toastr) {
                     toastr.clear();
                     toastr.success(messageObj.message);
@@ -437,8 +1494,8 @@ kraven_app.host_health_check_action =  (function (window, document, $) {
                 break;
             }
         },
-        error : function(messages){
-            for(var messageObj of messages) {
+        error: function(messages) {
+            for (var messageObj of messages) {
                 require(['toastr'], function(toastr) {
                     toastr.clear();
                     toastr.error(messageObj.message);
@@ -448,229 +1505,11 @@ kraven_app.host_health_check_action =  (function (window, document, $) {
         }
     };
 
-   return {
+    return {
         init: base.init
     };
 
 })(window, document, jQuery);
-
-
-/**
- * App Notifications
- */
-kraven_app.notifications = function(Vue, axios, $, Pace, Cookies, toastr){
-
-    return new Vue({
-        delimiters: ['${', '}'],
-        el: '#app_notifications',
-        data () {
-            return {
-                notification_status: 'read',
-                notifications: []
-            }
-        },
-        mounted () {
-            this.fetch();
-            setInterval(function(){ this.fetch() }.bind(this), 3000)
-        },
-        methods:{
-            fetch () {
-                axios.get(app_globals.notifications_endpoint)
-                    .then(response => {
-                        this.notifications = response.data.payload.notifications;
-                        this.notification_status = response.data.payload.status;
-                    })
-                    .catch(error => {
-                        toastr.clear();
-                        toastr.error(error);
-                    })
-            },
-            mouseOver (id, delivered){
-                if (delivered == false){
-                    const params = new URLSearchParams();
-                    params.append('notification_id', id);
-                    axios({
-                      method: 'post',
-                      url: app_globals.notifications_endpoint,
-                      data: params
-                    });
-                }
-            }
-        }
-    });
-
-}
-
-/**
- * App Hosts Images List
- */
-kraven_app.host_images_list_screen = function(Vue, axios, $, Pace, Cookies, toastr){
-
-    return new Vue({
-        delimiters: ['${', '}'],
-        el: '#host_images_list',
-        data () {
-            return {
-                info: null,
-                items: [],
-                isDimmerActive: true,
-                errored: false,
-                i18n: _host_images_view_i18n
-            }
-        },
-        mounted () {
-            this.fetch();
-            //setInterval(function(){ this.fetch() }.bind(this), 4000)
-        },
-        methods:{
-            fetch () {
-                axios.get($('#host_images_list').attr('data-fetch-images'))
-                    .then(response => {
-                        this.items = response.data.payload.images;
-                    })
-                    .catch(error => {
-                        toastr.clear();
-                        toastr.error(error);
-                    })
-                    .finally(() => this.isDimmerActive = false)
-            },
-            reloadHostsImages () {
-                this.isDimmerActive = true;
-                this.fetch();
-            },
-            pruneUnusedImagesAction (event) {
-                event.preventDefault();
-
-                if( !confirm(_i18n.confirm_msg) ){
-                    return false;
-                }
-
-                var _self = $(event.target);
-
-                Pace.track(function(){
-                    $.ajax({
-                      method: "POST",
-                      url: _self.attr('data-url'),
-                      data: { "csrfmiddlewaretoken": Cookies.get('csrftoken') }
-                    }).done(function( response ) {
-                        if( response.status == "success" ){
-                            for(var messageObj of response.messages) {
-                                toastr.clear();
-                                toastr.success(messageObj.message);
-                                break;
-                            }
-                        }else{
-                            for(var messageObj of response.messages) {
-                                toastr.clear();
-                                toastr.error(messageObj.message);
-                                break;
-                            }
-                        }
-                    });
-                });
-            },
-            pruneAllUnusedImagesAction (event) {
-                event.preventDefault();
-
-                if( !confirm(_i18n.confirm_msg) ){
-                    return false;
-                }
-
-                var _self = $(event.target);
-
-                Pace.track(function(){
-                    $.ajax({
-                      method: "POST",
-                      url: _self.attr('data-url'),
-                      data: { "csrfmiddlewaretoken": Cookies.get('csrftoken') }
-                    }).done(function( response ) {
-                        if( response.status == "success" ){
-                            for(var messageObj of response.messages) {
-                                toastr.clear();
-                                toastr.success(messageObj.message);
-                                break;
-                            }
-                        }else{
-                            for(var messageObj of response.messages) {
-                                toastr.clear();
-                                toastr.error(messageObj.message);
-                                break;
-                            }
-                        }
-                    });
-                });
-            },
-            forceDeleteHostImageAction (event) {
-                event.preventDefault();
-
-                if( !confirm(_i18n.confirm_msg) ){
-                    return false;
-                }
-
-                var _self = $(event.target);
-
-                _self.attr('disabled', 'disabled');
-                Pace.track(function(){
-                    $.ajax({
-                      method: "POST",
-                      url: _self.attr('data-url'),
-                      data: { "csrfmiddlewaretoken": Cookies.get('csrftoken'), "long_id": _self.attr("data-long-id"), "force": "on" }
-                    }).done(function( response ) {
-                        _self.removeAttr("disabled");
-                        if( response.status == "success" ){
-                            for(var messageObj of response.messages) {
-                                toastr.clear();
-                                toastr.success(messageObj.message);
-                                break;
-                            }
-                        }else{
-                            for(var messageObj of response.messages) {
-                                toastr.clear();
-                                toastr.error(messageObj.message);
-                                break;
-                            }
-                        }
-                    });
-                });
-            },
-            deleteHostImageAction (event) {
-                event.preventDefault();
-
-                if( !confirm(_i18n.confirm_msg) ){
-                    return false;
-                }
-
-                var _self = $(event.target);
-
-                _self.attr('disabled', 'disabled');
-                Pace.track(function(){
-                    $.ajax({
-                      method: "POST",
-                      url: _self.attr('data-url'),
-                      data: { "csrfmiddlewaretoken": Cookies.get('csrftoken'), "long_id": _self.attr("data-long-id"), "force": "off" }
-                    }).done(function( response ) {
-                        _self.removeAttr("disabled");
-                        if( response.status == "success" ){
-                            for(var messageObj of response.messages) {
-                                toastr.clear();
-                                toastr.success(messageObj.message);
-                                break;
-                            }
-                        }else{
-                            for(var messageObj of response.messages) {
-                                toastr.clear();
-                                toastr.error(messageObj.message);
-                                break;
-                            }
-                        }
-                    });
-                });
-            }
-        }
-    });
-
-}
-
 
 /**
  *
@@ -685,48 +1524,7 @@ let hexToRgba = function(hex, opacity) {
     return 'rgba(' + rgb.r + ', ' + rgb.g + ', ' + rgb.b + ', ' + opacity + ')';
 };
 
-
 $(document).ready(function() {
-
-    $(document).ajaxStart(function() {
-        require(['pace'], function(Pace) {
-            Pace.restart();
-        });
-    });
-
-    require(['vue', 'axios', 'jscookie', 'jquery', 'pace', 'toastr'], function(Vue, axios, Cookies, $, Pace, toastr) {
-        axios.defaults.headers.common = {
-            'X-Requested-With': 'XMLHttpRequest',
-            'X-CSRFToken' : Cookies.get('csrftoken')
-        };
-
-        $.ajaxSetup({
-            headers:
-            { 'X-CSRFToken': Cookies.get('csrftoken') }
-        });
-
-        if(document.getElementById("app_notifications")){
-            kraven_app.notifications(
-                Vue,
-                axios,
-                $,
-                Pace,
-                Cookies,
-                toastr
-            );
-        }
-        if(document.getElementById("host_images_list")){
-            kraven_app.host_images_list_screen(
-                Vue,
-                axios,
-                $,
-                Pace,
-                Cookies,
-                toastr
-            );
-        }
-    });
-
 
     /** Constant div card */
     const DIV_CARD = 'div.card';

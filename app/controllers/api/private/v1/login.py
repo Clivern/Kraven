@@ -35,7 +35,6 @@ class Login(View):
 
     @stop_request_if_authenticated
     def post(self, request):
-
         if self.__login.is_authenticated(request):
             return JsonResponse(self.__response.send_private_failure([{
                 "type": "error",

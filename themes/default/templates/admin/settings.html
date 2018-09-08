@@ -8,9 +8,9 @@
         {% include 'partials/top-menu.html' %}
         <div class="my-3 my-md-5">
             <div class="container">
-                <div class="row">
+                <div class="row" id="manage_settings">
                     <div class="col-8">
-                        <form class="card _endpoint_connect" onsubmit="return false" action="{% url 'app.api.private.v1.admin.settings.endpoint' %}" method="post" data-succ-type="nothing">
+                        <form class="card" v-on:submit.prevent="updateSettingsAction" action="{% url 'app.api.private.v1.admin.settings.endpoint' %}" method="post">
                             {% csrf_token %}
                             <div class="card-status bg-green"></div>
                             <div class="card-header">
@@ -75,7 +75,7 @@
                             </div>
                             <div class="card-footer text-right">
                                 <div class="d-flex">
-                                    <button type="submit" class="btn btn-primary ml-auto">{% trans "Submit" %}</button>
+                                    <button type="submit" class="btn btn-primary ml-auto" v-bind:class="{ 'btn-loading': isInProgress }" v-bind:disabled="isInProgress">{% trans "Submit" %}</button>
                                 </div>
                             </div>
                         </form>

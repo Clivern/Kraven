@@ -5,7 +5,7 @@
 {% block content %}
     <div class="page-single">
         <div class="container">
-            <div class="row">
+            <div class="row" id="app_login">
                 <div class="col col-login mx-auto">
                     <div class="text-center mb-6">
                         <a href="/">
@@ -22,7 +22,7 @@
                             {% endif %}
                         {% endfor %}
                     {% endif %}
-                    <form class="card _endpoint_connect" onsubmit="return false" action="{% url 'app.api.private.v1.login.endpoint' %}" method="post"data-succ-type="redirect" data-succ-url="{{ redirect_url }}" data-succ-wait="3000">
+                    <form class="card" v-on:submit.prevent="loginAction" action="{% url 'app.api.private.v1.login.endpoint' %}" method="post" data-redirect-url="{{ redirect_url }}" data-redirect-after="3000">
                         {% csrf_token %}
                         <div class="card-body p-6">
                             <div class="card-title">{% trans "Login to your account" %}</div>
@@ -48,7 +48,7 @@
                                 </div>
                             </div>
                             <div class="form-footer">
-                                <button type="submit" class="btn btn-primary btn-block">{% trans "Login" %}</button>
+                                <button type="submit" class="btn btn-primary btn-block" v-bind:class="{ 'btn-loading': isInProgress }" v-bind:disabled="isInProgress">{% trans "Login" %}</button>
                             </div>
                         </div>
                     </form>

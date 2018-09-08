@@ -23,7 +23,7 @@
                         <a class="dropdown-item" href="javascript:void(0)" v-on:click="pruneUnusedImagesAction" data-url="{% url 'app.api.private.v1.admin.action.host.prune_unused_images.endpoint' host.id %}">{% trans "Prune unused images" %}</a>
                         <a class="dropdown-item" href="javascript:void(0)" v-on:click="pruneAllUnusedImagesAction" data-url="{% url 'app.api.private.v1.admin.action.host.prune_all_unused_images.endpoint' host.id %}">{% trans "Prune all unused images" %}</a>
                     </div>
-                    <button type="button" class="btn btn-icon btn-secondary btn-sm" v-on:click="reloadHostsImages"><i class="fe fe fe-rotate-cw"></i></button>
+                    <button type="button" class="btn btn-icon btn-secondary btn-sm" v-on:click="reloadHostsImagesAction"><i class="fe fe fe-rotate-cw"></i></button>
                 </div>
             </div>
             <div class="dimmer" v-bind:class="{ active: isDimmerActive }">

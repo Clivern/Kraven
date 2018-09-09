@@ -208,6 +208,7 @@ class Build_Image(View):
             'tag': {
                 'value': request_data["tag"],
                 'sanitize': {
+
                 },
                 'validate': {
                 }

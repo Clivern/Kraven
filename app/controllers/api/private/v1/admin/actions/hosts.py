@@ -199,7 +199,7 @@ class Build_Image(View):
 
         request_data = self.__request.get_request_data("post", {
             "tag": "",
-            "fileobj": "",
+            "dockerfile": "",
             "rm": "",
             "nocache": ""
         })
@@ -212,8 +212,8 @@ class Build_Image(View):
                 'validate': {
                 }
             },
-            'fileobj': {
-                'value': request_data["fileobj"],
+            'dockerfile': {
+                'value': request_data["dockerfile"],
                 'sanitize': {
                 },
                 'validate': {
@@ -249,9 +249,9 @@ class Build_Image(View):
             }]))
 
         _tag = self.__form.get_input_value("tag")
-        _fileobj = self.__form.get_input_value("fileobj")
-        _rm = self.__form.get_input_value("rm")
-        _nocache = self.__form.get_input_value("nocache")
+        _fileobj = self.__form.get_input_value("dockerfile")
+        _rm = bool(self.__form.get_input_value("rm") == "1")
+        _nocache = bool(self.__form.get_input_value("nocache") == "1")
 
         task = self.__task_module.delay("build_image", {
             "host_id": self.__host_id,
@@ -364,8 +364,8 @@ class Remove_Image_By_Id(View):
             }]))
 
         _long_id = self.__form.get_input_value("long_id")
-        _force = bool(self.__form.get_input_value("force") == "on")
-        _noprune = bool(self.__form.get_input_value("noprune") == "on")
+        _force = bool(self.__form.get_input_value("force") == "1")
+        _noprune = bool(self.__form.get_input_value("noprune") == "1")
 
         task = self.__task_module.delay("remove_image_by_id", {
             "host_id": self.__host_id,

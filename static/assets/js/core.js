@@ -90,6 +90,7 @@ kraven_app.notifications = (Vue, axios, $, Pace, Cookies, toastr) => {
                     .then(response => {
                         this.notifications = response.data.payload.notifications;
                         this.notification_status = response.data.payload.status;
+                        console.log(this.notifications);
                     })
                     .catch(error => {
                         toastr.clear();
@@ -296,7 +297,7 @@ kraven_app.host_images_list_screen = (Vue, axios, $, Pace, Cookies, toastr) => {
                         data: {
                             "csrfmiddlewaretoken": Cookies.get('csrftoken'),
                             "long_id": _self.attr("data-long-id"),
-                            "force": "on"
+                            "force": "1"
                         }
                     }).done((response) => {
                         _self.removeAttr("disabled");
@@ -439,7 +440,7 @@ kraven_app.host_images_build_screen = (Vue, axios, $, Pace, Cookies, toastr) => 
             }
         },
         methods: {
-            pullHostImageAction(event) {
+            buildHostImageAction(event) {
                 event.preventDefault();
                 this.isInProgress = true;
 

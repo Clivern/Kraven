@@ -7,9 +7,9 @@
         <div class="card-options"></div>
     </div>
 </div>
-<div class="row">
+<div class="row" id="host_images_build">
     <div class="col-12">
-        <form id="host_create" class="card _endpoint_connect" onsubmit="return false" action="{% url 'app.api.private.v1.admin.action.host.pull_image.endpoint' host.id %}" data-succ-type="reset" method="post">
+        <form class="card" v-on:submit.prevent="buildHostImageAction" action="{% url 'app.api.private.v1.admin.action.host.build_image.endpoint' host.id %}" method="post">
             {% csrf_token %}
             <div class="card-status bg-green"></div>
             <div class="card-body">
@@ -20,11 +20,26 @@
                             <div class="col-md-12 col-lg-12">
                                 <div class="form-group">
                                     <label class="form-label">{% trans "Image Name" %}</label>
-                                    <input type="text" class="form-control" name="name" placeholder="ubuntu:18.04" required>
+                                    <input name="tag" type="text" class="form-control" placeholder="ubuntu:18.04" required>
+                                    <div class="form-text text-muted">{% trans "Note: if you don't specify the tag in the image name, latest will be used." %}</div>
                                 </div>
                                 <div class="form-group">
                                     <label class="form-label">{% trans "Dockerfile" %}</label>
                                     <textarea name="dockerfile" class="form-control" rows="10" required placeholder="FROM ubuntu:18.04"></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label class="custom-switch">
+                                        <input type="checkbox" value="1" name="rm" class="custom-switch-input">
+                                        <span class="custom-switch-indicator"></span>
+                                        <span class="custom-switch-description">{% trans "Remove Intermediate Containers" %}</span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label class="custom-switch">
+                                        <input type="checkbox" value="1" name="nocache" class="custom-switch-input" checked>
+                                        <span class="custom-switch-indicator"></span>
+                                        <span class="custom-switch-description">{% trans "Don’t use the cache" %}</span>
+                                    </label>
                                 </div>
                             </div>
                         </div>
@@ -33,7 +48,7 @@
             </div>
             <div class="card-footer text-right">
                 <div class="d-flex">
-                    <button type="submit" class="btn btn-primary btn-sm ml-auto">{% trans "Build" %}</button>
+                    <button type="submit" class="btn btn-primary ml-auto" v-bind:class="{ 'btn-loading': isInProgress }" v-bind:disabled="isInProgress">{% trans "Build" %}</button>
                 </div>
             </div>
         </form>

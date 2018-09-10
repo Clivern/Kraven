@@ -88,9 +88,16 @@ kraven_app.notifications = (Vue, axios, $, Pace, Cookies, toastr) => {
             fetch() {
                 axios.get(app_globals.notifications_endpoint)
                     .then(response => {
-                        this.notifications = response.data.payload.notifications;
-                        this.notification_status = response.data.payload.status;
-                        console.log(this.notifications);
+                        if (response.data.status == "success") {
+                            this.notifications = response.data.payload.notifications;
+                            this.notification_status = response.data.payload.status;
+                        } else {
+                            for (var messageObj of response.data.messages) {
+                                toastr.clear();
+                                toastr.error(messageObj.message);
+                                break;
+                            }
+                        }
                     })
                     .catch(error => {
                         toastr.clear();
@@ -196,7 +203,15 @@ kraven_app.host_images_list_screen = (Vue, axios, $, Pace, Cookies, toastr) => {
             fetch() {
                 axios.get($('#host_images_list').attr('data-fetch-images'))
                     .then(response => {
-                        this.items = response.data.payload.images;
+                        if (response.data.status == "success") {
+                            this.items = response.data.payload.images;
+                        } else {
+                            for (var messageObj of response.data.messages) {
+                                toastr.clear();
+                                toastr.error(messageObj.message);
+                                break;
+                            }
+                        }
                     })
                     .catch(error => {
                         toastr.clear();
@@ -1091,7 +1106,15 @@ kraven_app.hosts_list_screen = (Vue, axios, $, Pace, Cookies, toastr) => {
             fetch() {
                 axios.get($('#host_list').attr('data-fetch-hosts'))
                     .then(response => {
-                        this.items = response.data.payload.hosts;
+                        if (response.data.status == "success") {
+                            this.items = response.data.payload.hosts;
+                        } else {
+                            for (var messageObj of response.data.messages) {
+                                toastr.clear();
+                                toastr.error(messageObj.message);
+                                break;
+                            }
+                        }
                     })
                     .catch(error => {
                         toastr.clear();

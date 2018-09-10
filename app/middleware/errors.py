@@ -4,8 +4,10 @@ Errors Middleware
 
 # Django
 from django.utils.translation import gettext as _
+from django.http import JsonResponse
 
 # local Django
+from app.modules.core.response import Response
 from app.modules.util.helpers import Helpers
 
 
@@ -32,4 +34,12 @@ class Errors():
                 exception
             )
         )
+
+        if request.is_ajax():
+            response = Response()
+            return JsonResponse(response.send_private_failure([{
+                "type": "error",
+                "message": _("Something goes wrong! Please contact a system administrator.")
+            }]))
+
         return None

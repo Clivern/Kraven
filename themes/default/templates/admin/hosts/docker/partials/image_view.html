@@ -9,8 +9,22 @@
         </div>
     </div>
 </div>
-<div class="row" id="host_image_view">
+<div class="row" id="host_image_view" data-fetch-image="{% url 'app.api.private.v1.admin.action.host.get_image.endpoint' host.id image_id %}">
     <div class="col-12">
-        {{ image_id }}
+        <div class="card">
+            <div class="card-status bg-green"></div>
+            <div class="card-body">
+                <div class="dimmer" v-bind:class="{ active: isDimmerActive }">
+                    <div class="loader"></div>
+                    <div class="dimmer-content">
+                        <div class="row">
+                            <div class="col-md-12 col-lg-12">
+                                ${item}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>

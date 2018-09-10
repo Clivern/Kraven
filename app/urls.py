@@ -56,6 +56,7 @@ from app.controllers.api.private.v1.admin.actions.hosts import Health_Check as H
 from app.controllers.api.private.v1.admin.actions.hosts import Pull_Image as Pull_Image_Action_Admin_V1_Endpoint_Private
 from app.controllers.api.private.v1.admin.actions.hosts import Build_Image as Build_Image_Action_Admin_V1_Endpoint_Private
 from app.controllers.api.private.v1.admin.actions.hosts import Get_Images as Get_Images_Action_Admin_V1_Endpoint_Private
+from app.controllers.api.private.v1.admin.actions.hosts import Get_Image as Get_Image_Action_Admin_V1_Endpoint_Private
 from app.controllers.api.private.v1.admin.actions.hosts import Search_Community_Images as Search_Community_Images_Action_Admin_V1_Endpoint_Private
 from app.controllers.api.private.v1.admin.actions.hosts import Prune_Unused_Images as Prune_Unused_Images_Action_Admin_V1_Endpoint_Private
 from app.controllers.api.private.v1.admin.actions.hosts import Prune_All_Unused_Images as Prune_All_Unused_Images_Action_Admin_V1_Endpoint_Private
@@ -134,6 +135,11 @@ urlpatterns = [
                 'action/host/get_images/<int:host_id>',
                 Get_Images_Action_Admin_V1_Endpoint_Private.as_view(),
                 name='app.api.private.v1.admin.action.host.get_images.endpoint'
+            ),
+            path(
+                'action/host/get_image/<int:host_id>/<image_id>',
+                Get_Image_Action_Admin_V1_Endpoint_Private.as_view(),
+                name='app.api.private.v1.admin.action.host.get_image.endpoint'
             ),
             path(
                 'action/host/search_community_images/<int:host_id>',

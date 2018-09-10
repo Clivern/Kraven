@@ -657,7 +657,55 @@ class Prune_All_Unused_Images(View):
 
 
 class Get_Image(View):
-    pass
+
+    __request = None
+    __response = None
+    __helpers = None
+    __form = None
+    __logger = None
+    __user_id = None
+    __host_id = None
+    __image_id = None
+    __host_module = None
+    __image_module = None
+
+    def __init__(self):
+        self.__request = Request()
+        self.__response = Response()
+        self.__helpers = Helpers()
+        self.__form = Form()
+        self.__host_module = Host_Module()
+        self.__image_module = Image_Module()
+        self.__logger = self.__helpers.get_logger(__name__)
+
+    def get(self, request, host_id, image_id):
+
+        self.__user_id = request.user.id
+        self.__host_id = host_id
+        self.__image_id = image_id
+
+        if not self.__host_module.user_owns(self.__host_id, self.__user_id):
+            return JsonResponse(self.__response.send_private_failure([{
+                "type": "error",
+                "message": _("Error! Invalid Request.")
+            }]))
+
+        if self.__image_module.set_host(self.__host_id).check_health():
+            _image = {
+                'long_id': self.__image_id
+            }
+            return JsonResponse(self.__response.send_private_success([], {
+                'image': _image
+            }))
+        else:
+            return JsonResponse(self.__response.send_private_failure([{
+                "type": "error",
+                "message": _(
+                    "Error! Something goes wrong with your host!"
+                )
+            }], {
+                'image': {}
+            }))
 
 
 class Get_Images(View):

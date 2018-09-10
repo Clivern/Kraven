@@ -1168,6 +1168,49 @@ kraven_app.hosts_list_screen = (Vue, axios, $, Pace, Cookies, toastr) => {
 }
 
 
+/**
+ * App Host Image
+ */
+kraven_app.host_image_screen = (Vue, axios, $, Pace, Cookies, toastr) => {
+
+    return new Vue({
+        delimiters: ['${', '}'],
+        el: '#host_image_view',
+        data() {
+            return {
+                item: {},
+                isDimmerActive: true,
+                i18n: _host_image_view_i18n
+            }
+        },
+        mounted() {
+            this.fetch();
+        },
+        methods: {
+            fetch() {
+                axios.get($('#host_image_view').attr('data-fetch-image'))
+                    .then(response => {
+                        if (response.data.status == "success") {
+                            this.item = response.data.payload.image;
+                        } else {
+                            for (var messageObj of response.data.messages) {
+                                toastr.clear();
+                                toastr.error(messageObj.message);
+                                break;
+                            }
+                        }
+                    })
+                    .catch(error => {
+                        toastr.clear();
+                        toastr.error(error);
+                    })
+                    .finally(() => this.isDimmerActive = false)
+            }
+        }
+    });
+
+}
+
 
 $(document).ready(() => {
 
@@ -1321,6 +1364,16 @@ $(document).ready(() => {
         }
         if (document.getElementById("host_list")) {
             kraven_app.hosts_list_screen(
+                Vue,
+                axios,
+                $,
+                Pace,
+                Cookies,
+                toastr
+            );
+        }
+        if (document.getElementById("host_image_view")) {
+            kraven_app.host_image_screen(
                 Vue,
                 axios,
                 $,

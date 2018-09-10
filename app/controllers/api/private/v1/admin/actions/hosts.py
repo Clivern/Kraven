@@ -693,8 +693,9 @@ class Get_Images(View):
             }]))
 
         if self.__image_module.set_host(self.__host_id).check_health():
+            _host = self.__host_module.get_one_by_id(host_id)
             return JsonResponse(self.__response.send_private_success([], {
-                'images': self.__format_image(self.__image_module.list(), host_id)
+                'images': self.__format_image(self.__image_module.list(), host_id, _host.slug)
             }))
         else:
             return JsonResponse(self.__response.send_private_failure([{
@@ -706,7 +707,7 @@ class Get_Images(View):
                 'images': []
             }))
 
-    def __format_image(self, images_list, host_id):
+    def __format_image(self, images_list, host_id, host_slug):
         _image_list = []
 
         for image in images_list:
@@ -718,7 +719,7 @@ class Get_Images(View):
                 tag = tag.split(":")
                 _tags.append({"name": tag[0], "version": tag[1]})
             image["tags"] = _tags
-            image["url"] = "#view"
+            image["url"] = reverse("app.web.admin.hosts.view.image", kwargs={'host_slug': host_slug, 'image_id': image['long_id']})
             image["delete_url"] = reverse("app.api.private.v1.admin.action.host.delete_image.endpoint", kwargs={'host_id': host_id})
             _image_list.append(image)
 

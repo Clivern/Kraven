@@ -37,6 +37,7 @@ from app.controllers.web.admin.hosts import Host_Images_Build_View as Host_Image
 from app.controllers.web.admin.hosts import Host_Networks_View as Host_Networks_View_Web
 from app.controllers.web.admin.hosts import Host_Volumes_View as Host_Volumes_View_Web
 from app.controllers.web.admin.hosts import Host_Actions_View as Host_Actions_View_Web
+from app.controllers.web.admin.hosts import Host_Image_View as Host_Image_View_Web
 
 from app.controllers.api.private.v1.install import Install as Install_V1_Endpoint_Private
 from app.controllers.api.private.v1.login import Login as Login_V1_Endpoint_Private
@@ -88,6 +89,7 @@ urlpatterns = [
         path('hosts/view/<slug:host_slug>/images', Host_Images_View_Web.as_view(), name='app.web.admin.hosts.view.images'),
         path('hosts/view/<slug:host_slug>/images/pull', Host_Images_Pull_View_Web.as_view(), name='app.web.admin.hosts.view.pull.images'),
         path('hosts/view/<slug:host_slug>/images/build', Host_Images_Build_View_Web.as_view(), name='app.web.admin.hosts.view.build.images'),
+        path('hosts/view/<slug:host_slug>/image/<image_id>', Host_Image_View_Web.as_view(), name='app.web.admin.hosts.view.image'),
 
         path('hosts/view/<slug:host_slug>/networks', Host_Networks_View_Web.as_view(), name='app.web.admin.hosts.view.networks'),
         path('hosts/view/<slug:host_slug>/volumes', Host_Volumes_View_Web.as_view(), name='app.web.admin.hosts.view.volumes'),

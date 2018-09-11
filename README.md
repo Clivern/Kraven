@@ -6,6 +6,8 @@
 A SaaS Docker Management Dashboard.
 
 [![Build Status](https://travis-ci.org/Clivern/Kraven.svg?branch=master)](https://travis-ci.org/Clivern/Kraven)
+[![GitHub license](https://img.shields.io/badge/Version-1.0.0-orange.svg)](https://github.com/Clivern/Kraven#changelog)
+[![GitHub license](https://img.shields.io/github/license/Clivern/Kraven.svg)](https://github.com/Clivern/Kraven/blob/master/LICENSE)
 
 Installation
 ------------

@@ -2,6 +2,20 @@
 {% load staticfiles %}
 {% load i18n %}
 
+{% block customer_header %}
+    <script type="text/javascript">
+        var _host_images_view_i18n = {
+            manage: "{% trans "Manage" %}",
+            actions: "{% trans "Actions" %}",
+            delete: "{% trans "Delete" %}",
+            force_delete: "{% trans "Force Delete" %}"
+        }
+
+        var _host_image_view_i18n = {
+
+        }
+    </script>
+{% endblock %}
 
 {% block content %}
     <div class="page-main">
@@ -26,7 +40,7 @@
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td><i class="fe fe-circle text-muted"></i></td>
+                                        <td><i class="fe fe-droplet text-muted"></i></td>
                                         <td>
                                             <a href="{% url 'app.web.admin.hosts.view.images' host.slug %}">{% trans "Images" %}</a>
                                         </td>
@@ -38,12 +52,6 @@
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td><i class="fe fe-cpu text-muted"></i></td>
-                                        <td>
-                                            <a href="{% url 'app.web.admin.hosts.view.services' host.slug %}">{% trans "Services" %}</a>
-                                        </td>
-                                    </tr>
-                                    <tr>
                                         <td><i class="fe fe-hard-drive text-muted"></i></td>
                                         <td>
                                             <a href="{% url 'app.web.admin.hosts.view.volumes' host.slug %}">{% trans "Volumes" %}</a>
@@ -52,7 +60,7 @@
                                     <tr>
                                         <td><i class="fe fe-activity text-muted"></i></td>
                                         <td>
-                                            <a href="{% url 'app.web.admin.hosts.view.activity' host.slug %}">{% trans "Activity" %}</a>
+                                            <a href="{% url 'app.web.admin.hosts.view.actions' host.slug %}">{% trans "Actions" %}</a>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -60,21 +68,7 @@
                         </div>
                     </div>
                     <div class="col-sm-6 col-lg-9">
-                        {% if screen == "main" %}
-                            {% include 'templates/admin/hosts/docker/partials/main.html' %}
-                        {% elif screen == "containers" %}
-                            {% include 'templates/admin/hosts/docker/partials/containers.html' %}
-                        {% elif screen == "images" %}
-                            {% include 'templates/admin/hosts/docker/partials/images.html' %}
-                        {% elif screen == "networks" %}
-                            {% include 'templates/admin/hosts/docker/partials/networks.html' %}
-                        {% elif screen == "services" %}
-                            {% include 'templates/admin/hosts/docker/partials/services.html' %}
-                        {% elif screen == "volumes" %}
-                            {% include 'templates/admin/hosts/docker/partials/volumes.html' %}
-                        {% elif screen == "activity" %}
-                            {% include 'templates/admin/hosts/docker/partials/activity.html' %}
-                        {% endif %}
+                        {% include "templates/admin/hosts/docker/partials/"|add:screen|add:".html" %}
                     </div>
                 </div>
             </div>

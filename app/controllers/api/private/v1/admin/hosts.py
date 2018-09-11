@@ -6,6 +6,7 @@ Hosts API Endpoint
 from django.views import View
 from django.http import JsonResponse
 from django.utils.translation import gettext as _
+from django.urls import reverse
 
 # local Django
 from app.modules.validation.form import Form
@@ -13,20 +14,36 @@ from app.modules.util.helpers import Helpers
 from app.modules.core.request import Request
 from app.modules.core.response import Response
 from app.modules.core.host import Host as Host_Module
+from app.modules.service.docker.status import Status
 
 
 class Hosts(View):
 
-    __request = Request()
-    __response = Response()
-    __helpers = Helpers()
-    __form = Form()
+    __request = None
+    __response = None
+    __helpers = None
+    __form = None
     __logger = None
     __user_id = None
-    __host_module = Host_Module()
+    __host_module = None
+    __status = None
 
     def __init__(self):
+        self.__request = Request()
+        self.__response = Response()
+        self.__helpers = Helpers()
+        self.__form = Form()
+        self.__host_module = Host_Module()
+        self.__status = Status()
         self.__logger = self.__helpers.get_logger(__name__)
+
+    def get(self, request):
+
+        self.__user_id = request.user.id
+
+        return JsonResponse(self.__response.send_private_success([], {
+            'hosts': self.__format_host(self.__host_module.get_many_by_user(self.__user_id, "created_at", False))
+        }))
 
     def post(self, request):
 
@@ -165,19 +182,43 @@ class Hosts(View):
                 "message": _("Error! Something goes wrong while creating host.")
             }]))
 
+    def __format_host(self, hosts_list):
+        _hosts_list = []
+
+        for host in hosts_list:
+            _status = "up" if self.__status.set_host(host.id).ping() else "down"
+            _hosts_list.append({
+                "id": host.id,
+                "name": host.name,
+                "slug": host.slug,
+                "status": _status,
+                "type": host.type.capitalize(),
+                "created_at": host.created_at.strftime("%b %d %Y %H:%M:%S"),
+                "view_url": reverse("app.web.admin.hosts.view", kwargs={'host_slug': host.slug}),
+                "edit_url": reverse("app.web.admin.hosts.edit", kwargs={'host_slug': host.slug}),
+                "delete_url": reverse("app.api.private.v1.admin.host.endpoint", kwargs={'host_id': host.id})
+            })
+
+        return _hosts_list
+
 
 class Host(View):
 
-    __request = Request()
-    __response = Response()
-    __helpers = Helpers()
-    __form = Form()
+    __request = None
+    __response = None
+    __helpers = None
+    __form = None
     __logger = None
     __user_id = None
     __host_id = None
-    __host_module = Host_Module()
+    __host_module = None
 
     def __init__(self):
+        self.__request = Request()
+        self.__response = Response()
+        self.__helpers = Helpers()
+        self.__form = Form()
+        self.__host_module = Host_Module()
         self.__logger = self.__helpers.get_logger(__name__)
 
     def post(self, request, host_id):

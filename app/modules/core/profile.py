@@ -16,14 +16,19 @@ from app.modules.entity.user_entity import User_Entity
 
 class Profile():
 
-    __option_entity = Option_Entity()
-    __user_entity = User_Entity()
-    __helpers = Helpers()
+    __option_entity = None
+    __user_entity = None
+    __helpers = None
     __logger = None
-    __token = Token()
-    __profile_entity = Profile_Entity()
+    __token = None
+    __profile_entity = None
 
     def __init__(self):
+        self.__option_entity = Option_Entity()
+        self.__user_entity = User_Entity()
+        self.__helpers = Helpers()
+        self.__token = Token()
+        self.__profile_entity = Profile_Entity()
         self.__logger = self.__helpers.get_logger(__name__)
 
     def get_profile(self, user_id):

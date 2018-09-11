@@ -31,13 +31,17 @@ class Install():
         "is_active": True,
         "is_staff": False
     }
-    __option_entity = Option_Entity()
-    __user_entity = User_Entity()
-    __helpers = Helpers()
+    __option_entity = None
+    __user_entity = None
+    __helpers = None
     __logger = None
-    __acl = ACL()
+    __acl = None
 
     def __init__(self):
+        self.__option_entity = Option_Entity()
+        self.__user_entity = User_Entity()
+        self.__helpers = Helpers()
+        self.__acl = ACL()
         self.__logger = self.__helpers.get_logger(__name__)
 
     def is_installed(self):

@@ -9,11 +9,13 @@ from app.modules.entity.host_entity import Host_Entity
 
 class Host():
 
-    __helpers = Helpers()
+    __helpers = None
     __logger = None
-    __host_entity = Host_Entity()
+    __host_entity = None
 
     def __init__(self):
+        self.__helpers = Helpers()
+        self.__host_entity = Host_Entity()
         self.__logger = self.__helpers.get_logger(__name__)
 
     def user_owns(self, host_id, user_id):

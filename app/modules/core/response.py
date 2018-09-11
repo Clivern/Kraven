@@ -11,8 +11,6 @@ from app.modules.util.helpers import Helpers
 
 class Response():
 
-    __private = {}
-    __public = {}
     __helpers = None
     __logger = None
 
@@ -21,37 +19,41 @@ class Response():
         self.__logger = self.__helpers.get_logger(__name__)
 
     def send_private_success(self, messages, payload={}):
-        self.__private["status"] = "success"
-        self.__private["messages"] = messages
+        __private = {}
+        __private["status"] = "success"
+        __private["messages"] = messages
         if len(payload) > 0:
-            self.__private["payload"] = payload
+            __private["payload"] = payload
 
-        self.__logger.debug(_("App Response: ") + self.__helpers.json_dumps(self.__private) + "\n")
-        return self.__private
+        self.__logger.debug(_("App Response: ") + self.__helpers.json_dumps(__private) + "\n")
+        return __private
 
     def send_private_failure(self, messages, payload={}):
-        self.__private["status"] = "failure"
-        self.__private["messages"] = messages
+        __private = {}
+        __private["status"] = "failure"
+        __private["messages"] = messages
         if len(payload) > 0:
-            self.__private["payload"] = payload
+            __private["payload"] = payload
 
-        self.__logger.debug(_("App Response: ") + self.__helpers.json_dumps(self.__private) + "\n")
-        return self.__private
+        self.__logger.debug(_("App Response: ") + self.__helpers.json_dumps(__private) + "\n")
+        return __private
 
     def send_public_success(self, messages, payload={}):
-        self.__public["status"] = "success"
-        self.__public["messages"] = messages
+        __public = {}
+        __public["status"] = "success"
+        __public["messages"] = messages
         if len(payload) > 0:
-            self.__public["payload"] = payload
+            __public["payload"] = payload
 
-        self.__logger.debug(_("App Response: ") + self.__helpers.json_dumps(self.__public) + "\n")
-        return self.__public
+        self.__logger.debug(_("App Response: ") + self.__helpers.json_dumps(__public) + "\n")
+        return __public
 
     def send_public_failure(self, messages, payload={}):
-        self.__public["status"] = "failure"
-        self.__public["messages"] = messages
+        __public = {}
+        __public["status"] = "failure"
+        __public["messages"] = messages
         if len(payload) > 0:
-            self.__public["payload"] = payload
+            __public["payload"] = payload
 
-        self.__logger.debug(_("App Response: ") + self.__helpers.json_dumps(self.__public) + "\n")
-        return self.__public
+        self.__logger.debug(_("App Response: ") + self.__helpers.json_dumps(__public) + "\n")
+        return __public

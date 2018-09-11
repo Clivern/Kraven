@@ -17,16 +17,20 @@ from app.modules.core.response import Response
 
 class Profile(View):
 
-    __request = Request()
-    __response = Response()
-    __helpers = Helpers()
-    __form = Form()
-    __settings = None
+    __request = None
+    __response = None
+    __helpers = None
+    __form = None
     __logger = None
     __user_id = None
-    __profile_module = Profile_Module()
+    __profile_module = None
 
     def __init__(self):
+        self.__request = Request()
+        self.__response = Response()
+        self.__helpers = Helpers()
+        self.__form = Form()
+        self.__profile_module = Profile_Module()
         self.__logger = self.__helpers.get_logger(__name__)
 
     def post(self, request):

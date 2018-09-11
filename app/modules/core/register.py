@@ -19,9 +19,10 @@ class Register():
     __user_entity = None
     __helpers = None
     __logger = None
-    __acl = ACL()
+    __acl = None
 
     def __init__(self):
+        self.__acl = ACL()
         self.__option_entity = Option_Entity()
         self.__user_entity = User_Entity()
         self.__helpers = Helpers()

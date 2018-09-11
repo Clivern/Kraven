@@ -4,86 +4,77 @@
 
 {% block content %}
 		<section class="welcome">
-			<header class="header">
-				<div class="container d-flex align-items-center">
-					<a href="/" class="logo">
-						Kraven
-					</a>
-					<div class="menu ml-auto">
-						<a href="/login">Login</a>
-						<a href="https://github.com/clivern/kraven">
-							<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-1 feather feather-github"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
-							Github
-						</a>
-					</div>
-				</div>
-			</header>
 			<div class="container">
 				<div class="welcome-header">
-					<h1 class="welcome-title">Manage Docker Easily</h1>
-					<p class="welcome-description">Open Source Web Application to Manage Your Docker Nodes. For&nbsp;Free!</p>
-
-					<div class="mt-6">
-						<a href="/register" class="btn btn-green">Register</a>
-						<a href="/login" class="btn btn-outline ml-2">Login</a>
-					</div>
+					<img src="{% static 'assets/images/logo.png' %}" width="100"><br/><br/>
+					<p class="welcome-description">{% trans "A SaaS Docker Management Dashboard" %}</p>
+					{% if is_authenticated %}
+						<div class="mt-6">
+							<a href="{% url 'app.web.admin.dashboard' %}" class="btn btn-green">{% trans "Dashboard" %}</a>
+						</div>
+					{% else %}
+						<div class="mt-6">
+							<a href="{% url 'app.web.register' %}" class="btn btn-green">{% trans "Register" %}</a>
+							<a href="{% url 'app.web.login' %}" class="btn btn-green">{% trans "Login" %}</a>
+						</div>
+					{% endif %}
 				</div>
 			</div>
 		</section>
 		<section class="section pt-7">
 			<div class="container">
-				<h2 class="section-title">Features</h2>
+				<h2 class="section-title">{% trans "Features" %}</h2>
 				<p class="section-description mb-6">
-					Tabler comes with tons of well-designed components and features.
+					{% trans "Kraven comes with tons of well crafted features." %}
 				</p>
 
 				<div class="features">
 					<div class="feature">
 						<div class="feature-image">
-							<img src="https://tabler.github.io/assets/images/features/features-1.png" alt="">
+							<img src="{% static 'assets/images/docker_icon.png' %}" width="200">
 						</div>
 						<div class="feature-description">
-							<h3 class="feature-name">Coded by Developers for Developers</h3>
-							<p>Clear and telling code that you won't get lost in. It was made with care and loves so that you don't have to spend hours on making it work &lt;3</p>
+							<h3 class="feature-name">{% trans "Manage Docker Environments" %}</h3>
+							<p>{% trans "Now you have one place to manage all different docker environments or swarm clusters! It allows you to manage your docker containers, images, volumes, networks and much more!" %}</p>
 						</div>
 					</div>
 					<div class="feature">
 						<div class="feature-image">
-							<img src="https://tabler.github.io/assets/images/features/features-4.png" alt="">
+							<img src="{% static 'assets/images/install_icon.png' %}" width="200">
 						</div>
 						<div class="feature-description">
-							<h3 class="feature-name">Open Source Code</h3>
-							<p>You can see the code of Tabler on its GitHub account. If you miss any feature feel free to create a pull request there, we'll definitely check it.</p>
+							<h3 class="feature-name">{% trans "Easy to Install and Manage" %}</h3>
+							<p>{% trans "Auto Installer, Admin management page to control application global settings, Prometheus integration for metrics , docker compose file to run the Application, Workers, RabbitMQ, Redis, Prometheus and Grafana!" %}</p>
+						</div>
+					</div>
+					<div class="feature">
+						<div class="feature-image">
+							<img src="{% static 'assets/images/async_icon.png' %}" width="200">
+						</div>
+						<div class="feature-description">
+							<h3 class="feature-name">{% trans "Asynchronous Everything" %}</h3>
+							<p>{% trans "Everything is Asynchronous with ability to run any number of workers to scale. It can run as centralized or distributed application." %}</p>
+						</div>
+					</div>
+					<div class="feature">
+						<div class="feature-image">
+							<img src="{% static 'assets/images/encrypt_icon.png' %}" width="200">
+						</div>
+						<div class="feature-description">
+							<h3 class="feature-name">{% trans "Well Secured" %}</h3>
+							<p>{% trans "Two layers of encryption to secure your hosts." %}</p>
+						</div>
+					</div>
+					<div class="feature">
+						<div class="feature-image">
+							<img src="{% static 'assets/images/open_icon.png' %}" width="200">
+						</div>
+						<div class="feature-description">
+							<h3 class="feature-name">{% trans "Open Source Code" %}</h3>
+							<p>{% trans "You can see the code of Kraven on GitHub. If you killed a bug, miss any feature feel free to create a pull request there, we'll definitely check it." %}</p>
 							<div class="mt-5">
-								<a href="#" class="btn btn-small btn-outline-dark">View source code</a>
+								<a href="https://github.com/Clivern/Kraven" class="btn btn-small btn-outline-dark">{% trans "Source Code" %}</a>
 							</div>
-						</div>
-					</div>
-					<div class="feature">
-						<div class="feature-image">
-							<img src="https://tabler.github.io/assets/images/features/features-2.png" alt="">
-						</div>
-						<div class="feature-description">
-							<h3 class="feature-name">CSS3 Form Components</h3>
-							<p>We used CSS3 for most of our components to avoid using unnecessary JavaScript libraries. All this to make it fast, reliable and pleasant to use by everyone!</p>
-						</div>
-					</div>
-					<div class="feature">
-						<div class="feature-image">
-							<img src="https://tabler.github.io/assets/images/features/features-5.png" alt="">
-						</div>
-						<div class="feature-description">
-							<h3 class="feature-name">Build with Bootstrap</h3>
-							<p>Tabler used Bootstrap, the most popular HTML, CSS, and JS framework. Thanks to this developers without experience can modify code without any problems.</p>
-						</div>
-					</div>
-					<div class="feature">
-						<div class="feature-image">
-							<img src="https://tabler.github.io/assets/images/features/features-3.png" alt="">
-						</div>
-						<div class="feature-description">
-							<h3 class="feature-name">Simply, beautiful, open source icons</h3>
-							<p>Tabler is build with the newest version of <a href="https://feathericons.com">Feather icons</a> made by <a href="https://twitter.com/colebemis">Cole Bemis</a>. Each&nbsp;icon is designed with an emphasis on simplicity, consistency and readability.</p>
 						</div>
 					</div>
 				</div>
@@ -92,11 +83,10 @@
 
 		<section class="section section-action">
 			<div class="container">
-				<h2 class="section-title">Ready to Run Your Own?</h2>
-				<p class="section-description">
-					Set up Your Own Self-hosted Instance In a Couple of Minutes!</p>
+				<h2 class="section-title">{% trans "Ready to Run Your Own?" %}</h2>
+				<p class="section-description">{% trans "Set up Your Own Self-hosted Instance In a Couple of Minutes!" %}</p>
 				<div class="mt-4">
-					<a href="https://github.com/Clivern/Kraven#installation" class="btn btn-green" target="_blank">Download</a>
+					<a href="https://github.com/Clivern/Kraven#installation" class="btn btn-green" target="_blank">{% trans "Download" %}</a>
 				</div>
 			</div>
 		</section>
@@ -105,8 +95,7 @@
 			<div class="container">
 				<div class="row align-items-center text-center">
 					<div class="col-md-auto">
-						Project maintained by <a href="http://clivern.com">Clivern</a>
-						・ License: Apache V2
+						{% trans "Copyright" %} &#169; {% now "Y" %} <a href="{{ AUTHOR_URL }}">{{ AUTHOR }}</a>. {% trans "All Rights Reserved." %}
 					</div>
 				</div>
 			</div>

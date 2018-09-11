@@ -9,14 +9,16 @@ from app.modules.core.funnel import Funnel
 
 class Web_Funnel():
 
-    __helpers = Helpers()
+    __helpers = None
     __logger = None
-    __funnel = Funnel()
+    __funnel = None
     __roles = {
 
     }
 
     def __init__(self, get_response):
+        self.__helpers = Helpers()
+        self.__funnel = Funnel()
         self.get_response = get_response
         self.__logger = self.__helpers.get_logger(__name__)
 

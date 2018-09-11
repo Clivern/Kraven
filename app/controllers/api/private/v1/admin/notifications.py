@@ -16,21 +16,24 @@ from app.modules.core.notification import Notification as Notification_Module
 
 class Notifications(View):
 
-    __request = Request()
-    __response = Response()
-    __helpers = Helpers()
-    __form = Form()
+    __request = None
+    __response = None
+    __helpers = None
+    __form = None
     __logger = None
     __user_id = None
-    __notification_module = Notification_Module()
+    __notification_module = None
 
     def __init__(self):
+        self.__helpers = Helpers()
+        self.__form = Form()
         self.__logger = self.__helpers.get_logger(__name__)
+        self.__response = Response()
+        self.__request = Request()
+        self.__notification_module = Notification_Module()
 
     def get(self, request):
-
         self.__user_id = request.user.id
-
         return JsonResponse(self.__response.send_private_success(
             [],
             self.__notification_module.user_latest_notifications(self.__user_id)

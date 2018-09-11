@@ -18,14 +18,19 @@ from app.modules.core.decorators import stop_request_if_authenticated
 
 class Register(View):
 
-    __request = Request()
-    __response = Response()
-    __helpers = Helpers()
-    __form = Form()
-    __register = Register_Module()
+    __request = None
+    __response = None
+    __helpers = None
+    __form = None
+    __register = None
     __logger = None
 
     def __init__(self):
+        self.__request = Request()
+        self.__response = Response()
+        self.__helpers = Helpers()
+        self.__form = Form()
+        self.__register = Register_Module()
         self.__logger = self.__helpers.get_logger(__name__)
 
     @stop_request_if_authenticated

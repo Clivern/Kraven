@@ -11,17 +11,20 @@ from django.http import Http404
 from app.modules.service.prometheus import Prometheus
 from app.modules.core.decorators import redirect_if_not_installed
 from app.modules.core.decorators import protect_metric_with_auth_key
-from app.modules.core.metric import Metric
+from app.modules.core.metric import Metric as Metric_Module
 
 
 class Metric(View):
 
-    __prometheus = Prometheus()
-    __metric = Metric()
+    __prometheus = None
+    __metric = None
 
     @redirect_if_not_installed
     @protect_metric_with_auth_key
     def get(self, request, type):
+
+        self.__prometheus = Prometheus()
+        self.__metric = Metric_Module()
 
         if type not in ("prometheus"):
             raise Http404("Page not found.")

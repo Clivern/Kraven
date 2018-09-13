@@ -6,7 +6,9 @@ see https://docs.djangoproject.com/en/2.0/howto/custom-management-commands/
 # Django
 from django.core.management.base import BaseCommand, CommandError
 from app.modules.service.docker.image import Image as Image_Module
+from app.modules.service.docker.volume import Volume as Volume_Module
 from app.modules.util.io import File
+import json
 
 
 class Command(BaseCommand):
@@ -82,3 +84,33 @@ class Command(BaseCommand):
         _image = Image_Module()
         if _image.set_host(configs["host_id"]).check_health():
             print(_image.build(File().read(configs["dockerfile"]), configs["tag"]))
+
+    def list_volumes(self, configs={}):
+        _volume = Volume_Module()
+        if _volume.set_host(configs["host_id"]).check_health():
+            print(_volume.list())
+
+    def get_volume(self, configs={}):
+        _volume = Volume_Module()
+        if _volume.set_host(configs["host_id"]).check_health():
+            print(_volume.get(configs["volume_id"]))
+
+    def remove_volume(self, configs={}):
+        _volume = Volume_Module()
+        if _volume.set_host(configs["host_id"]).check_health():
+            print(_volume.remove(configs["volume_id"], configs["force"] == "True"))
+
+    def prune_volumes(self, configs={}):
+        _volume = Volume_Module()
+        if _volume.set_host(configs["host_id"]).check_health():
+            print(_volume.prune())
+
+    def create_volume(self, configs={}):
+        _volume = Volume_Module()
+        if _volume.set_host(configs["host_id"]).check_health():
+            print(_volume.create(
+                name=configs["name"],
+                driver=configs["driver"] if "driver" in configs else "local",
+                driver_opts=json.loads(configs["driver_opts"]) if "driver_opts" in configs else {},
+                labels=json.loads(configs["labels"]) if "labels" in configs else {}
+            ))

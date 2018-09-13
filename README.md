@@ -118,9 +118,9 @@ Misc
 
 Changelog
 ---------
-Version 1.0.0:
+[Version 1.0.0](https://github.com/Clivern/Kraven/milestone/1?closed=1):
 ```
-Coming Soon.
+Initial Release.
 ```
 
 Acknowledgements

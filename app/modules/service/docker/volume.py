@@ -2,9 +2,6 @@
 Volume Module
 """
 
-# standard library
-from io import BytesIO
-
 # local Django
 from .auth import Auth
 
@@ -25,7 +22,6 @@ class Volume(Auth):
                 "attrs": volume.attrs
             })
         return result
-
 
     def get(self, volume_id):
         return self._client.volumes.get(volume_id)

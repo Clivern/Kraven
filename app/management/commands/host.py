@@ -7,6 +7,7 @@ see https://docs.djangoproject.com/en/2.0/howto/custom-management-commands/
 from django.core.management.base import BaseCommand, CommandError
 from app.modules.service.docker.image import Image as Image_Module
 from app.modules.service.docker.volume import Volume as Volume_Module
+from app.modules.service.docker.network import Network as Network_Module
 from app.modules.util.io import File
 import json
 
@@ -114,3 +115,23 @@ class Command(BaseCommand):
                 driver_opts=json.loads(configs["driver_opts"]) if "driver_opts" in configs else {},
                 labels=json.loads(configs["labels"]) if "labels" in configs else {}
             ))
+
+    def list_networks(self, configs={}):
+        _network = Network_Module()
+        if _network.set_host(configs["host_id"]).check_health():
+            print(_network.list())
+
+    def get_network(self, configs={}):
+        _network = Network_Module()
+        if _network.set_host(configs["host_id"]).check_health():
+            print(_network.get(configs["network_id"]))
+
+    def prune_networks(self, configs={}):
+        _network = Network_Module()
+        if _network.set_host(configs["host_id"]).check_health():
+            print(_network.prune())
+
+    def remove_network(self, configs={}):
+        _network = Network_Module()
+        if _network.set_host(configs["host_id"]).check_health():
+            print(_network.remove(configs["network_id"]))

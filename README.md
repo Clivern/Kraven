@@ -6,7 +6,7 @@
 
 ---
 
-Kraven manage different docker environments or swarm clusters! It allows you to manage your docker containers, images, volumes, networks and much more! It is easy to install and manage with a ready integrations with prometheus and grafana.
+Kraven manage different docker environments! It allows you to manage your docker containers, images, volumes, networks and much more! It is easy to install and manage backed with a wonderful stuff like Django, RabbitMQ and Celery and integrated with prometheus and grafana.
 
 Everything Asynchronous with ability to run any number of workers to scale. It can run as centralized or distributed application.
 

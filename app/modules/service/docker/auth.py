@@ -21,6 +21,7 @@ class Auth():
     _host_id = None
     _host = None
     _retry = 3
+    _timeout = 1
     __crypto = None
     __directory = None
     __file = None
@@ -66,9 +67,9 @@ class Auth():
     def _ping(self, client_type="docker_client"):
         try:
             if client_type == "docker_client":
-                self._client = docker.DockerClient(base_url=self._host.server, tls=self.tls_config())
+                self._client = docker.DockerClient(base_url=self._host.server, tls=self.tls_config(),timeout=self._timeout)
             else:
-                self._client = docker.APIClient(base_url=self._host.server, tls=self.tls_config())
+                self._client = docker.APIClient(base_url=self._host.server, tls=self.tls_config(),timeout=self._timeout)
 
             return self._client.ping()
         except Exception as e:

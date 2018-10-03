@@ -19,6 +19,9 @@ class Volume(Auth):
                 "long_id": volume.id,
                 "short_id": volume.short_id,
                 "name": volume.name,
+                "created": volume.attrs["CreatedAt"],
+                "driver": volume.attrs["Driver"],
+                "scope": volume.attrs["Scope"],
                 "attrs": volume.attrs
             })
         return result

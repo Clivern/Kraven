@@ -52,15 +52,14 @@ from app.controllers.api.private.v1.admin.hosts import Host as Host_Admin_V1_End
 
 from app.controllers.api.private.v1.admin.notifications import Notifications as Notifications_Admin_V1_Endpoint_Private
 
-from app.controllers.api.private.v1.admin.actions.hosts import Health_Check as Health_Check_Action_Admin_V1_Endpoint_Private
-from app.controllers.api.private.v1.admin.actions.hosts import Pull_Image as Pull_Image_Action_Admin_V1_Endpoint_Private
-from app.controllers.api.private.v1.admin.actions.hosts import Build_Image as Build_Image_Action_Admin_V1_Endpoint_Private
-from app.controllers.api.private.v1.admin.actions.hosts import Get_Images as Get_Images_Action_Admin_V1_Endpoint_Private
-from app.controllers.api.private.v1.admin.actions.hosts import Get_Image as Get_Image_Action_Admin_V1_Endpoint_Private
-from app.controllers.api.private.v1.admin.actions.hosts import Search_Community_Images as Search_Community_Images_Action_Admin_V1_Endpoint_Private
-from app.controllers.api.private.v1.admin.actions.hosts import Prune_Unused_Images as Prune_Unused_Images_Action_Admin_V1_Endpoint_Private
-from app.controllers.api.private.v1.admin.actions.hosts import Prune_All_Unused_Images as Prune_All_Unused_Images_Action_Admin_V1_Endpoint_Private
-from app.controllers.api.private.v1.admin.actions.hosts import Remove_Image_By_Id as Remove_Image_By_Id_Action_Admin_V1_Endpoint_Private
+from app.controllers.api.private.v1.admin.host.images import Pull_Image as Pull_Image_Action_Admin_V1_Endpoint_Private
+from app.controllers.api.private.v1.admin.host.images import Build_Image as Build_Image_Action_Admin_V1_Endpoint_Private
+from app.controllers.api.private.v1.admin.host.images import Get_Images as Get_Images_Action_Admin_V1_Endpoint_Private
+from app.controllers.api.private.v1.admin.host.images import Get_Image as Get_Image_Action_Admin_V1_Endpoint_Private
+from app.controllers.api.private.v1.admin.host.images import Search_Community_Images as Search_Community_Images_Action_Admin_V1_Endpoint_Private
+from app.controllers.api.private.v1.admin.host.images import Prune_Unused_Images as Prune_Unused_Images_Action_Admin_V1_Endpoint_Private
+from app.controllers.api.private.v1.admin.host.images import Prune_All_Unused_Images as Prune_All_Unused_Images_Action_Admin_V1_Endpoint_Private
+from app.controllers.api.private.v1.admin.host.images import Remove_Image_By_Id as Remove_Image_By_Id_Action_Admin_V1_Endpoint_Private
 
 
 urlpatterns = [
@@ -116,11 +115,6 @@ urlpatterns = [
             path('host', Hosts_Admin_V1_Endpoint_Private.as_view(), name='app.api.private.v1.admin.hosts.endpoint'),
             path('host/<int:host_id>', Host_Admin_V1_Endpoint_Private.as_view(), name='app.api.private.v1.admin.host.endpoint'),
 
-            path(
-                'action/host/health_check/<int:host_id>',
-                Health_Check_Action_Admin_V1_Endpoint_Private.as_view(),
-                name='app.api.private.v1.admin.action.host.health_check.endpoint'
-            ),
             path(
                 'action/host/pull_image/<int:host_id>',
                 Pull_Image_Action_Admin_V1_Endpoint_Private.as_view(),

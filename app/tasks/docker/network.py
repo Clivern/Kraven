@@ -25,6 +25,14 @@ def create_network(host_id):
                 },
                 "notify_type": "failed"
             }
+    except Exception as e:
+        return {
+            "status": "error",
+            "result": {
+                "error": str(e)
+            },
+            "notify_type": "error"
+        }
 
 
 @shared_task
@@ -40,6 +48,14 @@ def remove_network_by_id(host_id, network_id):
                 },
                 "notify_type": "failed"
             }
+    except Exception as e:
+        return {
+            "status": "error",
+            "result": {
+                "error": str(e)
+            },
+            "notify_type": "error"
+        }
 
 
 @shared_task
@@ -55,6 +71,14 @@ def connect_network_container(host_id):
                 },
                 "notify_type": "failed"
             }
+    except Exception as e:
+        return {
+            "status": "error",
+            "result": {
+                "error": str(e)
+            },
+            "notify_type": "error"
+        }
 
 
 @shared_task
@@ -70,6 +94,14 @@ def disconnect_network_container(host_id):
                 },
                 "notify_type": "failed"
             }
+    except Exception as e:
+        return {
+            "status": "error",
+            "result": {
+                "error": str(e)
+            },
+            "notify_type": "error"
+        }
 
 
 @shared_task
@@ -100,7 +132,6 @@ def prune_unused_networks(host_id):
                 "result": "{}",
                 "notify_type": "failed"
             }
-
     except Exception as e:
         return {
             "status": "error",

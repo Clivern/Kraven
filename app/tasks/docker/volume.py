@@ -25,6 +25,14 @@ def create_volume(host_id):
                 },
                 "notify_type": "failed"
             }
+    except Exception as e:
+        return {
+            "status": "error",
+            "result": {
+                "error": str(e)
+            },
+            "notify_type": "error"
+        }
 
 
 @shared_task
@@ -40,6 +48,14 @@ def delete_volume(host_id):
                 },
                 "notify_type": "failed"
             }
+    except Exception as e:
+        return {
+            "status": "error",
+            "result": {
+                "error": str(e)
+            },
+            "notify_type": "error"
+        }
 
 
 @shared_task

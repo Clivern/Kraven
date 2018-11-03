@@ -61,6 +61,20 @@ from app.controllers.api.private.v1.admin.host.images import Prune_Unused_Images
 from app.controllers.api.private.v1.admin.host.images import Prune_All_Unused_Images as Prune_All_Unused_Images_Action_Admin_V1_Endpoint_Private
 from app.controllers.api.private.v1.admin.host.images import Remove_Image_By_Id as Remove_Image_By_Id_Action_Admin_V1_Endpoint_Private
 
+from app.controllers.api.private.v1.admin.host.networks import Create_Network as Create_Network_Action_Admin_V1_Endpoint_Private
+from app.controllers.api.private.v1.admin.host.networks import Get_Network as Get_Network_Action_Admin_V1_Endpoint_Private
+from app.controllers.api.private.v1.admin.host.networks import Get_Networks as Get_Networks_Action_Admin_V1_Endpoint_Private
+from app.controllers.api.private.v1.admin.host.networks import Remove_Network as Remove_Network_Action_Admin_V1_Endpoint_Private
+from app.controllers.api.private.v1.admin.host.networks import Connect_Network_Container as Connect_Network_Container_Action_Admin_V1_Endpoint_Private
+from app.controllers.api.private.v1.admin.host.networks import Disconnect_Network_Container as Disconnect_Network_Container_Action_Admin_V1_Endpoint_Private
+from app.controllers.api.private.v1.admin.host.networks import Prune_Networks as Prune_Networks_Action_Admin_V1_Endpoint_Private
+
+from app.controllers.api.private.v1.admin.host.volumes import Create_Volume as Create_Volume_Action_Admin_V1_Endpoint_Private
+from app.controllers.api.private.v1.admin.host.volumes import Get_Volume as Get_Volume_Action_Admin_V1_Endpoint_Private
+from app.controllers.api.private.v1.admin.host.volumes import Get_Volumes as Get_Volumes_Action_Admin_V1_Endpoint_Private
+from app.controllers.api.private.v1.admin.host.volumes import Remove_Volume as Remove_Volume_Action_Admin_V1_Endpoint_Private
+from app.controllers.api.private.v1.admin.host.volumes import Prune_Volumes as Prune_Volumes_Action_Admin_V1_Endpoint_Private
+
 
 urlpatterns = [
     # Public Views
@@ -154,6 +168,68 @@ urlpatterns = [
                 'action/host/delete_image/<int:host_id>',
                 Remove_Image_By_Id_Action_Admin_V1_Endpoint_Private.as_view(),
                 name='app.api.private.v1.admin.action.host.delete_image.endpoint'
+            ),
+
+            path(
+                'action/host/create_network/<int:host_id>',
+                Create_Network_Action_Admin_V1_Endpoint_Private.as_view(),
+                name='app.api.private.v1.admin.action.host.create_network.endpoint'
+            ),
+            path(
+                'action/host/get_network/<int:host_id>/<network_id>',
+                Get_Network_Action_Admin_V1_Endpoint_Private.as_view(),
+                name='app.api.private.v1.admin.action.host.get_network.endpoint'
+            ),
+            path(
+                'action/host/get_networks/<int:host_id>',
+                Get_Networks_Action_Admin_V1_Endpoint_Private.as_view(),
+                name='app.api.private.v1.admin.action.host.get_networks.endpoint'
+            ),
+            path(
+                'action/host/remove_network/<int:host_id>',
+                Remove_Network_Action_Admin_V1_Endpoint_Private.as_view(),
+                name='app.api.private.v1.admin.action.host.remove_network.endpoint'
+            ),
+            path(
+                'action/host/connect_network_container/<int:host_id>',
+                Connect_Network_Container_Action_Admin_V1_Endpoint_Private.as_view(),
+                name='app.api.private.v1.admin.action.host.connect_network_container.endpoint'
+            ),
+            path(
+                'action/host/disconnect_network_container/<int:host_id>',
+                Disconnect_Network_Container_Action_Admin_V1_Endpoint_Private.as_view(),
+                name='app.api.private.v1.admin.action.host.disconnect_network_container.endpoint'
+            ),
+            path(
+                'action/host/prune_networks/<int:host_id>',
+                Prune_Networks_Action_Admin_V1_Endpoint_Private.as_view(),
+                name='app.api.private.v1.admin.action.host.prune_networks.endpoint'
+            ),
+
+            path(
+                'action/host/create_volume/<int:host_id>',
+                Create_Volume_Action_Admin_V1_Endpoint_Private.as_view(),
+                name='app.api.private.v1.admin.action.host.create_volume.endpoint'
+            ),
+            path(
+                'action/host/get_volume/<int:host_id>/<volume_id>',
+                Get_Volume_Action_Admin_V1_Endpoint_Private.as_view(),
+                name='app.api.private.v1.admin.action.host.get_volume.endpoint'
+            ),
+            path(
+                'action/host/get_volumes/<int:host_id>',
+                Get_Volumes_Action_Admin_V1_Endpoint_Private.as_view(),
+                name='app.api.private.v1.admin.action.host.get_volumes.endpoint'
+            ),
+            path(
+                'action/host/remove_volume/<int:host_id>',
+                Remove_Volume_Action_Admin_V1_Endpoint_Private.as_view(),
+                name='app.api.private.v1.admin.action.host.remove_volume.endpoint'
+            ),
+            path(
+                'action/host/prune_volume/<int:host_id>',
+                Prune_Volumes_Action_Admin_V1_Endpoint_Private.as_view(),
+                name='app.api.private.v1.admin.action.host.prune_volumes.endpoint'
             ),
         ]))
 

@@ -37,6 +37,7 @@ services:
 
     # Web UI Service
     web:
+        image: "clivern_kraven:1.0.0"
         build: .
         command: 'gunicorn --bind 0.0.0.0:8000 app.wsgi'
         volumes:
@@ -54,6 +55,7 @@ services:
 
     # Worker Service
     worker1:
+        image: "clivern_kraven:1.0.0"
         build: .
         command: 'celery -A app worker --loglevel=info -n worker1'
         volumes:

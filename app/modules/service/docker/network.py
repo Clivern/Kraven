@@ -19,8 +19,11 @@ class Network(Auth):
                 "id": network.id,
                 "short_id": network.short_id,
                 "name": network.name,
-                "attrs": network.attrs,
-                "containers": network.containers
+                "created": network.attrs["Created"],
+                "driver": network.attrs["Driver"],
+                "scope": network.attrs["Scope"],
+                "containers": network.containers,
+                "attrs": network.attrs
             })
         return result
 
@@ -39,5 +42,5 @@ class Network(Auth):
     def connect(self, network_id, container, **configs):
         self._client.networks.get(network_id).connect(container, **configs)
 
-    def create(self, name):
-        return self._client.networks.create(name=name)
+    def create(self, name, **args):
+        return self._client.networks.create(name=name, **args)

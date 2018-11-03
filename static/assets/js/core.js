@@ -1212,6 +1212,338 @@ kraven_app.host_image_screen = (Vue, axios, $, Pace, Cookies, toastr) => {
 }
 
 
+/**
+ * App Hosts Networks List
+ */
+kraven_app.host_networks_list_screen = (Vue, axios, $, Pace, Cookies, toastr) => {
+
+    return new Vue({
+        delimiters: ['${', '}'],
+        el: '#host_networks_list',
+        data() {
+            return {
+                info: null,
+                items: [],
+                isDimmerActive: true,
+                errored: false,
+                i18n: _host_networks_view_i18n
+            }
+        },
+        mounted() {
+            this.fetch();
+        },
+        methods: {
+            fetch() {
+                axios.get($('#host_networks_list').attr('data-fetch-networks'))
+                    .then(response => {
+                        if (response.data.status == "success") {
+                            this.items = response.data.payload.networks;
+                        } else {
+                            for (var messageObj of response.data.messages) {
+                                toastr.clear();
+                                toastr.error(messageObj.message);
+                                break;
+                            }
+                        }
+                    })
+                    .catch(error => {
+                        toastr.clear();
+                        toastr.error(error);
+                    })
+                    .finally(() => this.isDimmerActive = false)
+            },
+            reloadHostsNetworksAction() {
+                this.isDimmerActive = true;
+                this.fetch();
+            },
+            pruneNetworksAction(event) {
+                event.preventDefault();
+
+                if (!confirm(_i18n.confirm_msg)) {
+                    return false;
+                }
+
+                var _self = $(event.target);
+
+                Pace.track(() => {
+                    $.ajax({
+                        method: "POST",
+                        url: _self.attr('data-url'),
+                        data: {
+                            "csrfmiddlewaretoken": Cookies.get('csrftoken')
+                        }
+                    }).done((response) => {
+                        if (response.status == "success") {
+                            for (var messageObj of response.messages) {
+                                toastr.clear();
+                                toastr.success(messageObj.message);
+                                break;
+                            }
+                        } else {
+                            for (var messageObj of response.messages) {
+                                toastr.clear();
+                                toastr.error(messageObj.message);
+                                break;
+                            }
+                        }
+                    }).fail((jqXHR, textStatus, error) => {
+                        toastr.clear();
+                        toastr.error(error);
+                    });
+                });
+            },
+            forceDeleteHostNetworkAction(event) {
+                event.preventDefault();
+
+                if (!confirm(_i18n.confirm_msg)) {
+                    return false;
+                }
+
+                var _self = $(event.target);
+
+                _self.attr('disabled', 'disabled');
+                Pace.track(() => {
+                    $.ajax({
+                        method: "POST",
+                        url: _self.attr('data-url'),
+                        data: {
+                            "csrfmiddlewaretoken": Cookies.get('csrftoken'),
+                            "long_id": _self.attr("data-long-id"),
+                            "force": "1"
+                        }
+                    }).done((response) => {
+                        _self.removeAttr("disabled");
+                        if (response.status == "success") {
+                            for (var messageObj of response.messages) {
+                                toastr.clear();
+                                toastr.success(messageObj.message);
+                                break;
+                            }
+                        } else {
+                            for (var messageObj of response.messages) {
+                                toastr.clear();
+                                toastr.error(messageObj.message);
+                                break;
+                            }
+                        }
+                    }).fail((jqXHR, textStatus, error) => {
+                        toastr.clear();
+                        toastr.error(error);
+                    });
+                });
+            },
+            deleteHostNetworkAction(event) {
+                event.preventDefault();
+
+                if (!confirm(_i18n.confirm_msg)) {
+                    return false;
+                }
+
+                var _self = $(event.target);
+
+                _self.attr('disabled', 'disabled');
+                Pace.track(() => {
+                    $.ajax({
+                        method: "POST",
+                        url: _self.attr('data-url'),
+                        data: {
+                            "csrfmiddlewaretoken": Cookies.get('csrftoken'),
+                            "long_id": _self.attr("data-long-id"),
+                            "force": "off"
+                        }
+                    }).done((response) => {
+                        _self.removeAttr("disabled");
+                        if (response.status == "success") {
+                            for (var messageObj of response.messages) {
+                                toastr.clear();
+                                toastr.success(messageObj.message);
+                                break;
+                            }
+                        } else {
+                            for (var messageObj of response.messages) {
+                                toastr.clear();
+                                toastr.error(messageObj.message);
+                                break;
+                            }
+                        }
+                    }).fail((jqXHR, textStatus, error) => {
+                        toastr.clear();
+                        toastr.error(error);
+                    });
+                });
+            }
+        }
+    });
+
+}
+
+
+/**
+ * App Hosts Volumes List
+ */
+kraven_app.host_volumes_list_screen = (Vue, axios, $, Pace, Cookies, toastr) => {
+
+    return new Vue({
+        delimiters: ['${', '}'],
+        el: '#host_volumes_list',
+        data() {
+            return {
+                info: null,
+                items: [],
+                isDimmerActive: true,
+                errored: false,
+                i18n: _host_volumes_view_i18n
+            }
+        },
+        mounted() {
+            this.fetch();
+        },
+        methods: {
+            fetch() {
+                axios.get($('#host_volumes_list').attr('data-fetch-volumes'))
+                    .then(response => {
+                        if (response.data.status == "success") {
+                            this.items = response.data.payload.volumes;
+                        } else {
+                            for (var messageObj of response.data.messages) {
+                                toastr.clear();
+                                toastr.error(messageObj.message);
+                                break;
+                            }
+                        }
+                    })
+                    .catch(error => {
+                        toastr.clear();
+                        toastr.error(error);
+                    })
+                    .finally(() => this.isDimmerActive = false)
+            },
+            reloadHostsVolumesAction() {
+                this.isDimmerActive = true;
+                this.fetch();
+            },
+            pruneVolumesAction(event) {
+                event.preventDefault();
+
+                if (!confirm(_i18n.confirm_msg)) {
+                    return false;
+                }
+
+                var _self = $(event.target);
+
+                Pace.track(() => {
+                    $.ajax({
+                        method: "POST",
+                        url: _self.attr('data-url'),
+                        data: {
+                            "csrfmiddlewaretoken": Cookies.get('csrftoken')
+                        }
+                    }).done((response) => {
+                        if (response.status == "success") {
+                            for (var messageObj of response.messages) {
+                                toastr.clear();
+                                toastr.success(messageObj.message);
+                                break;
+                            }
+                        } else {
+                            for (var messageObj of response.messages) {
+                                toastr.clear();
+                                toastr.error(messageObj.message);
+                                break;
+                            }
+                        }
+                    }).fail((jqXHR, textStatus, error) => {
+                        toastr.clear();
+                        toastr.error(error);
+                    });
+                });
+            },
+            forceDeleteHostVolumeAction(event) {
+                event.preventDefault();
+
+                if (!confirm(_i18n.confirm_msg)) {
+                    return false;
+                }
+
+                var _self = $(event.target);
+
+                _self.attr('disabled', 'disabled');
+                Pace.track(() => {
+                    $.ajax({
+                        method: "POST",
+                        url: _self.attr('data-url'),
+                        data: {
+                            "csrfmiddlewaretoken": Cookies.get('csrftoken'),
+                            "long_id": _self.attr("data-long-id"),
+                            "force": "1"
+                        }
+                    }).done((response) => {
+                        _self.removeAttr("disabled");
+                        if (response.status == "success") {
+                            for (var messageObj of response.messages) {
+                                toastr.clear();
+                                toastr.success(messageObj.message);
+                                break;
+                            }
+                        } else {
+                            for (var messageObj of response.messages) {
+                                toastr.clear();
+                                toastr.error(messageObj.message);
+                                break;
+                            }
+                        }
+                    }).fail((jqXHR, textStatus, error) => {
+                        toastr.clear();
+                        toastr.error(error);
+                    });
+                });
+            },
+            deleteHostVolumeAction(event) {
+                event.preventDefault();
+
+                if (!confirm(_i18n.confirm_msg)) {
+                    return false;
+                }
+
+                var _self = $(event.target);
+
+                _self.attr('disabled', 'disabled');
+                Pace.track(() => {
+                    $.ajax({
+                        method: "POST",
+                        url: _self.attr('data-url'),
+                        data: {
+                            "csrfmiddlewaretoken": Cookies.get('csrftoken'),
+                            "long_id": _self.attr("data-long-id"),
+                            "force": "off"
+                        }
+                    }).done((response) => {
+                        _self.removeAttr("disabled");
+                        if (response.status == "success") {
+                            for (var messageObj of response.messages) {
+                                toastr.clear();
+                                toastr.success(messageObj.message);
+                                break;
+                            }
+                        } else {
+                            for (var messageObj of response.messages) {
+                                toastr.clear();
+                                toastr.error(messageObj.message);
+                                break;
+                            }
+                        }
+                    }).fail((jqXHR, textStatus, error) => {
+                        toastr.clear();
+                        toastr.error(error);
+                    });
+                });
+            }
+        }
+    });
+
+}
+
+
 $(document).ready(() => {
 
     $(document).ajaxStart(() => {
@@ -1374,6 +1706,26 @@ $(document).ready(() => {
         }
         if (document.getElementById("host_image_view")) {
             kraven_app.host_image_screen(
+                Vue,
+                axios,
+                $,
+                Pace,
+                Cookies,
+                toastr
+            );
+        }
+        if (document.getElementById("host_networks_list")) {
+            kraven_app.host_networks_list_screen(
+                Vue,
+                axios,
+                $,
+                Pace,
+                Cookies,
+                toastr
+            );
+        }
+        if (document.getElementById("host_volumes_list")) {
+            kraven_app.host_volumes_list_screen(
                 Vue,
                 axios,
                 $,

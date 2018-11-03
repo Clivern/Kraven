@@ -41,6 +41,13 @@ class Command(BaseCommand):
         except Exception as e:
             print("Something goes wrong: %s" % str(e))
 
+    def check_health(self, configs={}):
+        _image = Image_Module()
+        if _image.set_host(configs["host_id"]).check_health():
+            print("Host Up!")
+        else:
+            print("Host Down!")
+
     def pull_image(self, configs={}):
         _image = Image_Module()
         if _image.set_host(configs["host_id"]).check_health():

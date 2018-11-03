@@ -8,7 +8,6 @@ import os
 # Django
 from django.views import View
 from django.shortcuts import render
-from django.http import HttpResponse
 from django.shortcuts import redirect
 from django.utils.translation import gettext as _
 
@@ -21,12 +20,15 @@ from app.modules.core.install import Install as Install_Module
 class Install(View):
 
     template_name = 'templates/install.html'
-    __context = Context()
-    __install = Install_Module()
-    __option_entity = Option_Entity()
-
+    __context = None
+    __install = None
+    __option_entity = None
 
     def get(self, request):
+
+        self.__context = Context()
+        self.__install = Install_Module()
+        self.__option_entity = Option_Entity()
 
         if self.__install.is_installed():
             return redirect("app.web.login")

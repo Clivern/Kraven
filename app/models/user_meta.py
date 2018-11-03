@@ -20,6 +20,5 @@ class User_Meta(models.Model):
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Created at")
     updated_at = models.DateTimeField(auto_now=True, verbose_name="Updated at")
 
-
     def __str__(self):
         return self.key

@@ -9,7 +9,6 @@ from django.utils.translation import gettext as _
 
 class Humanize():
 
-
     def datetime(self, datetime):
         now = timezone.now()
         diff = now - datetime
@@ -22,17 +21,17 @@ class Humanize():
 
         if day_diff == 0:
             if second_diff < 10:
-                return "just now"
+                return _("just now")
             if second_diff < 60:
                 return _("%s seconds ago") % str(second_diff)
             if second_diff < 120:
-                return "a minute ago"
+                return _("a minute ago")
             if second_diff < 3600:
-                return  _("%s minutes ago") % str(round(second_diff / 60))
+                return _("%s minutes ago") % str(round(second_diff / 60))
             if second_diff < 7200:
                 return "an hour ago"
             if second_diff < 86400:
-                return  _("%s hours ago") % str(round(second_diff / 3600))
+                return _("%s hours ago") % str(round(second_diff / 3600))
 
         if day_diff == 1:
             return "Yesterday"

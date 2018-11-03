@@ -8,26 +8,20 @@ class Sanitizer():
     __input = None
     __sinput = None
 
-
     def set_input(self, input_value):
         self.__input = input_value
-
 
     def set_sinput(self, sinput_value):
         self.__sinput = sinput_value
 
-
     def get_sinput(self):
         return self.__sinput
-
 
     def get_input(self):
         return self.__input
 
-
     def is_exact(self):
         return self.__input == self.__sinput and len(self.__input) == len(self.__sinput)
-
 
     def strip(self, chars=''):
         if not isinstance(self.__input, (str)):
@@ -42,7 +36,6 @@ class Sanitizer():
 
         return self.__sinput
 
-
     def lstrip(self, chars=''):
         if not isinstance(self.__input, (str)):
             self.__sinput = str(self.__input)
@@ -56,7 +49,6 @@ class Sanitizer():
 
         return self.__sinput
 
-
     def rstrip(self, chars=''):
         if not isinstance(self.__input, (str)):
             self.__sinput = str(self.__input)
@@ -69,7 +61,6 @@ class Sanitizer():
             self.__sinput = self.__sinput.rstrip()
 
         return self.__sinput
-
 
     def escape(self, chars=['&', '"', '\'', '>', '<']):
         html_escape_table = {

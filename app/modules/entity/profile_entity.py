@@ -8,25 +8,20 @@ from django.contrib.auth.models import User
 
 # local Django
 from app.models import Profile
-from app.models import User_Meta
-from app.modules.util.helpers import Helpers
-
 
 
 class Profile_Entity():
-
 
     def profile_exists(self, user_id):
         try:
             user = Profile.objects.get(user=user_id)
             return False if user.pk is None else True
-        except:
+        except Exception as e:
             return False
-
 
     def create_profile(self, profile_data):
 
-        if not "user" in profile_data:
+        if "user" not in profile_data:
             return False
 
         profile = Profile(
@@ -46,15 +41,14 @@ class Profile_Entity():
         profile.save()
         return False if profile.pk is None else profile
 
-
     def update_profile(self, profile_data):
 
-        if not "user" in profile_data:
+        if "user" not in profile_data:
             return False
 
         profile = self.get_profile_by_user_id(profile_data["user"])
 
-        if profile != False:
+        if profile is not False:
 
             if "job_title" in profile_data:
                 profile.job_title = profile_data["job_title"]
@@ -87,57 +81,49 @@ class Profile_Entity():
                 profile.refresh_token_updated_at = profile_data["refresh_token_updated_at"]
 
             profile.save()
-
             return True
-
 
     def get_profile_by_user_id(self, user_id):
         try:
             profile = Profile.objects.get(user=user_id)
             return False if profile.pk is None else profile
-        except:
+        except Exception as e:
             return False
-
 
     def get_profile_by_access_token(self, access_token):
         try:
             profile = Profile.objects.get(access_token=access_token)
             return False if profile.pk is None else profile
-        except:
+        except Exception as e:
             return False
-
 
     def get_profile_by_refresh_token(self, refresh_token):
         try:
             profile = Profile.objects.get(refresh_token=refresh_token)
             return False if profile.pk is None else profile
-        except:
+        except Exception as e:
             return False
-
 
     def token_used(self, token):
         try:
-            profile = Profile.objects.get(Q(refresh_token=token) | Q(access_token=token))
+            profile = Profile.objects.get(Q(refresh_token=token) | Q(access_token=token))  # noqa: F821
             return False if profile.pk is None else True
-        except:
+        except Exception as e:
             return False
-
 
     def access_token_used(self, access_token):
         try:
             profile = Profile.objects.get(access_token=access_token)
             return False if profile.pk is None else True
-        except:
+        except Exception as e:
             return False
-
 
     def refresh_token_used(self, refresh_token):
         try:
             profile = Profile.objects.get(refresh_token=refresh_token)
             return False if profile.pk is None else True
-        except:
+        except Exception as e:
             return False
-
 
     def update_access_token(self, user_id, access_token):
         result = self.update_profile({
@@ -148,7 +134,6 @@ class Profile_Entity():
 
         return result
 
-
     def update_refresh_token(self, user_id, refresh_token):
         result = self.update_profile({
             "user": user_id,
@@ -157,7 +142,6 @@ class Profile_Entity():
         })
 
         return result
-
 
     def count_all_profiles(self):
         return Profile.objects.count()

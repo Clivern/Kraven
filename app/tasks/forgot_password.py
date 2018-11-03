@@ -4,7 +4,6 @@ Forgot Password Tasks
 
 # Django
 from django.core.mail import send_mail
-from django.utils.translation import gettext as _
 from django.template.loader import render_to_string
 
 # Third party

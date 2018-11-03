@@ -9,3 +9,70 @@
         </div>
     </div>
 </div>
+<div class="row" id="host_images_list" data-fetch-images="{% url 'app.api.private.v1.admin.action.host.get_images.endpoint' host.id %}">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <div class="dropdown">
+                    <button type="button" class="btn btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown">
+                        <i class="fe fe-terminal"></i> {% trans "Actions" %}
+                    </button>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item" href="{% url 'app.web.admin.hosts.view.pull.images' host.slug %}">{% trans "Pull image" %}</a>
+                        <a class="dropdown-item" href="{% url 'app.web.admin.hosts.view.build.images' host.slug %}">{% trans "Build image" %}</a>
+                        <a class="dropdown-item" href="javascript:void(0)" v-on:click="pruneUnusedImagesAction" data-url="{% url 'app.api.private.v1.admin.action.host.prune_unused_images.endpoint' host.id %}">{% trans "Prune unused images" %}</a>
+                        <a class="dropdown-item" href="javascript:void(0)" v-on:click="pruneAllUnusedImagesAction" data-url="{% url 'app.api.private.v1.admin.action.host.prune_all_unused_images.endpoint' host.id %}">{% trans "Prune all unused images" %}</a>
+                    </div>
+                    <button type="button" class="btn btn-icon btn-secondary btn-sm" v-on:click="reloadHostsImagesAction"><i class="fe fe fe-rotate-cw"></i></button>
+                </div>
+            </div>
+            <div class="dimmer" v-bind:class="{ active: isDimmerActive }">
+                <div class="loader"></div>
+                <div class="dimmer-content">
+                    <div class="table-responsive">
+                        <table class="table card-table table-vcenter text-nowrap">
+                            <thead>
+                                <tr>
+                                    <th>{% trans "ID" %}</th>
+                                    <th>{% trans "Tags" %}</th>
+                                    <th>{% trans "Size" %}</th>
+                                    <th>{% trans "Created" %}</th>
+                                    <th></th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="item in items">
+                                    <td><a v-bind:href="item.url" class="text-inherit">${item.short_id}</a></td>
+                                    <td>
+                                        <template v-for="tag in item.tags">
+                                            <p>
+                                                <div class="tag">${tag.name}<span class="tag-addon tag-success">${tag.version}</span></div>
+                                            </p>
+                                        </template>
+                                    </td>
+                                    <td>${item.size}</td>
+                                    <td>${item.created_at}</td>
+                                    <td colspan="2" class="text-right">
+                                        <a v-bind:href="item.url" class="btn btn-secondary btn-sm">${i18n.manage}</a>
+                                        <div class="dropdown">
+                                            <button class="btn btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown">${i18n.actions}</button>
+                                            <div class="dropdown-menu dropdown-menu-right">
+                                                <a href="javascript:void(0)" v-bind:data-url="item.delete_url" v-bind:data-long-id="item.long_id" class="dropdown-item" v-on:click="deleteHostImageAction">
+                                                    <i class="dropdown-icon fe fe-trash"></i> ${i18n.delete}
+                                                </a>
+                                                <a href="javascript:void(0)" v-bind:data-url="item.delete_url" v-bind:data-long-id="item.long_id" class="dropdown-item" v-on:click="forceDeleteHostImageAction">
+                                                    <i class="dropdown-icon fe fe-trash-2"></i> ${i18n.force_delete}
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

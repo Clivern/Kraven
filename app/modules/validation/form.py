@@ -3,7 +3,6 @@ Form Validation Module
 """
 
 # local Django
-from app.modules.validation.extensions import *
 from app.modules.validation.validator import Validator
 from app.modules.validation.sanitizer import Sanitizer
 from app.exceptions.sanitization_rule_not_found import Sanitization_Rule_Not_Found
@@ -23,26 +22,21 @@ class Form():
     __sanitizers = []
     __validators = []
 
-
     def __init__(self, inputs={}):
         self.__inputs = inputs
         self.__validator = Validator()
         self.__sanitizer = Sanitizer()
 
-
     def add_inputs(self, inputs={}):
         self.__inputs = inputs
-
 
     def get_inputs(self):
         return self.__inputs
 
-
     def get_input_value(self, input_key, sanitized=True):
-        return self.__inputs[input_key]["value"] if not sanitized or not "svalue" in self.__inputs[input_key] else self.__inputs[input_key]["svalue"]
+        return self.__inputs[input_key]["value"] if not sanitized or "svalue" not in self.__inputs[input_key] else self.__inputs[input_key]["svalue"]
 
-
-    def get_errors(self, with_type = False):
+    def get_errors(self, with_type=False):
         if with_type:
             errors = []
             for input_key, error_list in self.__errors.items():
@@ -52,21 +46,17 @@ class Form():
         else:
             return self.__errors
 
-
     def is_passed(self):
         for input in self.__inputs:
             if len(self.__errors[input]) > 0:
                 return False
         return True
 
-
     def get_vstatus(self):
         return self._vstatus
 
-
     def get_sstatus(self):
         return self._sstatus
-
 
     def process(self, direction=['sanitize', 'validate']):
         if direction[0] == 'sanitize':
@@ -80,14 +70,11 @@ class Form():
             if 'sanitize' in direction:
                 self.__sanitize()
 
-
     def add_validator(self, val_instance):
         self.__validators.append(val_instance)
 
-
     def add_sanitizer(self, san_instance):
         self.__sanitizers.append(san_instance)
-
 
     def __validate(self):
         status = True
@@ -112,12 +99,8 @@ class Form():
                     if not current_status and 'error' in rule_args.keys():
                         self.__errors[current_input].append(rule_args['error'])
 
-
-
-
         self.__vstatus = status
         return status
-
 
     def __sanitize(self):
         status = True
@@ -139,7 +122,6 @@ class Form():
         self.__sstatus = status
         return status
 
-
     def __update_validator(self, rule_name):
         if hasattr(self.__validator, rule_name):
             return True
@@ -148,7 +130,6 @@ class Form():
                 self.__validator = validator
                 return True
         raise Validation_Rule_Not_Found('Non existent validation rule %s' % rule_name)
-
 
     def __update_sanitizer(self, rule_name):
         if hasattr(self.__sanitizer, rule_name):

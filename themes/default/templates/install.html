@@ -5,12 +5,12 @@
 {% block content %}
     <div class="page-single">
         <div class="container">
-            <div class="row">
+            <div class="row" id="app_install">
                 <div class="col col-login mx-auto">
                     <div class="text-center mb-6">
                         <img src="{% static 'assets/images/logo.png' %}" class="h-9">
                     </div>
-                    <form class="card _endpoint_connect" onsubmit="return false" action="{% url 'app.api.private.v1.install.endpoint' %}" method="post" data-succ-type="redirect" data-succ-url="{% url 'app.web.login' %}" data-succ-wait="3000">
+                    <form class="card" v-on:submit.prevent="installAction" action="{% url 'app.api.private.v1.install.endpoint' %}" method="post" data-redirect-url="{% url 'app.web.login' %}" data-redirect-after="3000">
                         {% csrf_token %}
                         <div class="card-body p-6">
                             <div class="form-group">
@@ -38,7 +38,7 @@
                                 <input name="admin_password" type="password" class="form-control" placeholder="{% trans "Enter admin password" %}" required>
                             </div>
                             <div class="form-footer">
-                                <button type="submit" class="btn btn-primary btn-block">{% trans "Install" %}</button>
+                                <button type="submit" class="btn btn-primary btn-block" v-bind:class="{ 'btn-loading': isInProgress }" v-bind:disabled="isInProgress">{% trans "Install" %}</button>
                             </div>
                         </div>
                     </form>

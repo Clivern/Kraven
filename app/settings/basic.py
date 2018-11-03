@@ -20,7 +20,7 @@ from dotenv import load_dotenv
 from django.utils.translation import ugettext_lazy as _
 
 # local Django
-from app.settings.info import *
+from app.settings.info import APP_ROOT
 
 
 load_dotenv(dotenv_path=os.path.join(APP_ROOT, ".env"))
@@ -35,11 +35,11 @@ SECRET_KEY = ")lj2@3@y&5ofgoekbt2c-4$$w2bedn@-(hr&i^!#%wype&wp6d" if os.getenv("
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv("APP_DEBUG", "false").lower() == "true"
 
-ALLOWED_HOSTS =  [] if (os.getenv("ALLOWED_HOSTS", "") == "") else os.getenv("ALLOWED_HOSTS", "").split(",")
+ALLOWED_HOSTS = [] if (os.getenv("ALLOWED_HOSTS", "") == "") else os.getenv("ALLOWED_HOSTS", "").split(",")
 
 # Application definition
 INSTALLED_APPS = [
-    #'django.contrib.admin',
+    # 'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -87,39 +87,37 @@ TEMPLATES = [
 
 # Email Settings
 # https://docs.djangoproject.com/en/2.0/topics/email/
-if os.getenv("EMAIL_HOST", None) != None:
+if os.getenv("EMAIL_HOST", None) is not None:
     EMAIL_HOST = os.getenv("EMAIL_HOST", "localhost")
 
-if os.getenv("EMAIL_PORT", None) != None:
+if os.getenv("EMAIL_PORT", None) is not None:
     EMAIL_PORT = os.getenv("EMAIL_PORT", 25)
 
-if os.getenv("EMAIL_HOST_USER", None) != None:
+if os.getenv("EMAIL_HOST_USER", None) is not None:
     EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER", "")
 
-if os.getenv("EMAIL_HOST_PASSWORD", None) != None:
+if os.getenv("EMAIL_HOST_PASSWORD", None) is not None:
     EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD", "")
 
-if os.getenv("EMAIL_USE_TLS", None) != None:
+if os.getenv("EMAIL_USE_TLS", None) is not None:
     EMAIL_USE_TLS = True if os.getenv("EMAIL_USE_TLS", "false").lower() == "true" else False
 
-if os.getenv("EMAIL_USE_SSL", None) != None:
+if os.getenv("EMAIL_USE_SSL", None) is not None:
     EMAIL_USE_SSL = True if os.getenv("EMAIL_USE_SSL", "false").lower() == "true" else False
 
-if os.getenv("EMAIL_TIMEOUT", None) != None:
+if os.getenv("EMAIL_TIMEOUT", None) is not None:
     EMAIL_TIMEOUT = os.getenv("EMAIL_TIMEOUT", None)
 
-if os.getenv("EMAIL_SSL_KEYFILE", None) != None and os.path.isfile(APP_ROOT + os.getenv("EMAIL_SSL_KEYFILE", "")):
+if os.getenv("EMAIL_SSL_KEYFILE", None) is not None and os.path.isfile(APP_ROOT + os.getenv("EMAIL_SSL_KEYFILE", "")):
     EMAIL_SSL_KEYFILE = APP_ROOT + os.getenv("EMAIL_SSL_KEYFILE", "")
 
-if os.getenv("EMAIL_SSL_CERTFILE", None) != None and os.path.isfile(APP_ROOT + os.getenv("EMAIL_SSL_CERTFILE", "")):
+if os.getenv("EMAIL_SSL_CERTFILE", None) is not None and os.path.isfile(APP_ROOT + os.getenv("EMAIL_SSL_CERTFILE", "")):
     EMAIL_SSL_CERTFILE = APP_ROOT + os.getenv("EMAIL_SSL_CERTFILE", "")
 
-if os.getenv("EMAIL_BACKEND", None) != None and os.getenv("EMAIL_BACKEND", None) in ["smtp", "console", "filebased"]:
+if os.getenv("EMAIL_BACKEND", None) is not None and os.getenv("EMAIL_BACKEND", None) in ["smtp", "console", "filebased"]:
     EMAIL_BACKEND = "django.core.mail.backends." + os.getenv("EMAIL_BACKEND", "smtp") + ".EmailBackend"
     if os.getenv("EMAIL_BACKEND", None) == "filebased":
         EMAIL_FILE_PATH = APP_ROOT + "/storage/mails"
-
-
 
 WSGI_APPLICATION = 'app.wsgi.application'
 
@@ -231,7 +229,6 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.0/howto/static-files/

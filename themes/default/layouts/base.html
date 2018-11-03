@@ -45,6 +45,8 @@
         <link href="{% static 'assets/plugins/toastr/toastr.css' %}" rel="stylesheet" />
         <link href="{% static 'assets/css/app.css' %}" rel="stylesheet" />
         {% include 'partials/header.html' %}
+        {% block customer_header %}
+        {% endblock %}
     </head>
     <body class="">
         <div class="page">

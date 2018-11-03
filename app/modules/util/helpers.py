@@ -18,21 +18,17 @@ class Helpers():
 
     __loggers = {}
 
-
     def slugify(self, text, allow_unicode=False):
         return slugify(text, allow_unicode=allow_unicode)
 
-
-    def get_logger(self, name = __name__):
+    def get_logger(self, name=__name__):
         if name in self.__loggers:
             return self.__loggers[name]
         self.__loggers[name] = logging.getLogger(name)
         return self.__loggers[name]
 
-
     def switch_language(self, language):
         activate(language)
-
 
     def get_request_data(self, data_bag, predicted):
         request_data = {}
@@ -42,22 +38,17 @@ class Helpers():
 
         return request_data
 
-
     def json_dumps(self, data):
         return json.dumps(data)
-
 
     def json_loads(self, data):
         return json.loads(data)
 
-
     def dump_var(self, var):
         pprint(var)
 
-
     def substr(self, haystack, needle):
         return False if haystack.find(needle) < 0 else True
-
 
     def time_after(self, interval):
         datetime = timezone.now()

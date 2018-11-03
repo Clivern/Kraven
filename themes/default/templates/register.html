@@ -5,14 +5,14 @@
 {% block content %}
     <div class="page-single">
         <div class="container">
-            <div class="row">
+            <div class="row" id="app_register">
                 <div class="col col-login mx-auto">
                     <div class="text-center mb-6">
                         <a href="/">
                             <img src="{% static 'assets/images/logo.png' %}" class="h-9">
                         </a>
                     </div>
-                    <form class="card _endpoint_connect" onsubmit="return false" action="{% url 'app.api.private.v1.register.endpoint' %}" method="post" data-succ-type="redirect" data-succ-url="{% url 'app.web.login' %}" data-succ-wait="3000">
+                    <form class="card" v-on:submit.prevent="registerAction" action="{% url 'app.api.private.v1.register.endpoint' %}" method="post" data-redirect-url="{% url 'app.web.login' %}" data-redirect-after="3000">
                         {% csrf_token %}
                         <div class="card-body p-6">
                             <div class="card-title">{% trans "Create new account" %}</div>
@@ -37,7 +37,7 @@
                                 <input type="password" name="password" class="form-control" placeholder="{% trans "Password" %}" required>
                             </div>
                             <div class="form-footer">
-                                <button type="submit" class="btn btn-primary btn-block">{% trans "Create a new account" %}</button>
+                                <button type="submit" class="btn btn-primary btn-block" v-bind:class="{ 'btn-loading': isInProgress }" v-bind:disabled="isInProgress">{% trans "Create a new account" %}</button>
                             </div>
                         </div>
                     </form>

@@ -21,7 +21,11 @@ class Migration(migrations.Migration):
                 ('name', models.CharField(max_length=50, verbose_name='Name')),
                 ('slug', models.SlugField(max_length=60, verbose_name='Slug')),
                 ('type', models.CharField(choices=[('docker', 'DOCKER')], default='docker', max_length=20, verbose_name='Type')),
-                ('status', models.CharField(choices=[('pending', 'PENDING'), ('running', 'RUNNING'), ('down', 'DOWN')], default='pending', max_length=20, verbose_name='Status')),
+                ('status', models.CharField(choices=[
+                    ('pending', 'PENDING'),
+                    ('running', 'RUNNING'),
+                    ('down', 'DOWN')
+                ], default='pending', max_length=20, verbose_name='Status')),
                 ('server', models.CharField(max_length=200, verbose_name='Server')),
                 ('auth_data', models.TextField(verbose_name='Auth Data')),
                 ('token', models.CharField(max_length=250, verbose_name='Token')),
@@ -48,7 +52,13 @@ class Migration(migrations.Migration):
                 ('highlight', models.CharField(max_length=200, verbose_name='Highlight')),
                 ('notification', models.CharField(max_length=200, verbose_name='Notification')),
                 ('url', models.CharField(max_length=200, verbose_name='URL')),
-                ('type', models.CharField(choices=[('pending', 'PENDING'), ('failed', 'FAILED'), ('passed', 'PASSED'), ('error', 'ERROR'), ('message', 'MESSAGE')], default='message', max_length=20, verbose_name='Type')),
+                ('type', models.CharField(choices=[
+                    ('pending', 'PENDING'),
+                    ('failed', 'FAILED'),
+                    ('passed', 'PASSED'),
+                    ('error', 'ERROR'),
+                    ('message', 'MESSAGE')
+                ], default='message', max_length=20, verbose_name='Type')),
                 ('delivered', models.BooleanField(default=False, verbose_name='Delivered')),
                 ('created_at', models.DateTimeField(auto_now_add=True, verbose_name='Created at')),
                 ('updated_at', models.DateTimeField(auto_now=True, verbose_name='Updated at')),
@@ -102,7 +112,12 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('uuid', models.CharField(max_length=200, verbose_name='UUID')),
-                ('status', models.CharField(choices=[('pending', 'PENDING'), ('failed', 'FAILED'), ('passed', 'PASSED'), ('error', 'ERROR')], default='pending', max_length=20, verbose_name='Status')),
+                ('status', models.CharField(choices=[
+                    ('pending', 'PENDING'),
+                    ('failed', 'FAILED'),
+                    ('passed', 'PASSED'),
+                    ('error', 'ERROR')
+                ], default='pending', max_length=20, verbose_name='Status')),
                 ('executor', models.CharField(max_length=200, verbose_name='Executor')),
                 ('parameters', models.TextField(verbose_name='Parameters')),
                 ('result', models.TextField(verbose_name='Result')),

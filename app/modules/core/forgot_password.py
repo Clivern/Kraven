@@ -2,10 +2,6 @@
 Forgot Password Module
 """
 
-# standard library
-from datetime import timedelta
-import json
-
 # Django
 from django.utils import timezone
 from django.utils.translation import gettext as _
@@ -29,7 +25,6 @@ class Forgot_Password():
     __reset_expire_option = 24
     __messages_count_option = 5
 
-
     def __init__(self):
         self.__reset_request_entity = Reset_Request_Entity()
         self.__option_entity = Option_Entity()
@@ -40,26 +35,22 @@ class Forgot_Password():
         messages_count_option = self.__option_entity.get_one_by_key("reset_mails_messages_count")
         reset_expire_option = self.__option_entity.get_one_by_key("reset_mails_expire_after")
 
-        if messages_count_option != False:
+        if messages_count_option:
             self.__messages_count_option = int(messages_count_option.value)
 
-        if reset_expire_option != False:
+        if reset_expire_option:
             self.__reset_expire_option = int(reset_expire_option.value)
 
-
     def check_email(self, email):
-        return True if self.__user_entity.get_one_by_email(email) != False else False
-
+        return True if self.__user_entity.get_one_by_email(email) is not False else False
 
     def reset_request_exists(self, email):
         return self.__reset_request_entity.get_one_by_email(email)
-
 
     def is_spam(self, request):
         if request.messages_count >= self.__messages_count_option and timezone.now() < request.expire_at:
             return True
         return False
-
 
     def update_request(self, request):
 
@@ -77,8 +68,7 @@ class Forgot_Password():
             "messages_count": request.messages_count + 1
 
         })
-        return request.token if request != False else False
-
+        return request.token if request is not False else False
 
     def create_request(self, email):
         request = self.__reset_request_entity.insert_one({
@@ -87,15 +77,14 @@ class Forgot_Password():
             "messages_count": 0
 
         })
-        return request.token if request != False else False
-
+        return request.token if request is not False else False
 
     def send_message(self, email, token):
 
         app_name = self.__option_entity.get_value_by_key("app_name")
         app_email = self.__option_entity.get_value_by_key("app_email")
         app_url = self.__option_entity.get_value_by_key("app_url")
-        user = self.__user_entity.get_one_by_email(email);
+        user = self.__user_entity.get_one_by_email(email)
 
         return self.__task_core.delay("forgot_password_email", {
             "app_name": app_name,
@@ -107,19 +96,3 @@ class Forgot_Password():
             "template": "mails/reset_password.html",
             "fail_silently": False
         }, user.id)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

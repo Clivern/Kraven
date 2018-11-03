@@ -2,13 +2,24 @@
 {% load staticfiles %}
 {% load i18n %}
 
+{% block customer_header %}
+    <script type="text/javascript">
+        var _hosts_list_view_i18n = {
+            manage: "{% trans "Manage" %}",
+            actions: "{% trans "Actions" %}",
+            delete: "{% trans "Delete" %}",
+            edit: "{% trans "Edit" %}",
+            noHosts: "{% trans "You miss a lot of fun, create some hosts!" %}"
+        }
+    </script>
+{% endblock %}
 
 {% block content %}
     <div class="page-main">
         {% include 'partials/top-menu.html' %}
         <div class="my-3 my-md-5">
             <div class="container">
-                <div class="row">
+                <div class="row" id="host_list" data-fetch-hosts="{% url 'app.api.private.v1.admin.hosts.endpoint' %}">
                     <div class="col-12">
                         <div class="card">
                             <div class="card-header">
@@ -17,59 +28,65 @@
                                     <a href="{% url 'app.web.admin.hosts.create' %}" class="btn btn-secondary btn-sm"><i class="fe fe-plus mr-2"></i> {% trans "New Host" %}</a>
                                 </div>
                             </div>
-                            <div class="table-responsive">
-                                <table class="table card-table table-vcenter text-nowrap">
-                                    <thead>
-                                        <tr>
-                                            <th>{% trans "Host Name" %}</th>
-                                            <th>{% trans "Type" %}</th>
-                                            <th>{% trans "Created" %}</th>
-                                            <th class="text-center">{% trans "Status" %}</th>
-                                            <th></th>
-                                            <th></th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {% if hosts %}
-                                            {% for host in hosts %}
+
+                            <div class="dimmer" v-bind:class="{ active: isDimmerActive }">
+                                <div class="loader"></div>
+                                <div class="dimmer-content">
+                                    <div class="table-responsive">
+                                        <table class="table card-table table-vcenter text-nowrap">
+                                            <thead>
                                                 <tr>
-                                                    <td><a href="{% url 'app.web.admin.hosts.view' host.slug %}" class="text-inherit">{{ host.name }}</a></td>
-                                                    <td>
-                                                        {{ host.type|title }}
-                                                    </td>
-                                                    <td>
-                                                        {{ host.created_at }}
-                                                    </td>
-                                                    <td class="text-center">
-                                                        <span data-action="host_health_check" data-action-url="{% url 'app.api.private.v1.admin.action.host.health_check.endpoint' host.id %}" class="avatar avatar-yellow btn-loading"><i class="fe fe-refresh-ccw"></i></span>
-                                                    </td>
-                                                    <td colspan="2" class="text-right">
-                                                        <a href="{% url 'app.web.admin.hosts.view' host.slug %}" class="btn btn-secondary btn-sm">{% trans "Manage" %}</a>
-                                                        <div class="dropdown">
-                                                            <button class="btn btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown">{% trans "Actions" %}</button>
-                                                            <div class="dropdown-menu dropdown-menu-right">
-                                                                <a href="{% url 'app.web.admin.hosts.edit' host.slug %}" class="dropdown-item">
-                                                                    <i class="dropdown-icon fe fe-edit"></i> {% trans "Edit" %}
-                                                                </a>
-                                                                <a href="javascript:void(0)" data-url="{% url 'app.api.private.v1.admin.host.endpoint' host.id %}" class="dropdown-item delete_host">
-                                                                    <i class="dropdown-icon fe fe-trash"></i> {% trans "Delete" %}
-                                                                </a>
-                                                            </div>
-                                                        </div>
-                                                    </td>
+                                                    <th>{% trans "Host Name" %}</th>
+                                                    <th>{% trans "Type" %}</th>
+                                                    <th>{% trans "Created" %}</th>
+                                                    <th class="text-center">{% trans "Status" %}</th>
+                                                    <th></th>
+                                                    <th></th>
                                                 </tr>
-                                            {% endfor %}
-                                        {% else %}
-                                            <tr>
-                                                <td colspan="6" class="text-center small text-muted">
-                                                    <br/>
-                                                    {% trans "You miss a lot of fun, create some hosts!" %}
-                                                </td>
-                                            </tr>
-                                        {% endif %}
-                                    </tbody>
-                                </table>
-                                <br/><br/>
+                                            </thead>
+                                            <tbody>
+                                                <template v-if="Object.keys(items).length === 0">
+                                                    <tr>
+                                                        <td colspan="6" class="text-center small text-muted">
+                                                            <br/>
+                                                            ${i18n.noHosts}
+                                                        </td>
+                                                    </tr>
+                                                </template>
+                                                <template v-if="Object.keys(items).length > 0">
+                                                    <tr v-for="item in items">
+                                                        <td><a v-bind:href="item.view_url" class="text-inherit">${item.name}</a></td>
+                                                        <td>${item.type}</td>
+                                                        <td>${item.created_at}</td>
+                                                        <td class="text-center">
+                                                            <template v-if="item.status === 'up'">
+                                                                <span class="avatar avatar-green"><i class="fe fe-check"></i></span>
+                                                            </template>
+                                                            <template v-if="item.status === 'down'">
+                                                                <span class="avatar avatar-red"><i class="fe fe-x"></i></span>
+                                                            </template>
+                                                        </td>
+                                                        <td colspan="2" class="text-right">
+                                                            <a v-bind:href="item.view_url" class="btn btn-secondary btn-sm">${i18n.manage}</a>
+                                                            <div class="dropdown">
+                                                                <button class="btn btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown">${i18n.actions}</button>
+                                                                <div class="dropdown-menu dropdown-menu-right">
+                                                                    <a v-bind:href="item.edit_url" class="dropdown-item">
+                                                                        <i class="dropdown-icon fe fe-edit"></i> ${i18n.edit}
+                                                                    </a>
+                                                                    <a href="javascript:void(0)" v-bind:data-url="item.delete_url" class="dropdown-item" v-on:click="deleteHostAction">
+                                                                        <i class="dropdown-icon fe fe-trash"></i> ${i18n.delete}
+                                                                    </a>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                </template>
+                                            </tbody>
+                                        </table>
+                                        <br/><br/>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>

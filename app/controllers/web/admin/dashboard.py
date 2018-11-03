@@ -8,8 +8,6 @@ import os
 # Django
 from django.views import View
 from django.shortcuts import render
-from django.http import HttpResponse
-from django.http import HttpResponseRedirect
 from django.utils.translation import gettext as _
 
 # local Django
@@ -21,7 +19,6 @@ class Dashboard(View):
 
     template_name = 'templates/admin/dashboard.html'
     __context = Context()
-
 
     @login_if_not_authenticated
     def get(self, request):

@@ -4,7 +4,6 @@ Forgot Password API Endpoint
 
 # Django
 from django.views import View
-from django.urls import reverse
 from django.http import JsonResponse
 from django.utils.translation import gettext as _
 
@@ -19,17 +18,20 @@ from app.modules.core.forgot_password import Forgot_Password as Forgot_Password_
 
 class Forgot_Password(View):
 
-    __request = Request()
-    __response = Response()
-    __helpers = Helpers()
-    __form = Form()
-    __forgot_password = Forgot_Password_Module()
+    __request = None
+    __response = None
+    __helpers = None
+    __form = None
+    __forgot_password = None
     __logger = None
 
-
     def __init__(self):
+        self.__request = Request()
+        self.__response = Response()
+        self.__helpers = Helpers()
+        self.__form = Form()
+        self.__forgot_password = Forgot_Password_Module()
         self.__logger = self.__helpers.get_logger(__name__)
-
 
     @stop_request_if_authenticated
     def post(self, request):
@@ -37,7 +39,7 @@ class Forgot_Password(View):
         self.__request.set_request(request)
 
         request_data = self.__request.get_request_data("post", {
-            "email" : ""
+            "email": ""
         })
 
         self.__form.add_inputs({
@@ -68,7 +70,7 @@ class Forgot_Password(View):
 
         reset_request = self.__forgot_password.reset_request_exists(self.__form.get_input_value("email"))
 
-        if reset_request != False:
+        if reset_request:
             if self.__forgot_password.is_spam(reset_request):
                 return JsonResponse(self.__response.send_private_failure([{
                     "type": "error",
@@ -78,7 +80,7 @@ class Forgot_Password(View):
         else:
             token = self.__forgot_password.create_request(self.__form.get_input_value("email"))
 
-        if token == False:
+        if not token:
             return JsonResponse(self.__response.send_private_failure([{
                 "type": "error",
                 "message": _("Error! Something goes wrong while creating reset request.")
@@ -86,7 +88,7 @@ class Forgot_Password(View):
 
         message = self.__forgot_password.send_message(self.__form.get_input_value("email"), token)
 
-        if message == False:
+        if not message:
             return JsonResponse(self.__response.send_private_failure([{
                 "type": "error",
                 "message": _("Error! Something goes wrong while sending reset instructions.")

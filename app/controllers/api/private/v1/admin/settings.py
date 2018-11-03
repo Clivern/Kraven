@@ -4,11 +4,8 @@ Settings API Endpoint
 
 # Django
 from django.views import View
-from django.urls import reverse
 from django.http import JsonResponse
 from django.utils.translation import gettext as _
-from django.views.decorators.csrf import csrf_exempt
-from django.utils.decorators import method_decorator
 
 # local Django
 from app.modules.validation.form import Form
@@ -21,18 +18,22 @@ from app.modules.core.acl import ACL
 
 class Settings(View):
 
-    __request = Request()
-    __response = Response()
-    __helpers = Helpers()
-    __form = Form()
-    __settings_module = Settings_Module()
+    __request = None
+    __response = None
+    __helpers = None
+    __form = None
+    __settings_module = None
     __logger = None
-    __acl = ACL()
-
+    __acl = None
 
     def __init__(self):
+        self.__request = Request()
+        self.__response = Response()
+        self.__helpers = Helpers()
+        self.__form = Form()
+        self.__settings_module = Settings_Module()
+        self.__acl = ACL()
         self.__logger = self.__helpers.get_logger(__name__)
-
 
     def post(self, request):
 
@@ -66,7 +67,7 @@ class Settings(View):
                     'alpha_numeric': {
                         'error': _('Error! Application name must be alpha numeric.')
                     },
-                    'length_between':{
+                    'length_between': {
                         'param': [3, 10],
                         'error': _('Error! Application name must be 5 to 10 characters long.')
                     }
@@ -102,7 +103,7 @@ class Settings(View):
                     'strip': {}
                 },
                 'validate': {
-                    'length_between':{
+                    'length_between': {
                         'param': [0, 300],
                         'error': _('Error! App description is very long.')
                     },
@@ -115,7 +116,7 @@ class Settings(View):
                     'strip': {}
                 },
                 'validate': {
-                    'length_between':{
+                    'length_between': {
                         'param': [0, 100],
                         'error': _('Error! Prometheus token is invalid.')
                     },
@@ -128,7 +129,7 @@ class Settings(View):
                     'strip': {}
                 },
                 'validate': {
-                    'length_between':{
+                    'length_between': {
                         'param': [0, 30],
                         'error': _('Error! Google analytics account is invalid.')
                     },

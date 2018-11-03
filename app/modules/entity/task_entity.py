@@ -7,7 +7,6 @@ from django.contrib.auth.models import User
 
 # local Django
 from app.models import Task
-from app.modules.util.helpers import Helpers
 
 
 class Task_Entity():
@@ -26,21 +25,19 @@ class Task_Entity():
         task.save()
         return False if task.pk is None else task
 
-
     def insert_many(self, tasks):
         """Insert Many Tasks"""
         status = True
         for task in tasks:
-            status &= True if self.insert_one(task) != False else False
+            status &= True if self.insert_one(task) is not False else False
         return status
-
 
     def get_one_by_id(self, id):
         """Get Task By ID"""
         try:
             task = Task.objects.get(pk=id)
             return False if task.pk is None else task
-        except:
+        except Exception as e:
             return False
 
     def get_one_by_uuid(self, uuid):
@@ -48,20 +45,18 @@ class Task_Entity():
         try:
             task = Task.objects.get(uuid=uuid)
             return False if task.pk is None else task
-        except:
+        except Exception as e:
             return False
-
 
     def get_many_by_user(self, user_id, order_by, asc):
         """Get Many Tasks By User ID"""
         tasks = Task.objects.filter(user=user_id).order_by(order_by if asc else "-%s" % order_by)
         return tasks
 
-
     def update_one_by_id(self, id, new_data):
         """Update Task By ID"""
         task = self.get_one_by_id(id)
-        if task != False:
+        if task is not False:
 
             if "uuid" in new_data:
                 task.uuid = new_data["uuid"]
@@ -84,12 +79,11 @@ class Task_Entity():
             task.save()
             return True
         return False
-
 
     def update_one_by_uuid(self, uuid, new_data):
         """Update Task By UUID"""
         task = self.get_one_by_uuid(uuid)
-        if task != False:
+        if task is not False:
 
             if "uuid" in new_data:
                 task.uuid = new_data["uuid"]
@@ -113,24 +107,21 @@ class Task_Entity():
             return True
         return False
 
-
     def delete_one_by_id(self, id):
         """Delete Task By ID"""
         task = self.get_one_by_id(id)
-        if task != False:
+        if task is not False:
             count, deleted = task.delete()
             return True if count > 0 else False
         return False
-
 
     def delete_one_by_uuid(self, uuid):
         """Delete Task By UUID"""
         task = self.get_one_by_uuid(uuid)
-        if task != False:
+        if task is not False:
             count, deleted = task.delete()
             return True if count > 0 else False
         return False
-
 
     def count_all_tasks(self):
         return Task.objects.count()

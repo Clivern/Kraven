@@ -2,9 +2,6 @@
 Settings Module
 """
 
-# standard library
-import time
-
 # local Django
 from app.modules.util.helpers import Helpers
 from app.modules.entity.option_entity import Option_Entity
@@ -16,20 +13,24 @@ from app.modules.entity.task_entity import Task_Entity
 
 class Metric():
 
-    __option_entity = Option_Entity()
-    __user_entity = User_Entity()
-    __host_entity = Host_Entity()
-    __task_entity = Task_Entity()
-    __profile_entity = Profile_Entity()
-    __helpers = Helpers()
+    __option_entity = None
+    __user_entity = None
+    __host_entity = None
+    __task_entity = None
+    __profile_entity = None
+    __helpers = None
     __logger = None
     __app_name = ""
 
-
     def __init__(self):
+        self.__option_entity = Option_Entity()
+        self.__user_entity = User_Entity()
+        self.__host_entity = Host_Entity()
+        self.__task_entity = Task_Entity()
+        self.__profile_entity = Profile_Entity()
+        self.__helpers = Helpers()
         self.__logger = self.__helpers.get_logger(__name__)
         self.__app_name = self.__option_entity.get_value_by_key("app_name").lower()
-
 
     def get_all_users(self):
         return {
@@ -39,7 +40,6 @@ class Metric():
             "comment": "Current All Users on System"
         }
 
-
     def get_all_profiles(self):
         return {
             "type": "count",
@@ -48,7 +48,6 @@ class Metric():
             "comment": "Current All Profiles on System"
         }
 
-
     def get_all_tasks(self):
         return {
             "type": "count",
@@ -56,7 +55,6 @@ class Metric():
             "count": self.__task_entity.count_all_tasks(),
             "comment": "Current All Tasks on System"
         }
-
 
     def get_all_hosts(self):
         return {

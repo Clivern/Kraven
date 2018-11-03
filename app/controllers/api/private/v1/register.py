@@ -4,11 +4,8 @@ Register API Endpoint
 
 # Django
 from django.views import View
-from django.urls import reverse
 from django.http import JsonResponse
 from django.utils.translation import gettext as _
-from django.views.decorators.csrf import csrf_exempt
-from django.utils.decorators import method_decorator
 
 # local Django
 from app.modules.validation.form import Form
@@ -21,17 +18,20 @@ from app.modules.core.decorators import stop_request_if_authenticated
 
 class Register(View):
 
-    __request = Request()
-    __response = Response()
-    __helpers = Helpers()
-    __form = Form()
-    __register = Register_Module()
+    __request = None
+    __response = None
+    __helpers = None
+    __form = None
+    __register = None
     __logger = None
 
-
     def __init__(self):
+        self.__request = Request()
+        self.__response = Response()
+        self.__helpers = Helpers()
+        self.__form = Form()
+        self.__register = Register_Module()
         self.__logger = self.__helpers.get_logger(__name__)
-
 
     @stop_request_if_authenticated
     def post(self, request):
@@ -39,11 +39,11 @@ class Register(View):
         self.__request.set_request(request)
 
         request_data = self.__request.get_request_data("post", {
-            "first_name" : "",
-            "last_name" : "",
-            "username" : "",
-            "email" : "",
-            "password" : ""
+            "first_name": "",
+            "last_name": "",
+            "username": "",
+            "email": "",
+            "password": ""
         })
 
         self.__form.add_inputs({
@@ -56,7 +56,7 @@ class Register(View):
                     'names': {
                         'error': _('Error! First name contains invalid characters.')
                     },
-                    'length_between':{
+                    'length_between': {
                         'param': [0, 20],
                         'error': _('Error! First name must be 1 to 20 characters long.')
                     }
@@ -71,7 +71,7 @@ class Register(View):
                     'names': {
                         'error': _('Error! Last name contains invalid characters.')
                     },
-                    'length_between':{
+                    'length_between': {
                         'param': [0, 20],
                         'error': _('Error! Last name must be 1 to 20 characters long.')
                     }
@@ -87,7 +87,7 @@ class Register(View):
                     'alpha_numeric': {
                         'error': _('Error! Username must be alpha numeric.')
                     },
-                    'length_between':{
+                    'length_between': {
                         'param': [4, 10],
                         'error': _('Error! Username must be 5 to 10 characters long.')
                     }
@@ -111,7 +111,7 @@ class Register(View):
                     'password': {
                         'error': _('Error! Password must contain at least uppercase letter, lowercase letter, numbers and special character.')
                     },
-                    'length_between':{
+                    'length_between': {
                         'param': [7, 20],
                         'error': _('Error! Password length must be from 8 to 20 characters.')
                     }

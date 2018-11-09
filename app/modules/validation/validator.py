@@ -119,12 +119,12 @@ class Validator():
             return False
         if re.search("[0-9]", self.__input) is None:
             return False
-        if not re.search("^[a-zA-Z0-9]*$", self.__input) is None:
+        if not re.search(r"^[a-zA-Z0-9]*$", self.__input) is None:
             return False
         return True
 
     def names(self):
-        return (re.search('[^a-zA-Z\s\-\']', self.__input) is None)
+        return (re.search(r'[^a-zA-Z\s\-\']', self.__input) is None)
 
     def username_or_email(self):
         return self.email() or self.alpha_numeric()
@@ -210,15 +210,15 @@ class Validator():
         return self.__input == ""
 
     def numeric(self):
-        regex = re.compile('^[0-9]+$')
+        regex = re.compile(r'^[0-9]+$')
         return bool(regex.match(self.__input))
 
     def host_slug(self):
-        regex = re.compile('^[a-z0-9-_]+$')
+        regex = re.compile(r'^[a-z0-9-_]+$')
         return bool(regex.match(self.__input))
 
     def host_name(self):
-        regex = re.compile('^[a-zA-Z0-9-_\s]+$')
+        regex = re.compile(r'^[a-zA-Z0-9-_\s]+$')
         return bool(regex.match(self.__input))
 
     def host_server(self):

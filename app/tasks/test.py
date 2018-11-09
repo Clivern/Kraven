@@ -17,4 +17,10 @@ def non_blocking_call(hold_on):
         time.sleep(hold_on)
         return {"status": "passed", "result": "{}", "notify_type": "passed"}
     except Exception as e:
-        return {"status": "failed", "result": "{}", "notify_type": "error"}
+        return {
+            "status": "failed",
+            "result": {
+                "error": str(e)
+            },
+            "notify_type": "error"
+        }

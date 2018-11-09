@@ -24,6 +24,14 @@ def forgot_password_email(app_name, app_email, app_url, recipient_list, token, s
                 "token": token,
                 "app_name": app_name
             }))
-        return {"status": "passed", "result": "{}"}
+        return {
+            "status": "passed",
+            "result": "{}"
+        }
     except Exception as e:
-        return {"status": "failed", "result": "{}"}
+        return {
+            "status": "failed",
+            "result": {
+                "error": str(e)
+            }
+        }

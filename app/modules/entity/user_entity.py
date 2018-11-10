@@ -89,7 +89,7 @@ class User_Entity():
         try:
             user = User.objects.get(id=user_id)
             return False if user.pk is None else user
-        except Exception as e:
+        except Exception:
             return False
 
     def get_one_by_username(self, username):
@@ -97,7 +97,7 @@ class User_Entity():
         try:
             user = User.objects.get(username=username)
             return False if user.pk is None else user
-        except Exception as e:
+        except Exception:
             return False
 
     def get_one_by_email(self, email):
@@ -105,7 +105,7 @@ class User_Entity():
         try:
             user = User.objects.get(email=email)
             return False if user.pk is None else user
-        except Exception as e:
+        except Exception:
             return False
 
     def update_password_by_email(self, email, new_password):

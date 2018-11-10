@@ -34,7 +34,7 @@ class Option_Entity():
         try:
             option = Option.objects.get(pk=id)
             return False if option.pk is None else option
-        except Exception as e:
+        except Exception:
             return False
 
     def get_one_by_key(self, key):
@@ -42,7 +42,7 @@ class Option_Entity():
         try:
             option = Option.objects.get(key=key)
             return False if option.pk is None else option
-        except Exception as e:
+        except Exception:
             return False
 
     def get_value_by_key(self, key, default=""):
@@ -50,7 +50,7 @@ class Option_Entity():
         try:
             option = Option.objects.get(key=key)
             return default if option.pk is None else option.value
-        except Exception as e:
+        except Exception:
             return default
 
     def get_many_by_autoload(self, autoload):

@@ -16,7 +16,7 @@ class Profile_Entity():
         try:
             user = Profile.objects.get(user=user_id)
             return False if user.pk is None else True
-        except Exception as e:
+        except Exception:
             return False
 
     def create_profile(self, profile_data):
@@ -87,42 +87,42 @@ class Profile_Entity():
         try:
             profile = Profile.objects.get(user=user_id)
             return False if profile.pk is None else profile
-        except Exception as e:
+        except Exception:
             return False
 
     def get_profile_by_access_token(self, access_token):
         try:
             profile = Profile.objects.get(access_token=access_token)
             return False if profile.pk is None else profile
-        except Exception as e:
+        except Exception:
             return False
 
     def get_profile_by_refresh_token(self, refresh_token):
         try:
             profile = Profile.objects.get(refresh_token=refresh_token)
             return False if profile.pk is None else profile
-        except Exception as e:
+        except Exception:
             return False
 
     def token_used(self, token):
         try:
             profile = Profile.objects.get(Q(refresh_token=token) | Q(access_token=token))  # noqa: F821
             return False if profile.pk is None else True
-        except Exception as e:
+        except Exception:
             return False
 
     def access_token_used(self, access_token):
         try:
             profile = Profile.objects.get(access_token=access_token)
             return False if profile.pk is None else True
-        except Exception as e:
+        except Exception:
             return False
 
     def refresh_token_used(self, refresh_token):
         try:
             profile = Profile.objects.get(refresh_token=refresh_token)
             return False if profile.pk is None else True
-        except Exception as e:
+        except Exception:
             return False
 
     def update_access_token(self, user_id, access_token):

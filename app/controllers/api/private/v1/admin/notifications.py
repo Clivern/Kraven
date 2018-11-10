@@ -51,7 +51,7 @@ class Notifications(View):
 
         try:
             notification_id = int(request_data["notification_id"])
-        except Exception as e:
+        except Exception:
             return JsonResponse(self.__response.send_private_success([]))
 
         self.__notification_module.mark_notification(self.__user_id, notification_id)

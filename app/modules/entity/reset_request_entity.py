@@ -50,7 +50,7 @@ class Reset_Request_Entity():
         try:
             reset_request = Reset_Request.objects.get(pk=id)
             return False if reset_request.pk is None else reset_request
-        except Exception as e:
+        except Exception:
             return False
 
     def get_one_by_email(self, email):
@@ -58,7 +58,7 @@ class Reset_Request_Entity():
         try:
             reset_request = Reset_Request.objects.get(email=email)
             return False if reset_request.pk is None else reset_request
-        except Exception as e:
+        except Exception:
             return False
 
     def get_one_by_token(self, token):
@@ -66,7 +66,7 @@ class Reset_Request_Entity():
         try:
             reset_request = Reset_Request.objects.get(token=token)
             return False if reset_request.pk is None else reset_request
-        except Exception as e:
+        except Exception:
             return False
 
     def clear_expired_tokens(self):

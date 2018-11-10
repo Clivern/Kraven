@@ -37,7 +37,7 @@ class Task_Entity():
         try:
             task = Task.objects.get(pk=id)
             return False if task.pk is None else task
-        except Exception as e:
+        except Exception:
             return False
 
     def get_one_by_uuid(self, uuid):
@@ -45,7 +45,7 @@ class Task_Entity():
         try:
             task = Task.objects.get(uuid=uuid)
             return False if task.pk is None else task
-        except Exception as e:
+        except Exception:
             return False
 
     def get_many_by_user(self, user_id, order_by, asc):

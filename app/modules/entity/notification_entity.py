@@ -41,7 +41,7 @@ class Notification_Entity():
         try:
             notification = Notification.objects.get(pk=id)
             return False if notification.pk is None else notification
-        except Exception as e:
+        except Exception:
             return False
 
     def get_one_by_task_id(self, task_id):
@@ -49,7 +49,7 @@ class Notification_Entity():
         try:
             notification = Notification.objects.get(task=task_id)
             return False if notification.pk is None else notification
-        except Exception as e:
+        except Exception:
             return False
 
     def get_many_by_user(self, user_id, order_by, asc, count=5):
@@ -133,7 +133,7 @@ class Notification_Entity():
         try:
             notification = Notification.objects.get(pk=id, user=user_id)
             return False if notification.pk is None else notification
-        except Exception as e:
+        except Exception:
             return False
 
     def delete_one_by_id(self, id):

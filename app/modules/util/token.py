@@ -29,7 +29,7 @@ class Token():
         signer = Signer()
         try:
             original = signer.unsign(token)
-        except Exception as e:
+        except Exception:
             return False
 
         return True if original != "" else False

@@ -49,7 +49,7 @@ class Host_Entity():
             host.server = self.__crypto.decrypt(host.server, host.token)
             host.auth_data = self.__crypto.decrypt(host.auth_data, host.token)
             return False if host.pk is None else host
-        except Exception as e:
+        except Exception:
             return False
 
     def user_owns(self, host_id, user_id):
@@ -57,7 +57,7 @@ class Host_Entity():
         try:
             host = Host.objects.get(pk=host_id, user=user_id)
             return False if host.pk is None else True
-        except Exception as e:
+        except Exception:
             return False
 
     def get_one_by_slug_user_id(self, slug, user_id):
@@ -67,7 +67,7 @@ class Host_Entity():
             host.server = self.__crypto.decrypt(host.server, host.token)
             host.auth_data = self.__crypto.decrypt(host.auth_data, host.token)
             return False if host.pk is None else host
-        except Exception as e:
+        except Exception:
             return False
 
     def get_many_by_user(self, user_id, order_by, asc):

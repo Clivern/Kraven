@@ -35,7 +35,7 @@ class Login():
         is_email = False
         try:
             is_email = True if validate_email(username_email) is None else False
-        except Exception as e:
+        except Exception:
             is_email = False
         if is_email:
             user = self.__user_entity.get_one_by_email(username_email)

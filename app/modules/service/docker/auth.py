@@ -72,7 +72,7 @@ class Auth():
                 self._client = docker.APIClient(base_url=self._host.server, tls=self.tls_config(), timeout=self._timeout)
 
             return self._client.ping()
-        except Exception as e:
+        except Exception:
             return False
 
     def tls_config(self):

@@ -41,28 +41,28 @@ class ACL():
         try:
             role = Group.objects.get(name=name)
             return False if role.pk is None else role
-        except Exception as e:
+        except Exception:
             return False
 
     def get_permission_by_name(self, name):
         try:
             permission = Permission.objects.get(name=name)
             return False if permission.pk is None else permission
-        except Exception as e:
+        except Exception:
             return False
 
     def get_permission_by_codename(self, codename):
         try:
             permission = Permission.objects.get(codename=codename)
             return False if permission.pk is None else permission
-        except Exception as e:
+        except Exception:
             return False
 
     def get_user_by_id(self, user_id):
         try:
             user = User.objects.get(id=user_id)
             return False if user.pk is None else user
-        except Exception as e:
+        except Exception:
             return False
 
     def add_permission_to_role(self, permission_codename, role_name):
@@ -99,7 +99,7 @@ class ACL():
         try:
             content_type = ContentType.objects.get(app_label=label, model=model)
             return False if content_type.pk is None else content_type
-        except Exception as e:
+        except Exception:
             return False
 
     def get_user_content_type(self):
@@ -109,7 +109,7 @@ class ACL():
         try:
             content_type = ContentType.objects.get(app_label=label, model=model)
             return False if content_type.pk is None else content_type.id
-        except Exception as e:
+        except Exception:
             return False
 
     def truncate_default_permissions(self):

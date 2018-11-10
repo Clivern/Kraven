@@ -137,7 +137,7 @@ class Validator():
     def email(self):
         try:
             return True if validate_email(self.__input) is None else False
-        except Exception as e:
+        except Exception:
             return False
 
     def emails(self, sep=','):
@@ -145,7 +145,7 @@ class Validator():
         for email in self.__input.split(sep):
             try:
                 status &= True if validate_email(self.__input) is None else False
-            except Exception as e:
+            except Exception:
                 status &= False
         return status
 
@@ -153,7 +153,7 @@ class Validator():
         validate = URLValidator(protocols)
         try:
             return True if validate(self.__input) is None else False
-        except Exception as e:
+        except Exception:
             return False
 
     def ip(self, formats=['ipv4', 'ipv6']):
@@ -169,26 +169,26 @@ class Validator():
     def ipv4(self):
         try:
             return True if validate_ipv4_address(self.__input) is None else False
-        except Exception as e:
+        except Exception:
             return False
 
     def ipv6(self):
         try:
             return True if validate_ipv6_address(self.__input) is None else False
-        except Exception as e:
+        except Exception:
             return False
 
     def ipv46(self):
         try:
             return True if validate_ipv46_address(self.__input) is None else False
-        except Exception as e:
+        except Exception:
             return False
 
     def uuid(self):
         try:
             uuid.UUID(self.__input)
             return True
-        except Exception as e:
+        except Exception:
             return False
 
     def matches(self, regex, flags=0):
@@ -201,7 +201,7 @@ class Validator():
         signer = Signer()
         try:
             original = signer.unsign(self.__input)
-        except Exception as e:
+        except Exception:
             return False
 
         return True if original != "" else False

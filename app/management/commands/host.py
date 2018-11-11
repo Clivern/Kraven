@@ -123,6 +123,14 @@ class Command(BaseCommand):
                 labels=json.loads(configs["labels"]) if "labels" in configs else {}
             ))
 
+    def create_network(self, configs={}):
+        _network = Network_Module()
+        if _network.set_host(configs["host_id"]).check_health():
+            print(_network.create(
+                configs["name"],
+                driver=configs["driver"]
+            ))
+
     def list_networks(self, configs={}):
         _network = Network_Module()
         if _network.set_host(configs["host_id"]).check_health():
@@ -142,3 +150,13 @@ class Command(BaseCommand):
         _network = Network_Module()
         if _network.set_host(configs["host_id"]).check_health():
             print(_network.remove(configs["network_id"]))
+
+    def connect_network(self, configs={}):
+        _network = Network_Module()
+        if _network.set_host(configs["host_id"]).check_health():
+            print(_network.connect(configs["network_id"], configs["container"]))
+
+    def disconnect_network(self, configs={}):
+        _network = Network_Module()
+        if _network.set_host(configs["host_id"]).check_health():
+            print(_network.disconnect(configs["network_id"], configs["container"]))

@@ -36,11 +36,11 @@ class Network(Auth):
     def prune(self, filters=None):
         return self._client.networks.prune(filters)
 
-    def disconnect(self, network_id, container, **configs):
-        self._client.networks.get(network_id).disconnect(container, **configs)
+    def disconnect(self, network_id, container_id, **configs):
+        self._client.networks.get(network_id).disconnect(container_id, **configs)
 
-    def connect(self, network_id, container, **configs):
-        self._client.networks.get(network_id).connect(container, **configs)
+    def connect(self, network_id, container_id, **configs):
+        self._client.networks.get(network_id).connect(container_id, **configs)
 
     def create(self, name, **args):
         return self._client.networks.create(name=name, **args)

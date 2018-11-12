@@ -1379,6 +1379,50 @@ kraven_app.host_networks_list_screen = (Vue, axios, $, Pace, Cookies, toastr) =>
 
 
 /**
+ * App Host Network
+ */
+kraven_app.host_network_screen = (Vue, axios, $, Pace, Cookies, toastr) => {
+
+    return new Vue({
+        delimiters: ['${', '}'],
+        el: '#host_network_view',
+        data() {
+            return {
+                item: {},
+                isDimmerActive: true,
+                i18n: _host_image_view_i18n
+            }
+        },
+        mounted() {
+            this.fetch();
+        },
+        methods: {
+            fetch() {
+                axios.get($('#host_network_view').attr('data-fetch-network'))
+                    .then(response => {
+                        if (response.data.status == "success") {
+                            this.item = response.data.payload.network;
+                        } else {
+                            for (var messageObj of response.data.messages) {
+                                toastr.clear();
+                                toastr.error(messageObj.message);
+                                break;
+                            }
+                        }
+                    })
+                    .catch(error => {
+                        toastr.clear();
+                        toastr.error(error);
+                    })
+                    .finally(() => this.isDimmerActive = false)
+            }
+        }
+    });
+
+}
+
+
+/**
  * App Hosts Volumes List
  */
 kraven_app.host_volumes_list_screen = (Vue, axios, $, Pace, Cookies, toastr) => {
@@ -1706,6 +1750,16 @@ $(document).ready(() => {
         }
         if (document.getElementById("host_image_view")) {
             kraven_app.host_image_screen(
+                Vue,
+                axios,
+                $,
+                Pace,
+                Cookies,
+                toastr
+            );
+        }
+        if (document.getElementById("host_network_view")) {
+            kraven_app.host_network_screen(
                 Vue,
                 axios,
                 $,

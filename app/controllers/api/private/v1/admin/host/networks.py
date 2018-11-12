@@ -6,6 +6,7 @@ Host Networks API Endpoints
 from django.views import View
 from django.http import JsonResponse
 from django.utils.translation import gettext as _
+from django.urls import reverse
 
 # local Django
 from app.modules.validation.form import Form
@@ -146,7 +147,33 @@ class Get_Network(View):
         self.__logger = self.__helpers.get_logger(__name__)
 
     def get(self, request, host_id, network_id):
-        pass
+
+        self.__user_id = request.user.id
+        self.__host_id = host_id
+        self.__network_id = network_id
+
+        if not self.__host_module.user_owns(self.__host_id, self.__user_id):
+            return JsonResponse(self.__response.send_private_failure([{
+                "type": "error",
+                "message": _("Error! Invalid Request.")
+            }]))
+
+        if self.__network_module.set_host(self.__host_id).check_health():
+            _network = {
+                'long_id': self.__network_id
+            }
+            return JsonResponse(self.__response.send_private_success([], {
+                'network': _network
+            }))
+        else:
+            return JsonResponse(self.__response.send_private_failure([{
+                "type": "error",
+                "message": _(
+                    "Error! Something goes wrong with your host!"
+                )
+            }], {
+                'network': {}
+            }))
 
 
 class Get_Networks(View):
@@ -209,10 +236,8 @@ class Get_Networks(View):
         for network in networks_list:
             date = network["created"].split("T")
             network["created_at"] = date[0]
-            network["url"] = "#"
-            network["delete_url"] = "#"
-            # network["url"] = reverse("app.web.admin.hosts.view.network", kwargs={'host_slug': host_slug, 'network_id': network['long_id']})
-            # network["delete_url"] = reverse("app.api.private.v1.admin.action.host.delete_network.endpoint", kwargs={'host_id': host_id})
+            network["url"] = reverse("app.web.admin.hosts.view.network", kwargs={'host_slug': host_slug, 'network_id': network['id']})
+            network["delete_url"] = reverse("app.api.private.v1.admin.action.host.delete_network.endpoint", kwargs={'host_id': host_id})
             _networks_list.append(network)
 
         return _networks_list

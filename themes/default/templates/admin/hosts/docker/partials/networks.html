@@ -18,7 +18,7 @@
                         <i class="fe fe-terminal"></i> {% trans "Actions" %}
                     </button>
                     <div class="dropdown-menu">
-                        <a class="dropdown-item" href="#">{% trans "Create network" %}</a>
+                        <a class="dropdown-item" href="{% url 'app.web.admin.hosts.view.create.network' host.slug %}">{% trans "Create network" %}</a>
                         <a class="dropdown-item" href="javascript:void(0)" v-on:click="pruneNetworksAction" data-url="{% url 'app.api.private.v1.admin.action.host.prune_networks.endpoint' host.id %}">{% trans "Prune networks" %}</a>
                     </div>
                     <button type="button" class="btn btn-icon btn-secondary btn-sm" v-on:click="reloadHostsNetworksAction"><i class="fe fe fe-rotate-cw"></i></button>

@@ -35,6 +35,10 @@ from app.controllers.web.admin.hosts import Host_Images_View as Host_Images_View
 from app.controllers.web.admin.hosts import Host_Images_Pull_View as Host_Images_Pull_View_Web
 from app.controllers.web.admin.hosts import Host_Images_Build_View as Host_Images_Build_View_Web
 from app.controllers.web.admin.hosts import Host_Networks_View as Host_Networks_View_Web
+
+from app.controllers.web.admin.hosts import Host_Network_View as Host_Network_View_Web
+from app.controllers.web.admin.hosts import Host_Network_Create as Host_Network_Create_Web
+
 from app.controllers.web.admin.hosts import Host_Volumes_View as Host_Volumes_View_Web
 from app.controllers.web.admin.hosts import Host_Actions_View as Host_Actions_View_Web
 from app.controllers.web.admin.hosts import Host_Image_View as Host_Image_View_Web
@@ -104,8 +108,9 @@ urlpatterns = [
         path('hosts/view/<slug:host_slug>/images/pull', Host_Images_Pull_View_Web.as_view(), name='app.web.admin.hosts.view.pull.images'),
         path('hosts/view/<slug:host_slug>/images/build', Host_Images_Build_View_Web.as_view(), name='app.web.admin.hosts.view.build.images'),
         path('hosts/view/<slug:host_slug>/image/<image_id>', Host_Image_View_Web.as_view(), name='app.web.admin.hosts.view.image'),
-
         path('hosts/view/<slug:host_slug>/networks', Host_Networks_View_Web.as_view(), name='app.web.admin.hosts.view.networks'),
+        path('hosts/view/<slug:host_slug>/networks/create', Host_Network_Create_Web.as_view(), name='app.web.admin.hosts.view.create.network'),
+        path('hosts/view/<slug:host_slug>/network/<network_id>', Host_Network_View_Web.as_view(), name='app.web.admin.hosts.view.network'),
         path('hosts/view/<slug:host_slug>/volumes', Host_Volumes_View_Web.as_view(), name='app.web.admin.hosts.view.volumes'),
         path('hosts/view/<slug:host_slug>/actions', Host_Actions_View_Web.as_view(), name='app.web.admin.hosts.view.actions'),
         path('activity', Activity_View.as_view(), name='app.web.admin.activity.list'),
@@ -188,7 +193,7 @@ urlpatterns = [
             path(
                 'action/host/remove_network/<int:host_id>',
                 Remove_Network_Action_Admin_V1_Endpoint_Private.as_view(),
-                name='app.api.private.v1.admin.action.host.remove_network.endpoint'
+                name='app.api.private.v1.admin.action.host.delete_network.endpoint'
             ),
             path(
                 'action/host/connect_network_container/<int:host_id>',

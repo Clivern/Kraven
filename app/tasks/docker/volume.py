@@ -13,7 +13,7 @@ from app.modules.service.docker.volume import Volume as Volume_Module
 
 
 @shared_task
-def create_volume(host_id):
+def create_volume(host_id, name, driver, driver_opts={}, labels={}):
     try:
         _volume = Volume_Module()
 
@@ -25,6 +25,27 @@ def create_volume(host_id):
                 },
                 "notify_type": "failed"
             }
+
+        result = _volume.create(
+            name,
+            driver,
+            driver_opts=driver_opts,
+            labels=labels
+        )
+
+        if result:
+            return {
+                "status": "passed",
+                "result": "{}",
+                "notify_type": "passed"
+            }
+        else:
+            return {
+                "status": "failed",
+                "result": "{}",
+                "notify_type": "failed"
+            }
+
     except Exception as e:
         return {
             "status": "error",
@@ -36,7 +57,7 @@ def create_volume(host_id):
 
 
 @shared_task
-def delete_volume(host_id):
+def remove_volume_by_id(host_id, volume_id, force=False):
     try:
         _volume = Volume_Module()
 
@@ -48,6 +69,14 @@ def delete_volume(host_id):
                 },
                 "notify_type": "failed"
             }
+
+        _volume.remove(volume_id, force)
+
+        return {
+            "status": "passed",
+            "result": "{}",
+            "notify_type": "passed"
+        }
     except Exception as e:
         return {
             "status": "error",

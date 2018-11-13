@@ -65,13 +65,13 @@ def remove_network_by_id(host_id, network_id):
                 "notify_type": "failed"
             }
 
-            _network.remove(network_id)
+        _network.remove(network_id)
 
-            return {
-                "status": "passed",
-                "result": "{}",
-                "notify_type": "passed"
-            }
+        return {
+            "status": "passed",
+            "result": "{}",
+            "notify_type": "passed"
+        }
     except Exception as e:
         return {
             "status": "error",
@@ -96,13 +96,13 @@ def connect_network_container(host_id, network_id, container_id):
                 "notify_type": "failed"
             }
 
-            _network.connect(network_id, container_id)
+        _network.connect(network_id, container_id)
 
-            return {
-                "status": "passed",
-                "result": "{}",
-                "notify_type": "passed"
-            }
+        return {
+            "status": "passed",
+            "result": "{}",
+            "notify_type": "passed"
+        }
     except Exception as e:
         return {
             "status": "error",
@@ -127,13 +127,13 @@ def disconnect_network_container(host_id, network_id, container_id):
                 "notify_type": "failed"
             }
 
-            _network.disconnect(network_id, container_id)
+        _network.disconnect(network_id, container_id)
 
-            return {
-                "status": "passed",
-                "result": "{}",
-                "notify_type": "passed"
-            }
+        return {
+            "status": "passed",
+            "result": "{}",
+            "notify_type": "passed"
+        }
     except Exception as e:
         return {
             "status": "error",

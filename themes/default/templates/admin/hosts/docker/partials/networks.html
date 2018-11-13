@@ -50,11 +50,8 @@
                                         <div class="dropdown">
                                             <button class="btn btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown">${i18n.actions}</button>
                                             <div class="dropdown-menu dropdown-menu-right">
-                                                <a href="javascript:void(0)" v-bind:data-url="item.delete_url" v-bind:data-long-id="item.long_id" class="dropdown-item" v-on:click="deleteHostNetworkAction">
+                                                <a href="javascript:void(0)" v-bind:data-url="item.delete_url" v-bind:data-long-id="item.id" class="dropdown-item" v-on:click="deleteHostNetworkAction">
                                                     <i class="dropdown-icon fe fe-trash"></i> ${i18n.delete}
-                                                </a>
-                                                <a href="javascript:void(0)" v-bind:data-url="item.delete_url" v-bind:data-long-id="item.long_id" class="dropdown-item" v-on:click="forceDeleteHostNetworkAction">
-                                                    <i class="dropdown-icon fe fe-trash-2"></i> ${i18n.force_delete}
                                                 </a>
                                             </div>
                                         </div>

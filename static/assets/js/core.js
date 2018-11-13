@@ -1292,6 +1292,7 @@ kraven_app.host_networks_list_screen = (Vue, axios, $, Pace, Cookies, toastr) =>
                     });
                 });
             },
+            // Not supported yet
             forceDeleteHostNetworkAction(event) {
                 event.preventDefault();
 
@@ -1308,7 +1309,7 @@ kraven_app.host_networks_list_screen = (Vue, axios, $, Pace, Cookies, toastr) =>
                         url: _self.attr('data-url'),
                         data: {
                             "csrfmiddlewaretoken": Cookies.get('csrftoken'),
-                            "long_id": _self.attr("data-long-id"),
+                            "network_id": _self.attr("data-long-id"),
                             "force": "1"
                         }
                     }).done((response) => {
@@ -1348,7 +1349,7 @@ kraven_app.host_networks_list_screen = (Vue, axios, $, Pace, Cookies, toastr) =>
                         url: _self.attr('data-url'),
                         data: {
                             "csrfmiddlewaretoken": Cookies.get('csrftoken'),
-                            "long_id": _self.attr("data-long-id"),
+                            "network_id": _self.attr("data-long-id"),
                             "force": "off"
                         }
                     }).done((response) => {
@@ -1374,7 +1375,6 @@ kraven_app.host_networks_list_screen = (Vue, axios, $, Pace, Cookies, toastr) =>
             }
         }
     });
-
 }
 
 
@@ -1418,7 +1418,66 @@ kraven_app.host_network_screen = (Vue, axios, $, Pace, Cookies, toastr) => {
             }
         }
     });
+}
 
+
+/**
+ * App Host Create Network
+ */
+kraven_app.host_network_create_screen = (Vue, axios, $, Pace, Cookies, toastr) => {
+
+    return new Vue({
+        delimiters: ['${', '}'],
+        el: '#host_network_create',
+        data() {
+            return {
+                isInProgress: false,
+            }
+        },
+        methods: {
+            createNetworkAction(event) {
+                event.preventDefault();
+                this.isInProgress = true;
+
+                var _self = $(event.target);
+                var _form = _self.closest("form");
+
+                var inputs = {};
+                _form.serializeArray().map((item, index) => {
+                    inputs[item.name] = item.value;
+                });
+
+                Pace.track(() => {
+                    $.ajax({
+                        method: "POST",
+                        url: _form.attr('action'),
+                        data: inputs
+                    }).done((response, textStatus, jqXHR) => {
+                        if (response.status == "success") {
+                            for (var messageObj of response.messages) {
+                                toastr.clear();
+                                toastr.success(messageObj.message);
+                                break;
+                            }
+                        } else {
+                            for (var messageObj of response.messages) {
+                                toastr.clear();
+                                toastr.error(messageObj.message);
+                                break;
+                            }
+                        }
+                        this.isInProgress = false;
+                        _form[0].reset();
+                    }).fail((jqXHR, textStatus, error) => {
+                        toastr.clear();
+                        toastr.error(error);
+                        this.isInProgress = false;
+                        _form[0].reset();
+                    });
+                });
+            }
+        }
+    });
 }
 
 
@@ -1760,6 +1819,16 @@ $(document).ready(() => {
         }
         if (document.getElementById("host_network_view")) {
             kraven_app.host_network_screen(
+                Vue,
+                axios,
+                $,
+                Pace,
+                Cookies,
+                toastr
+            );
+        }
+        if (document.getElementById("host_network_create")) {
+            kraven_app.host_network_create_screen(
                 Vue,
                 axios,
                 $,

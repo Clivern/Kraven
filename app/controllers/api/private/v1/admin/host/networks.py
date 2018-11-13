@@ -159,9 +159,8 @@ class Get_Network(View):
             }]))
 
         if self.__network_module.set_host(self.__host_id).check_health():
-            _network = {
-                'long_id': self.__network_id
-            }
+            _network = self.__network_module.get(self.__network_id)
+
             return JsonResponse(self.__response.send_private_success([], {
                 'network': _network
             }))
@@ -301,11 +300,11 @@ class Remove_Network(View):
                 "message": _("Error! Invalid Request.")
             }]))
 
-        _long_id = self.__form.get_input_value("network_id")
+        _network_id = self.__form.get_input_value("network_id")
 
         task = self.__task_module.delay("remove_network_by_id", {
             "host_id": self.__host_id,
-            "network_id": _long_id
+            "network_id": _network_id
         }, self.__user_id)
 
         if task:

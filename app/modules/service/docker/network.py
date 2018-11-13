@@ -28,7 +28,27 @@ class Network(Auth):
         return result
 
     def get(self, network_id):
-        return self._client.networks.get(network_id)
+        network = self._client.networks.get(network_id)
+        containers = []
+        for container in network.containers:
+            containers.append({
+                "id": container.id,
+                "image": container.image.short_id,
+                "name": container.name,
+                "short_id": container.short_id,
+                "status": container.status
+            })
+
+        return {
+            "id": network.id,
+            "short_id": network.short_id,
+            "name": network.name,
+            "created": network.attrs["Created"],
+            "driver": network.attrs["Driver"],
+            "scope": network.attrs["Scope"],
+            "containers": containers,
+            "attrs": network.attrs
+        }
 
     def remove(self, network_id):
         return self._client.networks.get(network_id).remove()

@@ -9,7 +9,7 @@
         </div>
     </div>
 </div>
-<div class="row" id="host_images_pull">
+<div class="row" id="host_network_create">
     <div class="col-12">
         <form class="card" v-on:submit.prevent="createNetworkAction" action="{% url 'app.api.private.v1.admin.action.host.create_network.endpoint' host.id %}" method="post">
             {% csrf_token %}
@@ -20,6 +20,15 @@
                         <div class="form-group">
                             <label class="form-label">{% trans "Network name" %}</label>
                             <input type="text" class="form-control" name="network_name" placeholder="">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">{% trans "Driver" %}</label>
+                            <select name="network_driver" class="form-control custom-select">
+                                <<option value="">{% trans "Please select a value" %}</option>}
+                                option
+                                <option value="bridge">Bridge</option>
+                            </select>
+
                         </div>
                     </div>
                 </div>

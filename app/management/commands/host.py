@@ -8,6 +8,8 @@ from django.core.management.base import BaseCommand, CommandError
 from app.modules.service.docker.image import Image as Image_Module
 from app.modules.service.docker.volume import Volume as Volume_Module
 from app.modules.service.docker.network import Network as Network_Module
+from app.modules.service.docker.event import Event as Event_Module
+from app.modules.service.docker.system import System as System_Module
 from app.modules.util.io import File
 import json
 
@@ -160,3 +162,21 @@ class Command(BaseCommand):
         _network = Network_Module()
         if _network.set_host(configs["host_id"]).check_health():
             print(_network.disconnect(configs["network_id"], configs["container"]))
+
+    def list_events(self, configs={}):
+        _event = Event_Module()
+        if _event.set_host(configs["host_id"]).check_health():
+            print(_event.list(
+                configs["since"] if "since" in configs.keys() else None,
+                configs["until"] if "until" in configs.keys() else None
+            ))
+
+    def system_info(self, configs={}):
+        system = System_Module()
+        if system.set_host(configs["host_id"]).check_health():
+            print(system.info())
+
+    def system_version(self, configs={}):
+        system = System_Module()
+        if system.set_host(configs["host_id"]).check_health():
+            print(system.version())

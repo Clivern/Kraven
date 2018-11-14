@@ -1,0 +1,30 @@
+{% load staticfiles %}
+{% load i18n %}
+
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">{% trans "Network" %}</h3>
+        <div class="card-options">
+
+        </div>
+    </div>
+</div>
+<div class="row" id="host_network_view" data-fetch-network="{% url 'app.api.private.v1.admin.action.host.get_network.endpoint' host.id network_id %}">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-status bg-green"></div>
+            <div class="card-body">
+                <div class="dimmer" v-bind:class="{ active: isDimmerActive }">
+                    <div class="loader"></div>
+                    <div class="dimmer-content">
+                        <div class="row">
+                            <div class="col-md-12 col-lg-12">
+                                ${item}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

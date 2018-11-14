@@ -18,7 +18,7 @@
                         <i class="fe fe-terminal"></i> {% trans "Actions" %}
                     </button>
                     <div class="dropdown-menu">
-                        <a class="dropdown-item" href="#">{% trans "Create network" %}</a>
+                        <a class="dropdown-item" href="{% url 'app.web.admin.hosts.view.create.network' host.slug %}">{% trans "Create network" %}</a>
                         <a class="dropdown-item" href="javascript:void(0)" v-on:click="pruneNetworksAction" data-url="{% url 'app.api.private.v1.admin.action.host.prune_networks.endpoint' host.id %}">{% trans "Prune networks" %}</a>
                     </div>
                     <button type="button" class="btn btn-icon btn-secondary btn-sm" v-on:click="reloadHostsNetworksAction"><i class="fe fe fe-rotate-cw"></i></button>
@@ -50,11 +50,8 @@
                                         <div class="dropdown">
                                             <button class="btn btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown">${i18n.actions}</button>
                                             <div class="dropdown-menu dropdown-menu-right">
-                                                <a href="javascript:void(0)" v-bind:data-url="item.delete_url" v-bind:data-long-id="item.long_id" class="dropdown-item" v-on:click="deleteHostNetworkAction">
+                                                <a href="javascript:void(0)" v-bind:data-url="item.delete_url" v-bind:data-long-id="item.id" class="dropdown-item" v-on:click="deleteHostNetworkAction">
                                                     <i class="dropdown-icon fe fe-trash"></i> ${i18n.delete}
-                                                </a>
-                                                <a href="javascript:void(0)" v-bind:data-url="item.delete_url" v-bind:data-long-id="item.long_id" class="dropdown-item" v-on:click="forceDeleteHostNetworkAction">
-                                                    <i class="dropdown-icon fe fe-trash-2"></i> ${i18n.force_delete}
                                                 </a>
                                             </div>
                                         </div>

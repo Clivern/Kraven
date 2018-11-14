@@ -67,7 +67,12 @@
                                                             </template>
                                                         </td>
                                                         <td colspan="2" class="text-right">
-                                                            <a v-bind:href="item.view_url" class="btn btn-secondary btn-sm">${i18n.manage}</a>
+                                                            <template v-if="item.status === 'up'">
+                                                                <a v-bind:href="item.view_url" class="btn btn-secondary btn-sm">${i18n.manage}</a>
+                                                            </template>
+                                                            <template v-if="item.status === 'down'">
+                                                                <button v-bind:href="item.view_url" class="btn btn-secondary btn-sm" disabled>${i18n.manage}</button>
+                                                            </template>
                                                             <div class="dropdown">
                                                                 <button class="btn btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown">${i18n.actions}</button>
                                                                 <div class="dropdown-menu dropdown-menu-right">

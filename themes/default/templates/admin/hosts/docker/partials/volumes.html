@@ -18,7 +18,7 @@
                         <i class="fe fe-terminal"></i> {% trans "Actions" %}
                     </button>
                     <div class="dropdown-menu">
-                        <a class="dropdown-item" href="#">{% trans "Create volume" %}</a>
+                        <a class="dropdown-item" href="{% url 'app.web.admin.hosts.view.create.volume' host.slug %}">{% trans "Create volume" %}</a>
                         <a class="dropdown-item" href="javascript:void(0)" v-on:click="pruneVolumesAction" data-url="{% url 'app.api.private.v1.admin.action.host.prune_volumes.endpoint' host.id %}">{% trans "Prune volumes" %}</a>
                     </div>
                     <button type="button" class="btn btn-icon btn-secondary btn-sm" v-on:click="reloadHostsVolumesAction"><i class="fe fe fe-rotate-cw"></i></button>

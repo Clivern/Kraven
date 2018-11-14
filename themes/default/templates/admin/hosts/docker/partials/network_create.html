@@ -1,0 +1,42 @@
+{% load staticfiles %}
+{% load i18n %}
+
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">{% trans "Create Network" %}</h3>
+        <div class="card-options">
+
+        </div>
+    </div>
+</div>
+<div class="row" id="host_network_create">
+    <div class="col-12">
+        <form class="card" v-on:submit.prevent="createNetworkAction" action="{% url 'app.api.private.v1.admin.action.host.create_network.endpoint' host.id %}" method="post">
+            {% csrf_token %}
+            <div class="card-status bg-green"></div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-12 col-lg-12">
+                        <div class="form-group">
+                            <label class="form-label">{% trans "Network name" %}</label>
+                            <input type="text" class="form-control" name="network_name" placeholder="">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">{% trans "Driver" %}</label>
+                            <select name="network_driver" class="form-control custom-select">
+                                <option value="">{% trans "Please select a value" %}</option>
+                                <option value="bridge">Bridge</option>
+                            </select>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer text-right">
+                <div class="d-flex">
+                    <button type="submit" class="btn btn-primary ml-auto" v-bind:class="{ 'btn-loading': isInProgress }" v-bind:disabled="isInProgress">{% trans "Create" %}</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

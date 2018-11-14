@@ -1292,6 +1292,7 @@ kraven_app.host_networks_list_screen = (Vue, axios, $, Pace, Cookies, toastr) =>
                     });
                 });
             },
+            // Not supported yet
             forceDeleteHostNetworkAction(event) {
                 event.preventDefault();
 
@@ -1308,7 +1309,7 @@ kraven_app.host_networks_list_screen = (Vue, axios, $, Pace, Cookies, toastr) =>
                         url: _self.attr('data-url'),
                         data: {
                             "csrfmiddlewaretoken": Cookies.get('csrftoken'),
-                            "long_id": _self.attr("data-long-id"),
+                            "network_id": _self.attr("data-long-id"),
                             "force": "1"
                         }
                     }).done((response) => {
@@ -1348,7 +1349,7 @@ kraven_app.host_networks_list_screen = (Vue, axios, $, Pace, Cookies, toastr) =>
                         url: _self.attr('data-url'),
                         data: {
                             "csrfmiddlewaretoken": Cookies.get('csrftoken'),
-                            "long_id": _self.attr("data-long-id"),
+                            "network_id": _self.attr("data-long-id"),
                             "force": "off"
                         }
                     }).done((response) => {
@@ -1374,7 +1375,109 @@ kraven_app.host_networks_list_screen = (Vue, axios, $, Pace, Cookies, toastr) =>
             }
         }
     });
+}
 
+
+/**
+ * App Host Network
+ */
+kraven_app.host_network_screen = (Vue, axios, $, Pace, Cookies, toastr) => {
+
+    return new Vue({
+        delimiters: ['${', '}'],
+        el: '#host_network_view',
+        data() {
+            return {
+                item: {},
+                isDimmerActive: true,
+                i18n: _host_image_view_i18n
+            }
+        },
+        mounted() {
+            this.fetch();
+        },
+        methods: {
+            fetch() {
+                axios.get($('#host_network_view').attr('data-fetch-network'))
+                    .then(response => {
+                        if (response.data.status == "success") {
+                            this.item = response.data.payload.network;
+                        } else {
+                            for (var messageObj of response.data.messages) {
+                                toastr.clear();
+                                toastr.error(messageObj.message);
+                                break;
+                            }
+                        }
+                    })
+                    .catch(error => {
+                        toastr.clear();
+                        toastr.error(error);
+                    })
+                    .finally(() => this.isDimmerActive = false)
+            }
+        }
+    });
+}
+
+
+/**
+ * App Host Create Network
+ */
+kraven_app.host_network_create_screen = (Vue, axios, $, Pace, Cookies, toastr) => {
+
+    return new Vue({
+        delimiters: ['${', '}'],
+        el: '#host_network_create',
+        data() {
+            return {
+                isInProgress: false,
+            }
+        },
+        methods: {
+            createNetworkAction(event) {
+                event.preventDefault();
+                this.isInProgress = true;
+
+                var _self = $(event.target);
+                var _form = _self.closest("form");
+
+                var inputs = {};
+                _form.serializeArray().map((item, index) => {
+                    inputs[item.name] = item.value;
+                });
+
+                Pace.track(() => {
+                    $.ajax({
+                        method: "POST",
+                        url: _form.attr('action'),
+                        data: inputs
+                    }).done((response, textStatus, jqXHR) => {
+                        if (response.status == "success") {
+                            for (var messageObj of response.messages) {
+                                toastr.clear();
+                                toastr.success(messageObj.message);
+                                break;
+                            }
+                        } else {
+                            for (var messageObj of response.messages) {
+                                toastr.clear();
+                                toastr.error(messageObj.message);
+                                break;
+                            }
+                        }
+                        this.isInProgress = false;
+                        _form[0].reset();
+                    }).fail((jqXHR, textStatus, error) => {
+                        toastr.clear();
+                        toastr.error(error);
+                        this.isInProgress = false;
+                        _form[0].reset();
+                    });
+                });
+            }
+        }
+    });
 }
 
 
@@ -1474,8 +1577,8 @@ kraven_app.host_volumes_list_screen = (Vue, axios, $, Pace, Cookies, toastr) => 
                         url: _self.attr('data-url'),
                         data: {
                             "csrfmiddlewaretoken": Cookies.get('csrftoken'),
-                            "long_id": _self.attr("data-long-id"),
-                            "force": "1"
+                            "volume_id": _self.attr("data-long-id"),
+                            "force": "on"
                         }
                     }).done((response) => {
                         _self.removeAttr("disabled");
@@ -1514,7 +1617,7 @@ kraven_app.host_volumes_list_screen = (Vue, axios, $, Pace, Cookies, toastr) => 
                         url: _self.attr('data-url'),
                         data: {
                             "csrfmiddlewaretoken": Cookies.get('csrftoken'),
-                            "long_id": _self.attr("data-long-id"),
+                            "volume_id": _self.attr("data-long-id"),
                             "force": "off"
                         }
                     }).done((response) => {
@@ -1541,6 +1644,108 @@ kraven_app.host_volumes_list_screen = (Vue, axios, $, Pace, Cookies, toastr) => 
         }
     });
 
+}
+
+/**
+ * App Host Volume
+ */
+kraven_app.host_volume_screen = (Vue, axios, $, Pace, Cookies, toastr) => {
+
+    return new Vue({
+        delimiters: ['${', '}'],
+        el: '#host_volume_view',
+        data() {
+            return {
+                item: {},
+                isDimmerActive: true,
+                i18n: _host_image_view_i18n
+            }
+        },
+        mounted() {
+            this.fetch();
+        },
+        methods: {
+            fetch() {
+                axios.get($('#host_volume_view').attr('data-fetch-volume'))
+                    .then(response => {
+                        if (response.data.status == "success") {
+                            this.item = response.data.payload.volume;
+                        } else {
+                            for (var messageObj of response.data.messages) {
+                                toastr.clear();
+                                toastr.error(messageObj.message);
+                                break;
+                            }
+                        }
+                    })
+                    .catch(error => {
+                        toastr.clear();
+                        toastr.error(error);
+                    })
+                    .finally(() => this.isDimmerActive = false)
+            }
+        }
+    });
+}
+
+
+/**
+ * App Host Create Volume
+ */
+kraven_app.host_volume_create_screen = (Vue, axios, $, Pace, Cookies, toastr) => {
+
+    return new Vue({
+        delimiters: ['${', '}'],
+        el: '#host_volume_create',
+        data() {
+            return {
+                isInProgress: false,
+            }
+        },
+        methods: {
+            createVolumeAction(event) {
+                event.preventDefault();
+                this.isInProgress = true;
+
+                var _self = $(event.target);
+                var _form = _self.closest("form");
+
+                var inputs = {};
+                _form.serializeArray().map((item, index) => {
+                    inputs[item.name] = item.value;
+                });
+
+                Pace.track(() => {
+                    $.ajax({
+                        method: "POST",
+                        url: _form.attr('action'),
+                        data: inputs
+                    }).done((response, textStatus, jqXHR) => {
+                        if (response.status == "success") {
+                            for (var messageObj of response.messages) {
+                                toastr.clear();
+                                toastr.success(messageObj.message);
+                                break;
+                            }
+                        } else {
+                            for (var messageObj of response.messages) {
+                                toastr.clear();
+                                toastr.error(messageObj.message);
+                                break;
+                            }
+                        }
+                        this.isInProgress = false;
+                        _form[0].reset();
+                    }).fail((jqXHR, textStatus, error) => {
+                        toastr.clear();
+                        toastr.error(error);
+                        this.isInProgress = false;
+                        _form[0].reset();
+                    });
+                });
+            }
+        }
+    });
 }
 
 
@@ -1714,6 +1919,26 @@ $(document).ready(() => {
                 toastr
             );
         }
+        if (document.getElementById("host_network_view")) {
+            kraven_app.host_network_screen(
+                Vue,
+                axios,
+                $,
+                Pace,
+                Cookies,
+                toastr
+            );
+        }
+        if (document.getElementById("host_network_create")) {
+            kraven_app.host_network_create_screen(
+                Vue,
+                axios,
+                $,
+                Pace,
+                Cookies,
+                toastr
+            );
+        }
         if (document.getElementById("host_networks_list")) {
             kraven_app.host_networks_list_screen(
                 Vue,
@@ -1726,6 +1951,26 @@ $(document).ready(() => {
         }
         if (document.getElementById("host_volumes_list")) {
             kraven_app.host_volumes_list_screen(
+                Vue,
+                axios,
+                $,
+                Pace,
+                Cookies,
+                toastr
+            );
+        }
+        if (document.getElementById("host_volume_view")) {
+            kraven_app.host_volume_screen(
+                Vue,
+                axios,
+                $,
+                Pace,
+                Cookies,
+                toastr
+            );
+        }
+        if (document.getElementById("host_volume_create")) {
+            kraven_app.host_volume_create_screen(
                 Vue,
                 axios,
                 $,

@@ -27,7 +27,17 @@ class Volume(Auth):
         return result
 
     def get(self, volume_id):
-        return self._client.volumes.get(volume_id)
+        volume = self._client.volumes.get(volume_id)
+
+        return {
+            "id": volume.id,
+            "short_id": volume.short_id,
+            "name": volume.name,
+            "created": volume.attrs["CreatedAt"],
+            "driver": volume.attrs["Driver"],
+            "scope": volume.attrs["Scope"],
+            "attrs": volume.attrs
+        }
 
     def remove(self, volume_id, force=False):
         return self._client.volumes.get(volume_id).remove(force)
